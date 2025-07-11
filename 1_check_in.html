@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <title>TAMU Check-In Form - Print Preview</title>
     <style>
-        /* CSS Optimized for a Single A4 Page */
+        /* Base page setup for A4 */
         body {
             font-family: Arial, sans-serif;
-            font-size: 9.5pt;
-            /* Base font size reduced slightly */
+            font-size: 8pt;
             background-color: #EEE;
             margin: 0;
         }
@@ -17,160 +16,233 @@
         .page {
             background: white;
             width: 210mm;
-            /* Set a fixed height and use overflow to see if it fits.
-                   For printing, the browser will handle it. */
-            height: 296mm;
+            height: 297mm;
             padding: 10mm;
-            /* Reduced padding to gain space */
             margin: 10mm auto;
             box-sizing: border-box;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
-        .header-box {
-            border: 1px solid black;
-            padding: 4px;
-            width: 190px;
-            font-size: 8.5pt;
-            line-height: 1.2;
+        .consent-section p {
+            margin: 4px 0;
+            text-align: justify;
+            /* MODIFIED: Justified text alignment */
         }
 
-        .voucher-no {
-            text-align: right;
-            margin-top: -45px;
-            /* Adjusted position */
-        }
-
-        .main-title {
-            text-align: center;
-            font-weight: bold;
-            font-size: 13pt;
-            margin-top: 15px;
-            /* Reduced margin */
-        }
-
-        .sub-title {
-            text-align: center;
-            font-weight: bold;
-            font-size: 8.5pt;
-            margin-top: 4px;
-        }
-
-        .confidential-box {
-            border: 2px solid black;
-            padding: 3px;
-            text-align: center;
-            font-weight: bold;
-            margin: 10px 0;
-            /* Reduced margin */
-        }
-
-        .details-table {
+        /* Base table styles - reduced spacing */
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #ddd;
         }
 
-        .details-table td {
-            padding: 3px;
-            /* Reduced padding */
-            vertical-align: bottom;
+        td {
+            padding: 4px 4px;
+            vertical-align: middle;
+        }
+
+        /* Form sections - optimized spacing */
+        .details-table,
+        .office-use-table {
+            background: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
+            margin-bottom: 12px;
+        }
+
+        .details-table td,
+        .office-use-table td {
+            padding: 4px 6px;
+            border-bottom: 1px solid #eee;
         }
 
         .line {
-            border-bottom: 1px solid black;
-            min-height: 1em;
-            /* Reduced height */
-            padding: 0 2px;
-            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+            min-height: 1.2em;
+            padding: 2px 4px;
+            font-weight: normal;
             font-size: 9pt;
-            /* Smaller font for data */
+            background: #f9f9f9;
+            border-radius: 2px;
         }
 
-        .section-title {
-            font-weight: bold;
-            margin-top: 10px;
-            /* Reduced margin */
-            margin-bottom: 4px;
-        }
-
-        .flex-container {
-            display: flex;
-            align-items: baseline;
-            margin-top: 5px;
-            /* Reduced margin */
-            gap: 8px;
-        }
-
+        /* Checkbox styling - compact */
         .checkbox-item {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 4px;
-            margin: 0 8px;
-            font-size: 9pt;
+            margin: 0 10px 0 0;
+            padding: 2px 0;
         }
 
         .box {
             display: inline-block;
-            width: 11px;
-            height: 11px;
-            border: 1px solid black;
+            width: 12px;
+            height: 12px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
             text-align: center;
-            line-height: 11px;
-            font-weight: bold;
+            line-height: 12px;
+            margin-right: 4px;
+            background: white;
         }
 
-        .income-section {
+        /* Section titles - reduced margins */
+        .section-title {
+            font-weight: 600;
+            margin: 12px 0 6px;
+            padding-bottom: 3px;
+            border-bottom: 2px solid #eee;
+            color: #333;
+        }
+
+        /* Header styling - compact */
+        .header-box {
+            border: 1px solid #ddd;
+            padding: 8px;
+            width: 180px;
+            font-size: 8pt;
+            line-height: 1.3;
+            background: white;
+            border-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-title {
+            text-align: center;
+            font-weight: 600;
+            font-size: 13pt;
+            margin: 15px 0 8px;
+            color: #333;
+        }
+
+        .sub-title {
+            text-align: center;
+            font-weight: normal;
+            font-size: 8.5pt;
+            margin: 4px 0;
+            color: #666;
+        }
+
+        .confidential-box {
+            border: 2px solid #e0e0e0;
+            padding: 6px;
+            text-align: center;
+            font-weight: 600;
+            margin: 12px 0;
+            background: #f8f8f8;
+            border-radius: 3px;
+            color: #444;
+        }
+
+        /* Occupation section - single row layout */
+        .flex-container {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin: 4px 0;
         }
 
-        .income-col {
-            width: 48%;
+        .occupation-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 4px 0;
         }
 
+        .occupation-row>div:first-child {
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .occupation-row .line {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .company-label {
+            width: 50px;
+            flex-shrink: 0;
+        }
+
+        /* Income section - compact single column */
+        .income-section {
+            margin: 8px 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            padding: 8px;
+        }
+
+        .income-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 4px 0;
+        }
+
+        .income-row>div:first-child {
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .income-options {
+            display: flex;
+            flex-wrap: nowrap;
+
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: inline-flex;
+            align-items: center;
+            margin: 0;
+            padding: 2px 0;
+            white-space: nowrap;
+        }
+
+        /* Consent section - reduced size */
         .consent-section {
             font-size: 7.5pt;
-            /* Reduced font for legal text */
-            margin-top: 15px;
-            /* Reduced margin */
-            text-align: justify;
-            line-height: 1.1;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            line-height: 1.3;
         }
 
         .consent-section p {
-            margin-bottom: 4px;
+            margin: 4px 0;
         }
 
+        /* Signature section - reduced spacing */
         .signature-section {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            /* Reduced margin significantly */
+            margin-top: 40px;
+            padding: 0 15px;
         }
 
         .sig-line {
             width: 45%;
-            border-top: 1px solid black;
-            padding-top: 5px;
+            border-top: 1px solid #ccc;
+            padding-top: 6px;
+            color: #666;
         }
 
+        /* Office use section - compact */
         .office-use-box {
-            border: 2px solid black;
-            padding: 8px;
-            margin-top: 20px;
-            /* Reduced margin */
+            border: 1px solid #ddd;
+            padding: 5px;
+            margin-top: 10px;
+            background: white;
+            border-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
-        .office-use-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .office-use-table td {
-            padding: 4px;
-        }
-
+        /* Print styles */
         @media print {
             body {
                 background: white;
@@ -179,25 +251,100 @@
             .page {
                 margin: 0;
                 padding: 10mm;
-                /* Keep some padding for printing */
                 box-shadow: none;
                 border: none;
-                height: auto;
-                /* Let the printer decide the height */
+                height: 297mm;
             }
+
+            .details-table,
+            .income-col,
+            .office-use-box,
+            .header-box {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+
+            /* Force page breaks */
+            .page {
+                page-break-after: always;
+            }
+        }
+
+        .title-cell {
+            width: 100px;
+            /* Adjust as needed */
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+
+            padding: 8px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .logo-container {
+            flex: 0 0 30%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            max-height: 1.6cm;
+            object-fit: contain;
+        }
+
+        .contact-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2px;
+            font-size: 10px;
+            line-height: 1.2;
+        }
+
+        .address {
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .contact-line {
+            color: #555;
+            font-size: 9px;
+        }
+
+        .email-line {
+            color: #2563eb;
+            font-size: 9px;
         }
     </style>
 </head>
 
 <body>
     <div class="page">
-        <div class="header-box">
-            51C-L1 Mezzanine Floor<br>
-            Bangunan Podium 53 Jalan Raja<br>
-            Alang Kampung Baru 53000 Kuala<br>
-            Lumpur
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="TCB_LOGO.png" alt="TAMU Logo" class="logo">
+            </div>
+            <div class="contact-info">
+                <div class="address">
+                    51C-L1 Mezzanine Floor Bangunan Podium 53, Jalan Raja Alang Kampung Baru, 53000 Kuala Lumpur
+                </div>
+                <div class="contact-line">
+                    <strong>T:</strong> +603 2698 8789 &nbsp;|&nbsp; <strong>F:</strong> +603 2692 4789
+                </div>
+                <div class="email-line">
+                    <strong>E:</strong> memberservices@tamucapital.com
+                </div>
+                <div class="voucher-no">Voucher No: <span id="printVoucherNo"></span></div>
+            </div>
         </div>
-        <div class="voucher-no">Voucher No: <span id="printVoucherNo"></span></div>
 
         <div class="main-title">PRESENTATION CHECK - IN FORM</div>
         <div class="sub-title">THANK YOU FOR ATTENDING OUR PRESENTATION TODAY. YOUR PARTICIPATION IS GREATLY
@@ -208,7 +355,7 @@
 
         <table class="details-table">
             <tr>
-                <td>NAME (MR):</td>
+                <td class="title-cell">NAME (MR):</td>
                 <td class="line" id="printGuestName"></td>
                 <td>NRIC:</td>
                 <td class="line" id="printGuestNric"></td>
@@ -235,7 +382,7 @@
                 <td colspan="5" class="line" id="printEmail"></td>
             </tr>
             <tr>
-                <td>TELEPHONE (MR) H/P:</td>
+                <td>(MR) H/P:</td>
                 <td colspan="2" class="line" id="printGuestPhone"></td>
                 <td>(MRS) H/P:</td>
                 <td colspan="2" class="line" id="printPartnerPhone"></td>
@@ -248,43 +395,52 @@
             <div class="checkbox-item"><span class="box" id="printMaritalSingle"></span> SINGLE</div>
             <div class="checkbox-item"><span class="box" id="printMaritalMarried"></span> MARRIED</div>
             <div class="checkbox-item"><span class="box" id="printMaritalOthers"></span> OTHERS</div>
-        </div>
-        <div class="flex-container">
-            <div>NUMBER OF CHILDREN:</div>
+
+            <div>| NUMBER OF CHILDREN:</div>
             <div class="line" id="printNumChildren" style="flex-grow: 1;"></div>
         </div>
 
         <div class="section-title">OCCUPATION:</div>
-        <div class="flex-container">
-            <div style="width: 15%;">HUSBAND:</div>
-            <div class="line" style="width: 35%;" id="printGuestOccupation"></div>
-            <div style="width: 15%; text-align: right; padding-right: 5px;">COMPANY:</div>
-            <div class="line" style="width: 35%;" id="printGuestCompany"></div>
+        <div class="occupation-row">
+            <div class="company-label">HUSBAND:</div>
+            <div class="line" id="printGuestOccupation"></div>
+            <div class="company-label">COMPANY:</div>
+            <div class="line" id="printGuestCompany"></div>
         </div>
-        <div class="flex-container">
-            <div style="width: 15%;">WIFE:</div>
-            <div class="line" style="width: 35%;" id="printPartnerOccupation"></div>
-            <div style="width: 15%; text-align: right; padding-right: 5px;">COMPANY:</div>
-            <div class="line" style="width: 35%;" id="printPartnerCompany"></div>
+        <div class="occupation-row">
+            <div class="company-label">WIFE:</div>
+            <div class="line" id="printPartnerOccupation"></div>
+            <div class="company-label">COMPANY:</div>
+            <div class="line" id="printPartnerCompany"></div>
         </div>
 
         <div class="section-title">GROSS MONTHLY INCOME:</div>
         <div class="income-section">
-            <div class="income-col">
-                <div>HUSBAND:</div>
-                <div class="checkbox-item"><span class="box" id="printGuestIncome1"></span> RM4,000 - RM6,000</div>
-                <div class="checkbox-item"><span class="box" id="printGuestIncome2"></span> RM6,001 - RM10,000</div>
-                <div class="checkbox-item"><span class="box" id="printGuestIncome3"></span> RM10,001 - RM 15,000</div>
-                <div class="checkbox-item"><span class="box" id="printGuestIncome4"></span> RM15,001 - RM 20,000</div>
-                <div class="checkbox-item"><span class="box" id="printGuestIncome5"></span> RM20,001 ABOVE</div>
+            <div class="income-row">
+                <div class="company-label">HUSBAND:</div>
+                <div class="income-options row">
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome1"></span> RM4k - RM6k</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome2"></span> RM6,001 - RM10,000</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome3"></span> RM10,001 - RM 15,000
+                    </div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome4"></span> RM15,001 - RM 20,000
+                    </div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome5"></span> RM20,001 > </div>
+                </div>
             </div>
-            <div class="income-col">
-                <div>WIFE:</div>
-                <div class="checkbox-item"><span class="box" id="printPartnerIncome1"></span> RM4,000 - RM6,000</div>
-                <div class="checkbox-item"><span class="box" id="printPartnerIncome2"></span> RM6,001 - RM10,000</div>
-                <div class="checkbox-item"><span class="box" id="printPartnerIncome3"></span> RM10,001 - RM15,000</div>
-                <div class="checkbox-item"><span class="box" id="printPartnerIncome4"></span> RM15,001 - RM 20,000</div>
-                <div class="checkbox-item"><span class="box" id="printPartnerIncome5"></span> RM20,001 ABOVE</div>
+            <div class="income-row">
+                <div class="company-label">WIFE:</div>
+                <div class="income-options">
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome1"></span> RM4k - RM6k
+                    </div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome2"></span> RM6,001 - RM10,000
+                    </div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome3"></span> RM10,001 - RM15,000
+                    </div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome4"></span> RM15,001 - RM 20,000
+                    </div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome5"></span> RM20,001 ></div>
+                </div>
             </div>
         </div>
 
@@ -292,8 +448,7 @@
             <div>ARE YOU A CREDIT CARD HOLDER:-</div>
             <div class="checkbox-item"><span class="box" id="printCCYes"></span> YES</div>
             <div class="checkbox-item"><span class="box" id="printCCNo"></span> NO</div>
-        </div>
-        <div class="flex-container" style="justify-content: center; margin-left: 100px;">
+            |
             <div class="checkbox-item"><span class="box" id="printCCPlatinum"></span> PLATINUM</div>
             <div class="checkbox-item"><span class="box" id="printCCGold"></span> GOLD</div>
             <div class="checkbox-item"><span class="box" id="printCCClassic"></span> CLASSIC</div>
@@ -321,28 +476,28 @@
 
         <div class="signature-section">
             <div class="sig-line"><span>Signature:</span></div>
-            <div class="sig-line"><span>Signature:</span></div>
+            <div class="sig-line"><span>Date:</span></div>
         </div>
 
         <div class="office-use-box">
             <div class="section-title" style="text-align: center;">FOR OFFICE USE ONLY:</div>
             <table class="office-use-table">
                 <tr>
-                    <td style="width: 10%;">DAY:</td>
+                    <td style="width: 20%;">DAY:</td>
                     <td class="line"></td>
-                    <td style="width: 10%;">DATE:</td>
-                    <td class="line"></td>
-                </tr>
-                <tr>
-                    <td style="width: 10%;">TIME IN:</td>
-                    <td class="line"></td>
-                    <td style="width: 10%;">TIME OUT:</td>
+                    <td style="width: 20%;">DATE:</td>
                     <td class="line"></td>
                 </tr>
                 <tr>
-                    <td style="width: 10%;">TM CODE:</td>
+                    <td style="width: 20%;">TIME IN:</td>
                     <td class="line"></td>
-                    <td style="width: 10%;">CONSULTANT:</td>
+                    <td style="width: 20%;">TIME OUT:</td>
+                    <td class="line"></td>
+                </tr>
+                <tr>
+                    <td style="width: 20%;">TM CODE:</td>
+                    <td class="line"></td>
+                    <td style="width: 20%;">CONSULTANT:</td>
                     <td class="line"></td>
                 </tr>
             </table>
