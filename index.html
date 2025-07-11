@@ -913,6 +913,7 @@
                     console.log(`Successfully preloaded ${file}`);
                 } catch (error) {
                     console.error(`Could not preload template ${file}:`, error);
+                    // This error will now appear in the browser's console (F12) if a file is missing or misspelled.
                 }
             }
         }
@@ -920,7 +921,10 @@
 
         // --- Core UI and Form Navigation Functions ---
 
-        function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
+        function showSection(sectionNumber) {
+            document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; }
+        }
+
         function nextSection() { if (validateCurrentSection() && currentSection < totalSections) { showSection(currentSection + 1); } }
         function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
         function updateProgress() { const progress = ((currentSection - 1) / (totalSections - 1)) * 100; document.getElementById('progressFill').style.width = progress + '%'; }
