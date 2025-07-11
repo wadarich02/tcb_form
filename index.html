@@ -1154,7 +1154,7 @@
 
                 let html = '';
                 for (let i = 0; i < max; i++) {
-                    const char = text[i] ? text[i].toUpperCase() : ' ';
+                    const char = text[i] ? text[i].toUpperCase() : ' ';
                     html += `<div class="char-box">${char}</div>`;
                 }
                 container.innerHTML = html;
@@ -1210,6 +1210,14 @@
             if (p2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
             if (p2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
             if (p2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
+
+            // ... inside populateGreenForm
+            createAndFillCharBoxes('appHomePhone', app.homePhone || '', 10);
+            createAndFillCharBoxes('appFax', app.fax || '', 10);
+            createAndFillCharBoxes('appOfficePhone', p2.applicantOffice.tel || '', 10);
+            createAndFillCharBoxes('appOfficeExt', p2.applicantOffice.ext || '', 5);
+            createAndFillCharBoxes('appOfficeFax', p2.applicantOffice.fax || '', 10);
+            // ... and so on for nominee fields, etc.
         }
 
         function populateDeclarationForm(data) {
