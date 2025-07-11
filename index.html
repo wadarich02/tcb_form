@@ -1151,7 +1151,6 @@
                 const container = document.getElementById(containerId);
                 if (!container) { console.warn(`Container with ID ${containerId} not found.`); return; }
                 if (typeof text !== 'string') text = '';
-
                 let html = '';
                 for (let i = 0; i < max; i++) {
                     const char = text[i] ? text[i].toUpperCase() : ' ';
@@ -1167,57 +1166,59 @@
             let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
             let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
 
+            // Applicant fields
             createAndFillCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 28);
             createAndFillCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 28);
             createAndFillCharBoxes('appNric', app.icPassport, 14);
             createAndFillCharBoxes('appDate', (sigs.applicant.date || '').replace(/-/g, ''), 8);
-
             if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) { setCheck('appNationalityMalaysian', true); } else { setCheck('appNationalityForeigner', true); setText('appNationalityForeignerText', app.nationality); }
             if (app.maritalStatus === 'Single') { setCheck('appMaritalSingle', true); } else if (app.maritalStatus === 'Married') { setCheck('appMaritalMarried', true); }
-
             createAndFillCharBoxes('appHomeAddress', `${app.correspondentAddress}, ${app.city}`, 56);
             createAndFillCharBoxes('appHomePostcode', app.poskod, 5);
             let mailAddr = p1.guestInfo.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.city}` : `${p1.guestInfo.mailingAddress}, ${p1.guestInfo.mailingCity}`;
             createAndFillCharBoxes('appMailingAddress', mailAddr, 56);
+            createAndFillCharBoxes('appHomePhone', app.homePhone || '', 10);
+            createAndFillCharBoxes('appFax', app.fax || '', 10);
             createAndFillCharBoxes('appHp', app.phone, 10);
             setText('appEmail', app.email);
             setText('appOccupation', appBiz.occupation);
-
             const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
             if (income > 60000) setCheck('appIncome4', true); else if (income >= 36000) setCheck('appIncome3', true); else if (income >= 24000) setCheck('appIncome2', true); else if (income > 0) setCheck('appIncome1', true);
-
             createAndFillCharBoxes('appEmployer', appBiz.industry, 25);
             setText('appIndustry', appBiz.industry);
             createAndFillCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
             createAndFillCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
+            createAndFillCharBoxes('appOfficePhone', p2.applicantOffice.tel || '', 10);
+            createAndFillCharBoxes('appOfficeExt', p2.applicantOffice.ext || '', 5);
+            createAndFillCharBoxes('appOfficeFax', p2.applicantOffice.fax || '', 10);
 
-            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName, 28);
-            createAndFillCharBoxes('nomineeNric', p1.partnerInfo.icPassport, 14);
-            setText('nomineeEmail', '');
+            // Nominee fields (partner info)
+            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName || '', 28);
+            createAndFillCharBoxes('nomineeNric', p1.partnerInfo.icPassport || '', 14);
+            setText('nomineeEmail', p1.partnerInfo.email || '');
             if (p1.partnerInfo.nationality && p1.partnerInfo.nationality.toLowerCase().includes('malaysian')) { setCheck('nomineeNationalityMalaysian', true); } else { setCheck('nomineeNationalityForeigner', true); setText('nomineeNationalityForeignerText', p1.partnerInfo.nationality); }
-            createAndFillCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest, 15);
-            createAndFillCharBoxes('nomineeEmployer', p1.partnerBusiness.occupation, 25);
+            createAndFillCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest || '', 15);
+            createAndFillCharBoxes('nomineeEmployer', p1.partnerBusiness.occupation || '', 25);
             let partnerOfficeAddr = p1.partnerInfo.addressSameAsGuest ? `${app.correspondentAddress}, ${app.city}` : `${p1.partnerInfo.correspondentAddress}, ${p1.partnerInfo.city}`;
             createAndFillCharBoxes('nomineeOfficeAddress', partnerOfficeAddr, 40);
             createAndFillCharBoxes('nomineeOfficePostcode', p1.partnerInfo.addressSameAsGuest ? app.poskod : p1.partnerInfo.poskod, 5);
-            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone, 10);
+            createAndFillCharBoxes('nomineeOfficePhone', p1.partnerInfo.phone || '', 10);
+            createAndFillCharBoxes('nomineeOfficeExt', '', 5); // Not collected
+            createAndFillCharBoxes('nomineeOfficeFax', '', 10); // Not collected
+            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone || '', 10);
             const p_income = parseFloat((p1.partnerBusiness.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
             if (p_income > 60000) setCheck('nomineeIncome4', true); else if (p_income >= 36000) setCheck('nomineeIncome3', true); else if (p_income >= 24000) setCheck('nomineeIncome2', true); else if (p_income > 0) setCheck('nomineeIncome1', true);
 
             setText('declarationDate', sigs.applicant.date);
             setSignature('applicantSignature', sigs.applicant.signatureData);
 
+            // Product checkboxes
             if (p2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
             if (p2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
             if (p2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
 
-            // ... inside populateGreenForm
-            createAndFillCharBoxes('appHomePhone', app.homePhone || '', 10);
-            createAndFillCharBoxes('appFax', app.fax || '', 10);
-            createAndFillCharBoxes('appOfficePhone', p2.applicantOffice.tel || '', 10);
-            createAndFillCharBoxes('appOfficeExt', p2.applicantOffice.ext || '', 5);
-            createAndFillCharBoxes('appOfficeFax', p2.applicantOffice.fax || '', 10);
-            // ... and so on for nominee fields, etc.
+            // Program ID (for office use only, leave blank)
+            createAndFillCharBoxes('programId', '', 15);
         }
 
         function populateDeclarationForm(data) {
