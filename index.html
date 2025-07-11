@@ -533,11 +533,27 @@
         </div>
     </div>
     <script>
+        const { jsPDF } = window.jspdf;
         let currentSection = 1;
         const totalSections = 4;
         let signatures = {};
         let signaturePadsInitialized = false;
 
+        // --- Pre-load templates from separate files ---
+        const templateCache = {};
+
+        async function preloadTemplates() {
+            const files = ['2_Application_Form_Green.html', '3_Buyer_Declaration.html', '4_AMLA_NEW.html', '5_Profit_Distribution.html'];
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    templateCache[file] = await response.text();
+                } catch (error) {
+                    console.error(`Could not preload template ${file}:`, error);
+                }
+            }
+        }
         // --- Core UI and Form Navigation Functions ---
 
         function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 1 && !signatures['guestCheckInSignature']) { initializeSignatureCanvas('guestCheckInSignature'); } if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
@@ -690,35 +706,107 @@
         function exportFullData() {
             if (!validateCurrentSection()) { alert("Please complete all required fields before exporting."); return; } const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Full_Application.json`; const dataStr = JSON.stringify(fullData, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Full application data exported successfully as ${fileName}`);
         }
-
-        function generateCombinedPdf() {
-            if (!validateCurrentSection()) { return; }
+        async function generateCombinedPdf() {
+            if (!validateCurrentSection()) { alert("Please complete all required fields."); return; }
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
             const formData = collectData();
-            localStorage.setItem('tamuPrintData', JSON.stringify(formData));
-            window.open('combined_forms.html', '_blank');
+            const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+            const filesToProcess = ['2_Application_Form_Green.html', '3_Buyer_Declaration.html', '4_AMLA_NEW.html', '5_Profit_Distribution.html'];
+            await processFilesSequentially(0, pdf, filesToProcess, formData);
         }
 
+        async function processFilesSequentially(index, pdf, files, formData) {
+            const loadingStatus = document.getElementById('loadingStatus');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (index >= files.length) {
+                loadingStatus.textContent = 'Saving PDF...';
+                pdf.save(`${formData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'}_Compiled_Forms.pdf`);
+                loadingOverlay.style.display = 'none';
+                return;
+            }
+            const file = files[index];
+            loadingStatus.textContent = `Processing ${file} (${index + 1}/${files.length})...`;
+            try {
+                const html = templateCache[file];
+                if (!html) throw new Error(`Template for ${file} was not pre-loaded.`);
+                const renderContainer = document.getElementById('pdf-render-container');
+                renderContainer.innerHTML = html;
+                populateTemplate(file, formData);
+                await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 100)));
+                const contentToCapture = renderContainer.firstElementChild;
+                if (!contentToCapture) throw new Error("Render container is empty.");
+                const canvas = await html2canvas(contentToCapture, { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' });
+                const imgData = canvas.toDataURL('image/png');
+                if (imgData.length < 200) throw new Error("Generated image data is empty for " + file);
+                const A4_WIDTH = 210;
+                const A4_HEIGHT = 297;
+                const imgProps = pdf.getImageProperties(imgData);
+                let pageHeight = (imgProps.height * A4_WIDTH) / imgProps.width;
+                let heightLeft = pageHeight;
+                let position = 0;
+                let pageCount = 0;
+                if (index > 0) pdf.addPage();
+                while (heightLeft > 0) {
+                    if (pageCount > 0) pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, A4_WIDTH, pageHeight);
+                    heightLeft -= A4_HEIGHT;
+                    position -= A4_HEIGHT;
+                    pageCount++;
+                }
+                renderContainer.innerHTML = '';
+                await processFilesSequentially(index + 1, pdf, files, formData);
+            } catch (error) {
+                console.error(`Failed to process ${file}:`, error);
+                alert(`Error: Could not process ${file}. Details: ${error.message}`);
+                loadingOverlay.style.display = 'none';
+            }
+        }
 
-        // --- Page Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            showSection(1);
-            const industries = ['Agriculture', 'Automotive', 'Banking', 'Construction', 'Consulting', 'Education', 'Energy', 'Engineering', 'Entertainment', 'Finance', 'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Information Technology', 'Insurance', 'Legal', 'Logistics', 'Manufacturing', 'Marketing', 'Media', 'Mining', 'Non-Profit', 'Oil & Gas', 'Pharmaceutical', 'Real Estate', 'Retail', 'Science', 'Telecommunications', 'Tourism', 'Transportation', 'Other'];
-            const populateDropdown = (id) => { const select = document.getElementById(id); if (select) { select.innerHTML = '<option value="" disabled selected>Select Industry</option>' + industries.map(i => `<option value="${i}">${i}</option>`).join(''); } };
-            populateDropdown('guestIndustry');
-            populateDropdown('partnerIndustry');
-            document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () { document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid'; });
-            document.getElementById('partnerSameAddress').addEventListener('change', function () { const fields = ['partnerCorrespondentAddress', 'partnerPoskod', 'partnerCity']; if (this.checked) { fields.forEach(id => { const guestField = document.getElementById(id.replace('partner', 'guest')); if (guestField) { document.getElementById(id).value = guestField.value; } document.getElementById(id).disabled = true; }); } else { fields.forEach(id => document.getElementById(id).disabled = false); } });
-            document.getElementById('payorIsApplicant').addEventListener('change', function () { document.getElementById('thirdPartyPayorFields').style.display = this.checked ? 'none' : 'grid'; });
+        // --- Template Population Functions ---
+        function populateTemplate(fileName, data) {
+            if (fileName.includes('2_Application_Form_Green.html')) populateGreenForm(data);
+            else if (fileName.includes('3_Buyer_Declaration.html')) populateDeclarationForm(data);
+            else if (fileName.includes('4_AMLA_NEW.html')) populateAmlaForm(data);
+            else if (fileName.includes('5_Profit_Distribution.html')) populateProfitForm(data);
+        }
 
-            // Auto-populate guest signature fields
-            document.getElementById('guestFullName').addEventListener('input', (e) => {
-                document.getElementById('guestCheckInSignatureName').value = e.target.value;
-            });
-            document.getElementById('guestIcPassport').addEventListener('input', (e) => {
-                document.getElementById('guestCheckInSignatureIC').value = e.target.value;
-            });
-            document.getElementById('guestCheckInSignatureDate').value = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
-        });
+        function populateGreenForm(data) {
+            const createAndFillCharBoxes = (containerId, text = '', max) => {
+                const container = document.getElementById(containerId);
+                if (!container) { return; }
+                if (typeof text !== 'string') text = '';
+                let html = '';
+                for (let i = 0; i < max; i++) {
+                    const char = text[i] ? text[i].toUpperCase() : ' ';
+                    html += `<div class="char-box">${char}</div>`;
+                }
+                container.innerHTML = html;
+            };
+            const setText = (id, value = '') => { const el = document.getElementById(id); if (el) el.textContent = value; };
+            const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox, .program-box'); if (cb) cb.textContent = '✓'; } };
+            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`; };
+            const p1 = data.part1, p2 = data.part2,
+                // --- Page Initialization ---
+                document.addEventListener('DOMContentLoaded', () => {
+                    showSection(1);
+                    const industries = ['Agriculture', 'Automotive', 'Banking', 'Construction', 'Consulting', 'Education', 'Energy', 'Engineering', 'Entertainment', 'Finance', 'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Information Technology', 'Insurance', 'Legal', 'Logistics', 'Manufacturing', 'Marketing', 'Media', 'Mining', 'Non-Profit', 'Oil & Gas', 'Pharmaceutical', 'Real Estate', 'Retail', 'Science', 'Telecommunications', 'Tourism', 'Transportation', 'Other'];
+                    const populateDropdown = (id) => { const select = document.getElementById(id); if (select) { select.innerHTML = '<option value="" disabled selected>Select Industry</option>' + industries.map(i => `<option value="${i}">${i}</option>`).join(''); } };
+                    populateDropdown('guestIndustry');
+                    populateDropdown('partnerIndustry');
+                    document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () { document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid'; });
+                    document.getElementById('partnerSameAddress').addEventListener('change', function () { const fields = ['partnerCorrespondentAddress', 'partnerPoskod', 'partnerCity']; if (this.checked) { fields.forEach(id => { const guestField = document.getElementById(id.replace('partner', 'guest')); if (guestField) { document.getElementById(id).value = guestField.value; } document.getElementById(id).disabled = true; }); } else { fields.forEach(id => document.getElementById(id).disabled = false); } });
+                    document.getElementById('payorIsApplicant').addEventListener('change', function () { document.getElementById('thirdPartyPayorFields').style.display = this.checked ? 'none' : 'grid'; });
+
+                    // Auto-populate guest signature fields
+                    document.getElementById('guestFullName').addEventListener('input', (e) => {
+                        document.getElementById('guestCheckInSignatureName').value = e.target.value;
+                    });
+                    document.getElementById('guestIcPassport').addEventListener('input', (e) => {
+                        document.getElementById('guestCheckInSignatureIC').value = e.target.value;
+                    });
+                    document.getElementById('guestCheckInSignatureDate').value = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+                });
     </script>
 </body>
 
