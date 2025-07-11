@@ -383,14 +383,18 @@
         }
 
         #pdf-render-container {
+            /* --- THIS IS THE FINAL FIX --- */
+            visibility: hidden;
+            /* Make the container invisible but keep its dimensions */
             position: absolute;
-            left: -9999px;
-            /* Moves it off-screen */
+            /* Take it out of the normal flow */
             top: 0;
+            left: 0;
             width: 900px;
-            /* CRITICAL: Gives the container a fixed width for rendering */
+            /* Define a stable width for rendering */
             background-color: white;
-            /* Ensures a solid background for html2canvas */
+            z-index: -1;
+            /* Place it behind everything else */
         }
 
         #loadingOverlay {
