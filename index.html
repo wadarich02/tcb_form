@@ -381,17 +381,15 @@
         .modal-body li {
             margin-bottom: 10px;
         }
-
+        
+        /* CORRECTED STYLES FOR RENDERING */
         #pdf-render-container {
-            /* This is the new, robust style */
+            /* This is the robust, off-screen rendering method */
             position: absolute;
+            left: -9999px; /* Position it way off the left of the screen */
             top: 0;
-            left: 0;
-            width: 900px;
+            width: 900px; /* A fixed width helps html2canvas */
             background-color: white;
-            /* It no longer needs to be hidden! The overlay will hide it. */
-            z-index: -1;
-            /* Place it behind the spinner text */
         }
 
         #loadingOverlay {
@@ -401,9 +399,8 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.75);
-            /* Make sure the z-index is very high */
             z-index: 10000;
-            display: none;
+            display: none; /* Changed from flex to none by default */
             justify-content: center;
             align-items: center;
             color: white;
@@ -444,10 +441,10 @@
 </head>
 
 <body>
-    <div id="loadingOverlay">
-        <!-- The render container is now INSIDE the overlay -->
-        <div id="pdf-render-container"></div>
+    <!-- RENDER CONTAINER IS NOW OUTSIDE THE OVERLAY -->
+    <div id="pdf-render-container"></div>
 
+    <div id="loadingOverlay">
         <div>
             <div class="spinner"></div>
             <p>Generating PDF...<br><span id="loadingStatus">Initializing...</span></p>
@@ -483,7 +480,7 @@
                                 <option value="Female">Female</option>
                             </select></div>
                         <div class="form-group"><label for="guestNationality">Nationality</label><input type="text"
-                                id="guestNationality" required></div>
+                                id="guestNationality" value="Malaysian" required></div>
                         <div class="form-group"><label>Marital Status</label>
                             <div class="checkbox-group"><label><input type="radio" name="maritalStatus" value="Married">
                                     Married</label><label><input type="radio" name="maritalStatus" value="Single">
@@ -525,11 +522,9 @@
                         <div class="form-group full-width"><label for="guestMonthlyIncome">Monthly Income</label><select
                                 id="guestMonthlyIncome" required>
                                 <option value="" disabled selected>Select Income Range</option>
-                                <option value="4,000-6,000">4,000 - 6,000</option>
-                                <option value="6,001-10,000">6,001 - 10,000</option>
-                                <option value="10,001-15,000">10,001 - 15,000</option>
-                                <option value="15,001-20,000">15,001 - 20,000</option>
-                                <option value="20,001 and above">20,001 and above</option>
+                                <option value="4,000-6,000">RM 4,000 - RM 6,000</option>
+                                <option value="6,001-10,000">RM 6,001 - RM 10,000</option>
+                                <option value="10,001 and above">RM 10,001 and above</option>
                             </select></div>
                     </div>
                 </div>
@@ -548,7 +543,7 @@
                                 <option value="Female">Female</option>
                             </select></div>
                         <div class="form-group"><label for="partnerNationality">Nationality</label><input type="text"
-                                id="partnerNationality"></div>
+                                id="partnerNationality" value="Malaysian"></div>
                         <div class="form-group"><label for="partnerPhone">Phone Number</label><input type="tel"
                                 id="partnerPhone"></div>
                         <div class="form-group"><label for="relationshipToGuest">Relationship to guest</label><select
@@ -584,11 +579,9 @@
                         <div class="form-group full-width"><label for="partnerMonthlyIncome">Monthly
                                 Income</label><select id="partnerMonthlyIncome">
                                 <option value="" disabled selected>Select Income Range</option>
-                                <option value="4,000-6,000">4,000 - 6,000</option>
-                                <option value="6,001-10,000">6,001 - 10,000</option>
-                                <option value="10,001-15,000">10,001 - 15,000</option>
-                                <option value="15,001-20,000">15,001 - 20,000</option>
-                                <option value="20,001 and above">20,001 and above</option>
+                                <option value="4,000-6,000">RM 4,000 - RM 6,000</option>
+                                <option value="6,001-10,000">RM 6,001 - RM 10,000</option>
+                                <option value="10,001 and above">RM 10,001 and above</option>
                             </select></div>
                     </div>
                 </div>
@@ -817,6 +810,7 @@
         </div>
     </div>
 
+    <!-- MODAL DEFINITIONS (Unchanged) -->
     <div id="rulesModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -900,6 +894,8 @@
             </div>
         </div>
     </div>
+
+    <!-- CORRECTED SCRIPT SECTION -->
     <script>
         const { jsPDF } = window.jspdf;
         let currentSection = 1;
@@ -926,13 +922,13 @@
                     console.log(`Successfully preloaded ${file}`);
                 } catch (error) {
                     console.error(`Could not preload template ${file}:`, error);
+                    alert(`Failed to load a required form template (${file}). Please check the file exists and the network connection.`);
                 }
             }
         }
 
 
-        // --- Core UI and Form Navigation Functions ---
-
+        // --- Core UI and Form Navigation Functions (Unchanged) ---
         function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
         function nextSection() { if (validateCurrentSection() && currentSection < totalSections) { showSection(currentSection + 1); } }
         function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
@@ -950,18 +946,15 @@
             return true;
         }
 
-        // --- Modal and Signature Pad Functions ---
-
+        // --- Modal and Signature Pad Functions (Unchanged) ---
         function showModal(modalId) { document.getElementById(modalId).style.display = "block"; }
         function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
         window.onclick = function (event) { document.querySelectorAll('.modal').forEach(modal => { if (event.target == modal) { modal.style.display = "none"; } }); }
-
         function initializeAllSignaturePads() { ['applicantSignature', 'nomineeSignature', 'consultantSignature', 'witnessSignature'].forEach(initializeSignatureCanvas); }
         function initializeSignatureCanvas(canvasId) { const canvas = document.getElementById(canvasId); if (!canvas) return; const ctx = canvas.getContext('2d'); let drawing = false; canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; const getPos = (e) => { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; }; const startDrawing = (e) => { e.preventDefault(); drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }; const draw = (e) => { if (!drawing) return; e.preventDefault(); const pos = getPos(e); ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#2c3e50'; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }; const stopDrawing = () => { if (!drawing) return; drawing = false; signatures[canvasId] = canvas.toDataURL('image/png'); }; canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove', draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing); }
         function clearSignature(canvasId) { const canvas = document.getElementById(canvasId); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); delete signatures[canvasId]; }
 
-        // --- Data Management Functions ---
-
+        // --- Data Management Functions (Unchanged, but now with corrected income ranges) ---
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
             return {
@@ -987,37 +980,16 @@
                 }
             };
         }
+        function importData() { const file = document.getElementById('importFile').files[0]; if (!file) { alert('Please select a file to import.'); return; } const reader = new FileReader(); reader.onload = (e) => { try { const data = JSON.parse(e.target.result); populateForm(data); alert('Data imported successfully!'); } catch (error) { alert('Error importing data. Please check the file format.'); console.error('Import Error:', error); } }; reader.readAsText(file); }
+        function populateForm(data) { const setVal = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.value = value; }; const setCheck = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.checked = value; }; const setRadio = (name, value) => { if (value) { const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if (el) el.checked = true; } }; const setMultiCheck = (name, values) => { if (values && Array.isArray(values)) { document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = values.includes(cb.value)); } }; if (data.part1) { const { guestInfo, guestBusiness, partnerInfo, partnerBusiness } = data.part1; if (guestInfo) { Object.keys(guestInfo).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestInfo[key])); setRadio('maritalStatus', guestInfo.maritalStatus); setCheck('mailingSameAsCorrespondent', guestInfo.mailingSameAsCorrespondent); document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change')); } if (guestBusiness) { Object.keys(guestBusiness).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestBusiness[key])); } if (partnerInfo) { Object.keys(partnerInfo).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerInfo[key])); setVal('relationshipToGuest', partnerInfo.relationshipToGuest); setCheck('partnerSameAddress', partnerInfo.addressSameAsGuest); document.getElementById('partnerSameAddress').dispatchEvent(new Event('change')); } if (partnerBusiness) { Object.keys(partnerBusiness).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerBusiness[key])); } } if (data.part2) { const { membershipApplicant, applicantOffice, applicantBanking, nominee, thirdPartyPayor, salesDetail } = data.part2; if (membershipApplicant) { setRadio('applicantType', membershipApplicant.applicantType); setVal('applicantTitle', membershipApplicant.title); setVal('applicantNameOnCard', membershipApplicant.nameOnCard); } if (applicantOffice) { setVal('applicantOfficeAddress', applicantOffice.address); setVal('applicantOfficePoskod', applicantOffice.poskod); setVal('applicantOfficeCity', applicantOffice.city); setVal('applicantOfficeTel', applicantOffice.tel); setVal('applicantFax', applicantOffice.fax); } if (applicantBanking) { setVal('applicantBankName', applicantBanking.bankName); setVal('applicantAccountNumber', applicantBanking.accountNumber); } if (nominee) { setCheck('nomineeSameAsPartner', nominee.sameAsPartner); setVal('nomineeBankName', nominee.bankName); setVal('nomineeAccountNumber', nominee.accountNumber); } if (thirdPartyPayor) { setCheck('payorIsApplicant', thirdPartyPayor.isApplicant); document.getElementById('payorIsApplicant').dispatchEvent(new Event('change')); setVal('payorOfficeAddress', thirdPartyPayor.officeAddress); } if (salesDetail) { setMultiCheck('productType', salesDetail.productTypes); setRadio('transactionMethod', salesDetail.transactionMethod); setVal('worksheetCode', salesDetail.worksheetCode); setVal('orNumber', salesDetail.orNumber); setVal('aprCode', salesDetail.aprCode); setVal('consultantName', salesDetail.consultantName); setVal('consultantCode', salesDetail.consultantCode); } } if (data.signatures) { Object.keys(data.signatures).forEach(key => { const sig = data.signatures[key]; if (sig) { setVal(`${key}SignatureName`, sig.name); setVal(`${key}SignatureIC`, sig.ic); setVal(`${key}SignatureDate`, sig.date); } }); } }
 
-        function importData() {
-            const file = document.getElementById('importFile').files[0];
-            if (!file) { alert('Please select a file to import.'); return; }
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try { const data = JSON.parse(e.target.result); populateForm(data); alert('Data imported successfully!'); }
-                catch (error) { alert('Error importing data. Please check the file format.'); console.error('Import Error:', error); }
-            };
-            reader.readAsText(file);
-        }
-
-        function populateForm(data) {
-            const setVal = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.value = value; };
-            const setCheck = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.checked = value; };
-            const setRadio = (name, value) => { if (value) { const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if (el) el.checked = true; } };
-            const setMultiCheck = (name, values) => { if (values && Array.isArray(values)) { document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = values.includes(cb.value)); } };
-            if (data.part1) { const { guestInfo, guestBusiness, partnerInfo, partnerBusiness } = data.part1; if (guestInfo) { Object.keys(guestInfo).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestInfo[key])); setRadio('maritalStatus', guestInfo.maritalStatus); setCheck('mailingSameAsCorrespondent', guestInfo.mailingSameAsCorrespondent); document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change')); } if (guestBusiness) { Object.keys(guestBusiness).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestBusiness[key])); } if (partnerInfo) { Object.keys(partnerInfo).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerInfo[key])); setVal('relationshipToGuest', partnerInfo.relationshipToGuest); setCheck('partnerSameAddress', partnerInfo.addressSameAsGuest); document.getElementById('partnerSameAddress').dispatchEvent(new Event('change')); } if (partnerBusiness) { Object.keys(partnerBusiness).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerBusiness[key])); } }
-            if (data.part2) { const { membershipApplicant, applicantOffice, applicantBanking, nominee, thirdPartyPayor, salesDetail } = data.part2; if (membershipApplicant) { setRadio('applicantType', membershipApplicant.applicantType); setVal('applicantTitle', membershipApplicant.title); setVal('applicantNameOnCard', membershipApplicant.nameOnCard); } if (applicantOffice) { setVal('applicantOfficeAddress', applicantOffice.address); setVal('applicantOfficePoskod', applicantOffice.poskod); setVal('applicantOfficeCity', applicantOffice.city); setVal('applicantOfficeTel', applicantOffice.tel); setVal('applicantFax', applicantOffice.fax); } if (applicantBanking) { setVal('applicantBankName', applicantBanking.bankName); setVal('applicantAccountNumber', applicantBanking.accountNumber); } if (nominee) { setCheck('nomineeSameAsPartner', nominee.sameAsPartner); setVal('nomineeBankName', nominee.bankName); setVal('nomineeAccountNumber', nominee.accountNumber); } if (thirdPartyPayor) { setCheck('payorIsApplicant', thirdPartyPayor.isApplicant); document.getElementById('payorIsApplicant').dispatchEvent(new Event('change')); setVal('payorOfficeAddress', thirdPartyPayor.officeAddress); } if (salesDetail) { setMultiCheck('productType', salesDetail.productTypes); setRadio('transactionMethod', salesDetail.transactionMethod); setVal('worksheetCode', salesDetail.worksheetCode); setVal('orNumber', salesDetail.orNumber); setVal('aprCode', salesDetail.aprCode); setVal('consultantName', salesDetail.consultantName); setVal('consultantCode', salesDetail.consultantCode); } }
-            if (data.signatures) { Object.keys(data.signatures).forEach(key => { const sig = data.signatures[key]; if (sig) { setVal(`${key}SignatureName`, sig.name); setVal(`${key}SignatureIC`, sig.ic); setVal(`${key}SignatureDate`, sig.date); } }); }
-        }
-
-        // --- Button-triggered Functions ---
-
+        // --- Button-triggered Functions (Unchanged) ---
         function generateCheckInPdf() { if (!validateCurrentSection()) return; const data = collectData(); localStorage.setItem('tamuPrintData', JSON.stringify(data)); window.open('print_preview.html', '_blank'); }
         function exportPart1Data() { if (!validateCurrentSection()) return; const fullData = collectData(); const dataToExport = { part1: fullData.part1 }; const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Part1_Check-In.json`; const dataStr = JSON.stringify(dataToExport, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Data exported successfully as ${fileName}`); }
         function exportFullData() { if (!validateCurrentSection()) { alert("Please complete all required fields before exporting."); return; } const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Full_Application.json`; const dataStr = JSON.stringify(fullData, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Full application data exported successfully as ${fileName}`); }
 
-        // --- PDF Generation Logic (Using Pre-loaded Templates) ---
-
-        // --- PDF Generation Logic (Using Pre-loaded Templates) ---
+        
+        // --- REVISED AND ROBUST PDF GENERATION LOGIC ---
 
         async function generateCombinedPdf() {
             if (!validateCurrentSection()) {
@@ -1025,12 +997,12 @@
                 return;
             }
             const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'flex';
+            loadingOverlay.style.display = 'flex'; // Use flex to center the spinner
 
             const formData = collectData();
-            console.log('Form Data:', JSON.stringify(formData, null, 2));
+            console.log('--- STARTING PDF GENERATION ---');
+            console.log('Collected Form Data:', formData);
 
-            // Initialize jsPDF. All pages will be added to this instance.
             const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
             const filesToProcess = [
@@ -1040,17 +1012,9 @@
                 '5_Profit_Distribution.html'
             ];
 
-            // Add debug logging for template population
-            const debugTemplatePopulation = (templateName, data) => {
-                console.log(`Populating template: ${templateName}`);
-                console.log('Using data:', JSON.stringify(data, null, 2));
-            };
-
-            // Start processing files one by one
             await processFilesSequentially(0, pdf, filesToProcess, formData, true);
         }
 
-        // Update processFilesSequentially to include debug logging
         async function processFilesSequentially(index, pdf, files, formData, isFirstPage) {
             const loadingStatus = document.getElementById('loadingStatus');
             const loadingOverlay = document.getElementById('loadingOverlay');
@@ -1058,71 +1022,64 @@
             if (index >= files.length) {
                 loadingStatus.textContent = 'Saving PDF...';
                 const guestName = formData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant';
-                console.log('PDF Generation Complete');
                 pdf.save(`${guestName}_Compiled_Forms.pdf`);
+                console.log('--- PDF GENERATION COMPLETE ---');
                 loadingOverlay.style.display = 'none';
                 return;
             }
 
             const file = files[index];
-            console.log(`Processing file ${index + 1}/${files.length}: ${file}`);
+            console.log(`[${index + 1}/${files.length}] Processing file: ${file}`);
             loadingStatus.textContent = `Processing ${file} (${index + 1}/${files.length})...`;
 
             try {
                 const html = templateCache[file];
-                if (!html) {
-                    throw new Error(`Template for ${file} was not pre-loaded.`);
-                }
+                if (!html) throw new Error(`Template for ${file} was not pre-loaded.`);
 
                 const renderContainer = document.getElementById('pdf-render-container');
                 renderContainer.innerHTML = html;
 
-                // Debug log before population
-                console.log(`Populating template ${file}`);
-                populateTemplate(file, formData);
-                // Debug log after population
-                console.log(`Template ${file} populated, HTML:`, renderContainer.innerHTML);
+                // Populate the template *after* it's in the DOM
+                populateTemplate(file, formData, renderContainer);
+                console.log(`[${index + 1}] Populated template. Final HTML for capture:`, renderContainer.innerHTML);
 
+                // IMPORTANT: Wait for the browser to render the new content
                 await new Promise(resolve => {
                     requestAnimationFrame(() => {
-                        requestAnimationFrame(resolve);
+                        setTimeout(resolve, 100); // A small extra delay can help with complex CSS
                     });
                 });
 
-                if (!renderContainer.hasChildNodes()) {
-                    throw new Error("Render container is empty, cannot capture.");
-                }
-
-                const canvas = await html2canvas(renderContainer, {
-                    scale: 2,
+                if (!renderContainer.firstElementChild) throw new Error("Render container is empty. Cannot capture.");
+                
+                const canvas = await html2canvas(renderContainer.firstElementChild, {
+                    scale: 3, // Higher scale for better quality
                     useCORS: true,
                     backgroundColor: '#ffffff',
-                    scrollY: -window.scrollY,
-                    windowWidth: document.documentElement.offsetWidth,
-                    windowHeight: document.documentElement.offsetHeight,
-                    logging: true // Enable html2canvas logging
+                    logging: true
                 });
 
                 const imgData = canvas.toDataURL('image/png');
-                if (imgData.length < 1000) {
-                    throw new Error(`Generated image data is suspiciously small for ${file}. Render likely failed.`);
-                }
+                if (imgData.length < 2000) throw new Error(`Generated image data is suspiciously small for ${file}. Render likely failed.`);
 
                 const A4_WIDTH_MM = 210;
                 const A4_HEIGHT_MM = 297;
-                const imgProps = pdf.getImageProperties(imgData);
+                const page_margin = 0;
 
-                const pdfImgWidth = A4_WIDTH_MM;
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfImgWidth = A4_WIDTH_MM - (page_margin * 2);
                 const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width;
+                let finalHeight = pdfImgHeight > (A4_HEIGHT_MM - (page_margin*2)) ? (A4_HEIGHT_MM - (page_margin*2)) : pdfImgHeight;
+
 
                 if (!isFirstPage) {
                     pdf.addPage();
                 }
 
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfImgWidth, pdfImgHeight);
-                console.log(`Successfully added ${file} to PDF`);
+                pdf.addImage(imgData, 'PNG', page_margin, page_margin, pdfImgWidth, finalHeight, undefined, 'FAST');
+                console.log(`[${index + 1}] Successfully added ${file} to PDF.`);
 
-                renderContainer.innerHTML = '';
+                renderContainer.innerHTML = ''; // Clean up for the next iteration
 
                 await processFilesSequentially(index + 1, pdf, files, formData, false);
 
@@ -1132,287 +1089,136 @@
                 loadingOverlay.style.display = 'none';
             }
         }
-        // --- Template Population Functions ---
 
-        function populateTemplate(fileName, data) {
+        // --- REVISED TEMPLATE POPULATION FUNCTIONS ---
+
+        function populateTemplate(fileName, data, container) {
             console.log(`Populating template: ${fileName}`);
             if (fileName.includes('2_Application_Form_Green.html')) {
-                populateGreenForm(data);
+                populateGreenForm(data, container);
             } else if (fileName.includes('3_Buyer_Declaration.html')) {
-                populateBuyerDeclaration(data);
+                populateBuyerDeclaration(data, container);
             } else if (fileName.includes('4_AMLA_NEW.html')) {
-                populateAmlaForm(data);
+                populateAmlaForm(data, container);
             } else if (fileName.includes('5_Profit_Distribution.html')) {
-                populateProfitForm(data);
+                populateProfitForm(data, container);
             }
         }
-
-        function populateGreenForm(data) {
+        
+        // Note the new 'container' parameter to scope all queries
+        function populateGreenForm(data, container) {
             const createAndFillCharBoxes = (containerId, text = '', max) => {
-                const container = document.getElementById(containerId);
-                if (!container) { console.warn(`Container with ID ${containerId} not found.`); return; }
+                const boxContainer = container.querySelector(`#${containerId}`);
+                if (!boxContainer) { console.warn(`Container with ID ${containerId} not found.`); return; }
                 if (typeof text !== 'string') text = '';
                 let html = '';
+                const upperText = text.toUpperCase();
                 for (let i = 0; i < max; i++) {
-                    const char = text[i] ? text[i].toUpperCase() : ' ';
+                    const char = upperText[i] ? upperText[i] : ' ';
                     html += `<div class="char-box">${char}</div>`;
                 }
-                container.innerHTML = html;
+                boxContainer.innerHTML = html;
             };
-
-            const setText = (id, value = '') => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = value;
-            };
-
-            const setCheck = (id, checked) => {
-                const el = document.getElementById(id);
-                if (el && checked) {
-                    const cb = el.querySelector('.checkbox, .program-box');
-                    if (cb) cb.textContent = '✓';
-                }
-            };
-
-            const p1 = data.part1;
-            const p2 = data.part2;
-            const sigs = data.signatures;
+            const setText = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.textContent = value; else console.warn(`Element with ID ${id} not found.`); };
+            const setCheck = (id) => { const el = container.querySelector(`#${id} .checkbox, #${id} .program-box`); if (el) el.textContent = '✓'; else console.warn(`Checkbox with ID ${id} not found.`); };
+            const setCheckboxByValue = (name, value) => { const el = container.querySelector(`input[name="${name}"][value="${value}"]`); if (el) el.previousElementSibling.textContent = '✓'; }
+            const setSignature = (id, url) => { const el = container.querySelector(`#${id}`); if (el && url) el.innerHTML = `<img src="${url}" class="signature-image">`; };
+            
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
             const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
             const appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
+            const nominee = p1.partnerInfo, nomineeBiz = p1.partnerBusiness;
 
-            // Product Type checkboxes
-            if (p2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
-            if (p2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
-            if (p2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
-
-            // Section A: Individual Information
-            createAndFillCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 28);
-            createAndFillCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 28);
+            p2.salesDetail.productTypes.forEach(p => { if (p === 'Dirham') setCheck('prodDirham'); if (p === 'Dinar') setCheck('prodDinar'); if (p === 'Almas') setCheck('prodAlmas'); });
+            
+            createAndFillCharBoxes('appName', `${p2.membershipApplicant.title} ${app.fullName}`, 28);
+            createAndFillCharBoxes('appNameOnCard', `${p2.membershipApplicant.title} ${p2.membershipApplicant.nameOnCard}`, 28);
             createAndFillCharBoxes('appNric', app.icPassport, 14);
             createAndFillCharBoxes('appDate', (sigs.applicant.date || '').replace(/-/g, ''), 8);
-
-            // Nationality
-            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) {
-                setCheck('appNationalityMalaysian', true);
-            } else {
-                setCheck('appNationalityForeigner', true);
-                setText('appNationalityForeignerText', app.nationality);
-            }
-
-            // Marital Status
-            if (app.maritalStatus === 'Single') {
-                setCheck('appMaritalSingle', true);
-            } else if (app.maritalStatus === 'Married') {
-                setCheck('appMaritalMarried', true);
-            }
-
-            // Addresses
-            createAndFillCharBoxes('appHomeAddress', `${app.correspondentAddress}`, 56);
+            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) container.querySelector('#appNationalityMalaysian').textContent = '✓'; else { container.querySelector('#appNationalityForeigner').textContent = '✓'; setText('appNationalityForeignerText', app.nationality); }
+            if (app.maritalStatus === 'Single') container.querySelector('#appMaritalSingle').textContent = '✓'; else if (app.maritalStatus === 'Married') container.querySelector('#appMaritalMarried').textContent = '✓';
+            createAndFillCharBoxes('appHomeAddress', app.correspondentAddress, 56);
             createAndFillCharBoxes('appHomePostcode', app.poskod, 5);
-            let mailAddr = app.mailingSameAsCorrespondent ?
-                `${app.correspondentAddress}` :
-                `${app.mailingAddress}`;
-            createAndFillCharBoxes('appMailingAddress', mailAddr, 56);
-
-            // Contact Information
-            createAndFillCharBoxes('appHomePhone', '', 10); // Not collected
-            createAndFillCharBoxes('appFax', '', 10); // Not collected
+            createAndFillCharBoxes('appMailingAddress', app.mailingSameAsCorrespondent ? app.correspondentAddress : app.mailingAddress, 56);
             createAndFillCharBoxes('appHp', app.phone, 10);
             setText('appEmail', app.email);
-
-            // Occupation & Income
             setText('appOccupation', appBiz.occupation);
-            const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
-            if (income > 60000) setCheck('appIncome4', true);
-            else if (income >= 36000) setCheck('appIncome3', true);
-            else if (income >= 24000) setCheck('appIncome2', true);
-            else if (income > 0) setCheck('appIncome1', true);
-
-            // Section B: Business/Employment Information
+            const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9]/g, '').split('-')[0]) * 12;
+            if (income > 60000) container.querySelector('#appIncome4').textContent = '✓'; else if (income >= 36000) container.querySelector('#appIncome3').textContent = '✓'; else if (income >= 24000) container.querySelector('#appIncome2').textContent = '✓'; else if (income > 0) container.querySelector('#appIncome1').textContent = '✓';
+            
             createAndFillCharBoxes('appEmployer', appBiz.industry, 25);
             setText('appIndustry', appBiz.industry);
             createAndFillCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
             createAndFillCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
             createAndFillCharBoxes('appOfficePhone', p2.applicantOffice.tel || '', 10);
-            createAndFillCharBoxes('appOfficeExt', '', 5);
             createAndFillCharBoxes('appOfficeFax', p2.applicantOffice.fax || '', 10);
 
-            // Section C: Family Information (Nominee)
-            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName, 28);
-            createAndFillCharBoxes('nomineeNric', p1.partnerInfo.icPassport, 14);
-            setText('nomineeEmail', p1.partnerInfo.email || '');
-
-            if (p1.partnerInfo.nationality && p1.partnerInfo.nationality.toLowerCase().includes('malaysian')) {
-                setCheck('nomineeNationalityMalaysian', true);
-            } else {
-                setCheck('nomineeNationalityForeigner', true);
-                setText('nomineeNationalityForeignerText', p1.partnerInfo.nationality);
-            }
-
-            createAndFillCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest, 15);
-            createAndFillCharBoxes('nomineeEmployer', p1.partnerBusiness.occupation, 25);
-
-            let nomineeAddr = p1.partnerInfo.addressSameAsGuest ?
-                `${app.correspondentAddress}` :
-                `${p1.partnerInfo.correspondentAddress}`;
-            createAndFillCharBoxes('nomineeOfficeAddress', nomineeAddr, 40);
-            createAndFillCharBoxes('nomineeOfficePostcode',
-                p1.partnerInfo.addressSameAsGuest ? app.poskod : p1.partnerInfo.poskod,
-                5
-            );
-
-            createAndFillCharBoxes('nomineeOfficePhone', p1.partnerInfo.phone || '', 10);
-            createAndFillCharBoxes('nomineeOfficeExt', '', 5);
-            createAndFillCharBoxes('nomineeOfficeFax', '', 10);
-            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone, 10);
-
-            const p_income = parseFloat((p1.partnerBusiness.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
-            if (p_income > 60000) setCheck('nomineeIncome4', true);
-            else if (p_income >= 36000) setCheck('nomineeIncome3', true);
-            else if (p_income >= 24000) setCheck('nomineeIncome2', true);
-            else if (p_income > 0) setCheck('nomineeIncome1', true);
-
-            // Declaration
+            createAndFillCharBoxes('nomineeName', nominee.fullName, 28);
+            createAndFillCharBoxes('nomineeNric', nominee.icPassport, 14);
+            setText('nomineeEmail', nominee.email || '');
+            if (nominee.nationality && nominee.nationality.toLowerCase().includes('malaysian')) container.querySelector('#nomineeNationalityMalaysian').textContent = '✓'; else { container.querySelector('#nomineeNationalityForeigner').textContent = '✓'; setText('nomineeNationalityForeignerText', nominee.nationality); }
+            createAndFillCharBoxes('nomineeRelation', nominee.relationshipToGuest, 15);
+            createAndFillCharBoxes('nomineeEmployer', nomineeBiz.industry, 25);
+            createAndFillCharBoxes('nomineeOfficeAddress', nominee.addressSameAsGuest ? app.correspondentAddress : nominee.correspondentAddress, 40);
+            createAndFillCharBoxes('nomineeOfficePostcode', nominee.addressSameAsGuest ? app.poskod : nominee.poskod, 5);
+            createAndFillCharBoxes('nomineeHp', nominee.phone, 10);
+            const p_income = parseFloat((nomineeBiz.monthlyIncome || "0").replace(/[^0-9]/g, '').split('-')[0]) * 12;
+            if (p_income > 60000) container.querySelector('#nomineeIncome4').textContent = '✓'; else if (p_income >= 36000) container.querySelector('#nomineeIncome3').textContent = '✓'; else if (p_income >= 24000) container.querySelector('#nomineeIncome2').textContent = '✓'; else if (p_income > 0) container.querySelector('#nomineeIncome1').textContent = '✓';
+            
             setText('declarationDate', sigs.applicant.date);
-            if (sigs.applicant && sigs.applicant.signatureData) {
-                const signatureImg = document.getElementById('applicantSignature');
-                if (signatureImg) {
-                    signatureImg.innerHTML = `<img src="${sigs.applicant.signatureData}" class="signature-image">`;
-                }
-            }
+            setSignature('applicantSignature', sigs.applicant.signatureData); // Note: This ID is shared, but querySelector will find the one inside the container.
         }
 
-        function populateBuyerDeclaration(data) {
-            const setText = (id, value = '') => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = value;
-            };
-
-            const setSignature = (id, url) => {
-                const c = document.getElementById(id);
-                if (c && url) {
-                    c.innerHTML = `<img src="${url}" class="signature-image">`;
-                }
-            };
-
+        function populateBuyerDeclaration(data, container) {
+            const setText = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.textContent = value; };
+            const setSignature = (id, url) => { const el = container.querySelector(`#${id}`); if (el && url) el.innerHTML = `<img src="${url}" class="signature-image">`; };
             const sigs = data.signatures;
-
-            // Applicant signature section
-            if (sigs.applicant) {
-                setSignature('applicantSignatureLine', sigs.applicant.signatureData);
-                setText('applicantName', sigs.applicant.name);
-                setText('applicantId', sigs.applicant.ic);
-                setText('applicantDate', sigs.applicant.date);
-            }
-
-            // Joint Applicant (Nominee) signature section
-            if (sigs.nominee) {
-                setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData);
-                setText('jointApplicantName', sigs.nominee.name);
-                setText('jointApplicantId', sigs.nominee.ic);
-                setText('jointApplicantDate', sigs.nominee.date);
-            }
-
-            // Witness signature section
-            if (sigs.witness) {
-                setSignature('witnessSignatureLine', sigs.witness.signatureData);
-                setText('witnessName', sigs.witness.name);
-                setText('witnessId', sigs.witness.ic);
-                setText('witnessDate', sigs.witness.date);
-            }
+            if (sigs.applicant) { setSignature('applicantSignatureLine', sigs.applicant.signatureData); setText('applicantName', sigs.applicant.name); setText('applicantId', sigs.applicant.ic); setText('applicantDate', sigs.applicant.date); }
+            if (sigs.nominee) { setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData); setText('jointApplicantName', sigs.nominee.name); setText('jointApplicantId', sigs.nominee.ic); setText('jointApplicantDate', sigs.nominee.date); }
+            if (sigs.witness) { setSignature('witnessSignatureLine', sigs.witness.signatureData); setText('witnessName', sigs.witness.name); setText('witnessId', sigs.witness.ic); setText('witnessDate', sigs.witness.date); }
         }
 
-        function populateAmlaForm(data) {
-            const setText = (id, value = '') => {
-                const el = document.getElementById(id);
-                if (el) el.value = value;
-            };
+        function populateAmlaForm(data, container) {
+            const setVal = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.value = value; };
+            const setText = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.textContent = value; };
+            const setSignature = (id, url) => { const el = container.querySelector(`#${id}`); if (el && url) el.innerHTML = `<img src="${url}" class="signature-image">`; };
+            
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
+            const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+            const appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
 
-            const setSignature = (id, url) => {
-                const el = document.getElementById(id);
-                if (el && url) {
-                    el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`;
-                }
-            };
+            setVal('amlaName', app.fullName);
+            setVal('amlaNric', app.icPassport);
+            setVal('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
+            setVal('amlaMailingAddress', app.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.poskod} ${app.city}` : `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`);
+            setVal('amlaMobile', app.phone);
+            setVal('amlaEmail', app.email);
+            setVal('amlaOccupation', appBiz.occupation);
 
-            const p1 = data.part1;
-            const p2 = data.part2;
-            const sigs = data.signatures;
+            if (sigs.applicant) { setSignature('amlaSig', sigs.applicant.signatureData); setVal('amlaSigName', sigs.applicant.name); setVal('amlaSigDate', sigs.applicant.date); }
+            if (sigs.consultant) { setText('receiver-name', sigs.consultant.name); setSignature('receiver-sig', sigs.consultant.signatureData); setText('receiver-date', sigs.consultant.date); }
+            if (sigs.witness) { setText('witness-name', sigs.witness.name); setSignature('witness-sig', sigs.witness.signatureData); setText('witness-date', sigs.witness.date); }
+        }
+
+        function populateProfitForm(data, container) {
+            const setVal = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.value = value; };
+            const setText = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.textContent = value; };
+            const setSignature = (id, url) => { const el = container.querySelector(`#${id}`); if (el && url) el.innerHTML = `<img src="${url}" class="signature-image">`; };
+
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
             const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
 
-            // Subscriber Details
-            setText('amlaName', app.fullName);
-            setText('amlaNric', app.icPassport);
-            setText('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
-
-            const mailAddr = app.mailingSameAsCorrespondent ?
-                `${app.correspondentAddress}, ${app.poskod} ${app.city}` :
-                `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`;
-            setText('amlaMailingAddress', mailAddr);
-
-            setText('amlaMobile', app.phone);
-            setText('amlaEmail', app.email);
-            setText('amlaOccupation', app.occupation);
-
-            // Signatures
-            if (sigs.applicant) {
-                setSignature('amlaSig', sigs.applicant.signatureData);
-                setText('amlaSigName', sigs.applicant.name);
-                setText('amlaSigDate', sigs.applicant.date);
-            }
-
-            // Office Use Section
-            if (sigs.consultant) {
-                setText('receiver-name', sigs.consultant.name);
-                setSignature('receiver-sig', sigs.consultant.signatureData);
-                setText('receiver-date', sigs.consultant.date);
-            }
-
-            if (sigs.witness) {
-                setText('witness-name', sigs.witness.name);
-                setSignature('witness-sig', sigs.witness.signatureData);
-                setText('witness-date', sigs.witness.date);
-            }
+            setVal('pdName', app.fullName);
+            setVal('pdNric', app.icPassport);
+            setVal('pdAccountNo', p2.applicantBanking.accountNumber);
+            setVal('pdBankName', p2.applicantBanking.bankName);
+            setVal('pdPhone', app.phone);
+            setVal('pdEmail', app.email);
+            if (sigs.applicant) { setSignature('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', sigs.applicant.date); }
+            if (sigs.consultant) { setSignature('pdManagerSig', sigs.consultant.signatureData); setText('pdManagerDate', sigs.consultant.date); }
         }
 
-        function populateProfitForm(data) {
-            const setText = (id, value = '') => {
-                const el = document.getElementById(id);
-                if (el) el.value = value;
-            };
-
-            const setSignature = (id, url) => {
-                const el = document.getElementById(id);
-                if (el && url) {
-                    el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`;
-                }
-            };
-
-            const p1 = data.part1;
-            const p2 = data.part2;
-            const sigs = data.signatures;
-            const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
-
-            // Subscriber Details
-            setText('pdName', app.fullName);
-            setText('pdNric', app.icPassport);
-            setText('pdAccountNo', p2.applicantBanking.accountNumber);
-            setText('pdBankName', p2.applicantBanking.bankName);
-            setText('pdPhone', app.phone);
-            setText('pdEmail', app.email);
-
-            // Signatures
-            if (sigs.applicant) {
-                setSignature('pdPrincipalSig', sigs.applicant.signatureData);
-                setText('pdPrincipalDate', sigs.applicant.date);
-            }
-
-            if (sigs.consultant) {
-                setSignature('pdManagerSig', sigs.consultant.signatureData);
-                setText('pdManagerDate', sigs.consultant.date);
-            }
-        }
-
-        // --- Page Initialization ---
+        // --- Page Initialization (Unchanged) ---
         document.addEventListener('DOMContentLoaded', () => {
             preloadTemplates();
             showSection(1);
