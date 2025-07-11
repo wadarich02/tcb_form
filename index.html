@@ -1028,7 +1028,8 @@
             loadingOverlay.style.display = 'flex';
 
             const formData = collectData();
-            console.log('Collected Data:', formData); // <-- Add this line
+            console.log('Form Data:', JSON.stringify(formData, null, 2));
+
             // Initialize jsPDF. All pages will be added to this instance.
             const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
@@ -1039,10 +1040,17 @@
                 '5_Profit_Distribution.html'
             ];
 
-            // Start processing files one by one. We pass 'true' for the first page.
+            // Add debug logging for template population
+            const debugTemplatePopulation = (templateName, data) => {
+                console.log(`Populating template: ${templateName}`);
+                console.log('Using data:', JSON.stringify(data, null, 2));
+            };
+
+            // Start processing files one by one
             await processFilesSequentially(0, pdf, filesToProcess, formData, true);
         }
 
+        // Update processFilesSequentially to include debug logging
         async function processFilesSequentially(index, pdf, files, formData, isFirstPage) {
             const loadingStatus = document.getElementById('loadingStatus');
             const loadingOverlay = document.getElementById('loadingOverlay');
@@ -1050,12 +1058,14 @@
             if (index >= files.length) {
                 loadingStatus.textContent = 'Saving PDF...';
                 const guestName = formData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant';
+                console.log('PDF Generation Complete');
                 pdf.save(`${guestName}_Compiled_Forms.pdf`);
                 loadingOverlay.style.display = 'none';
                 return;
             }
 
             const file = files[index];
+            console.log(`Processing file ${index + 1}/${files.length}: ${file}`);
             loadingStatus.textContent = `Processing ${file} (${index + 1}/${files.length})...`;
 
             try {
@@ -1067,15 +1077,14 @@
                 const renderContainer = document.getElementById('pdf-render-container');
                 renderContainer.innerHTML = html;
 
+                // Debug log before population
+                console.log(`Populating template ${file}`);
                 populateTemplate(file, formData);
+                // Debug log after population
+                console.log(`Template ${file} populated, HTML:`, renderContainer.innerHTML);
 
-                // *** NEW, MORE ROBUST WAITING MECHANISM ***
-                // Instead of a fixed setTimeout, we wait for the browser to signal
-                // that it has completed painting the new DOM elements. This is the
-                // most reliable method for complex, dynamic layouts.
                 await new Promise(resolve => {
                     requestAnimationFrame(() => {
-                        // We do it twice to be extra safe, ensuring one full render/paint cycle has completed.
                         requestAnimationFrame(resolve);
                     });
                 });
@@ -1084,17 +1093,18 @@
                     throw new Error("Render container is empty, cannot capture.");
                 }
 
-                const canvas = await html2canvas(renderContainer, { // Target the stable parent
+                const canvas = await html2canvas(renderContainer, {
                     scale: 2,
                     useCORS: true,
                     backgroundColor: '#ffffff',
                     scrollY: -window.scrollY,
                     windowWidth: document.documentElement.offsetWidth,
-                    windowHeight: document.documentElement.offsetHeight
+                    windowHeight: document.documentElement.offsetHeight,
+                    logging: true // Enable html2canvas logging
                 });
 
                 const imgData = canvas.toDataURL('image/png');
-                if (imgData.length < 1000) { // Increased threshold slightly for safety
+                if (imgData.length < 1000) {
                     throw new Error(`Generated image data is suspiciously small for ${file}. Render likely failed.`);
                 }
 
@@ -1105,31 +1115,15 @@
                 const pdfImgWidth = A4_WIDTH_MM;
                 const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width;
 
-                let heightLeft = pdfImgHeight;
-                let position = 0;
-                let pageCount = 0;
-
-                // If this is not the very first form, add a new page before rendering.
                 if (!isFirstPage) {
                     pdf.addPage();
                 }
 
-                // *** IMPROVED MULTI-PAGE LOGIC ***
-                // This correctly adds new pages for content taller than one page.
-                while (heightLeft > 0) {
-                    // Add a new page for the 2nd, 3rd, etc., pages of the SAME form.
-                    if (pageCount > 0) {
-                        pdf.addPage();
-                    }
-                    pdf.addImage(imgData, 'PNG', 0, position, pdfImgWidth, pdfImgHeight);
-                    heightLeft -= A4_HEIGHT_MM;
-                    position -= A4_HEIGHT_MM; // This moves the "view" of the source image up
-                    pageCount++;
-                }
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfImgWidth, pdfImgHeight);
+                console.log(`Successfully added ${file} to PDF`);
 
                 renderContainer.innerHTML = '';
 
-                // Process the next file in the sequence, marking it as not the first page.
                 await processFilesSequentially(index + 1, pdf, files, formData, false);
 
             } catch (error) {
@@ -1141,10 +1135,16 @@
         // --- Template Population Functions ---
 
         function populateTemplate(fileName, data) {
-            if (fileName.includes('2_Application_Form_Green.html')) populateGreenForm(data);
-            else if (fileName.includes('3_Buyer_Declaration.html')) populateDeclarationForm(data);
-            else if (fileName.includes('4_AMLA_NEW.html')) populateAmlaForm(data);
-            else if (fileName.includes('5_Profit_Distribution.html')) populateProfitForm(data);
+            console.log(`Populating template: ${fileName}`);
+            if (fileName.includes('2_Application_Form_Green.html')) {
+                populateGreenForm(data);
+            } else if (fileName.includes('3_Buyer_Declaration.html')) {
+                populateBuyerDeclaration(data);
+            } else if (fileName.includes('4_AMLA_NEW.html')) {
+                populateAmlaForm(data);
+            } else if (fileName.includes('5_Profit_Distribution.html')) {
+                populateProfitForm(data);
+            }
         }
 
         function populateGreenForm(data) {
@@ -1159,106 +1159,257 @@
                 }
                 container.innerHTML = html;
             };
-            const setText = (id, value = '') => { const el = document.getElementById(id); if (el) el.textContent = value; };
-            const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox, .program-box'); if (cb) cb.textContent = '✓'; } };
-            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`; };
 
-            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
-            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
-            let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
+            const setText = (id, value = '') => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            };
 
-            // Applicant fields
+            const setCheck = (id, checked) => {
+                const el = document.getElementById(id);
+                if (el && checked) {
+                    const cb = el.querySelector('.checkbox, .program-box');
+                    if (cb) cb.textContent = '✓';
+                }
+            };
+
+            const p1 = data.part1;
+            const p2 = data.part2;
+            const sigs = data.signatures;
+            const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+            const appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
+
+            // Product Type checkboxes
+            if (p2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
+            if (p2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
+            if (p2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
+
+            // Section A: Individual Information
             createAndFillCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 28);
             createAndFillCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 28);
             createAndFillCharBoxes('appNric', app.icPassport, 14);
             createAndFillCharBoxes('appDate', (sigs.applicant.date || '').replace(/-/g, ''), 8);
-            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) { setCheck('appNationalityMalaysian', true); } else { setCheck('appNationalityForeigner', true); setText('appNationalityForeignerText', app.nationality); }
-            if (app.maritalStatus === 'Single') { setCheck('appMaritalSingle', true); } else if (app.maritalStatus === 'Married') { setCheck('appMaritalMarried', true); }
-            createAndFillCharBoxes('appHomeAddress', `${app.correspondentAddress}, ${app.city}`, 56);
+
+            // Nationality
+            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) {
+                setCheck('appNationalityMalaysian', true);
+            } else {
+                setCheck('appNationalityForeigner', true);
+                setText('appNationalityForeignerText', app.nationality);
+            }
+
+            // Marital Status
+            if (app.maritalStatus === 'Single') {
+                setCheck('appMaritalSingle', true);
+            } else if (app.maritalStatus === 'Married') {
+                setCheck('appMaritalMarried', true);
+            }
+
+            // Addresses
+            createAndFillCharBoxes('appHomeAddress', `${app.correspondentAddress}`, 56);
             createAndFillCharBoxes('appHomePostcode', app.poskod, 5);
-            let mailAddr = p1.guestInfo.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.city}` : `${p1.guestInfo.mailingAddress}, ${p1.guestInfo.mailingCity}`;
+            let mailAddr = app.mailingSameAsCorrespondent ?
+                `${app.correspondentAddress}` :
+                `${app.mailingAddress}`;
             createAndFillCharBoxes('appMailingAddress', mailAddr, 56);
-            createAndFillCharBoxes('appHomePhone', app.homePhone || '', 10);
-            createAndFillCharBoxes('appFax', app.fax || '', 10);
+
+            // Contact Information
+            createAndFillCharBoxes('appHomePhone', '', 10); // Not collected
+            createAndFillCharBoxes('appFax', '', 10); // Not collected
             createAndFillCharBoxes('appHp', app.phone, 10);
             setText('appEmail', app.email);
+
+            // Occupation & Income
             setText('appOccupation', appBiz.occupation);
             const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
-            if (income > 60000) setCheck('appIncome4', true); else if (income >= 36000) setCheck('appIncome3', true); else if (income >= 24000) setCheck('appIncome2', true); else if (income > 0) setCheck('appIncome1', true);
+            if (income > 60000) setCheck('appIncome4', true);
+            else if (income >= 36000) setCheck('appIncome3', true);
+            else if (income >= 24000) setCheck('appIncome2', true);
+            else if (income > 0) setCheck('appIncome1', true);
+
+            // Section B: Business/Employment Information
             createAndFillCharBoxes('appEmployer', appBiz.industry, 25);
             setText('appIndustry', appBiz.industry);
             createAndFillCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
             createAndFillCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
             createAndFillCharBoxes('appOfficePhone', p2.applicantOffice.tel || '', 10);
-            createAndFillCharBoxes('appOfficeExt', p2.applicantOffice.ext || '', 5);
+            createAndFillCharBoxes('appOfficeExt', '', 5);
             createAndFillCharBoxes('appOfficeFax', p2.applicantOffice.fax || '', 10);
 
-            // Nominee fields (partner info)
-            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName || '', 28);
-            createAndFillCharBoxes('nomineeNric', p1.partnerInfo.icPassport || '', 14);
+            // Section C: Family Information (Nominee)
+            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName, 28);
+            createAndFillCharBoxes('nomineeNric', p1.partnerInfo.icPassport, 14);
             setText('nomineeEmail', p1.partnerInfo.email || '');
-            if (p1.partnerInfo.nationality && p1.partnerInfo.nationality.toLowerCase().includes('malaysian')) { setCheck('nomineeNationalityMalaysian', true); } else { setCheck('nomineeNationalityForeigner', true); setText('nomineeNationalityForeignerText', p1.partnerInfo.nationality); }
-            createAndFillCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest || '', 15);
-            createAndFillCharBoxes('nomineeEmployer', p1.partnerBusiness.occupation || '', 25);
-            let partnerOfficeAddr = p1.partnerInfo.addressSameAsGuest ? `${app.correspondentAddress}, ${app.city}` : `${p1.partnerInfo.correspondentAddress}, ${p1.partnerInfo.city}`;
-            createAndFillCharBoxes('nomineeOfficeAddress', partnerOfficeAddr, 40);
-            createAndFillCharBoxes('nomineeOfficePostcode', p1.partnerInfo.addressSameAsGuest ? app.poskod : p1.partnerInfo.poskod, 5);
+
+            if (p1.partnerInfo.nationality && p1.partnerInfo.nationality.toLowerCase().includes('malaysian')) {
+                setCheck('nomineeNationalityMalaysian', true);
+            } else {
+                setCheck('nomineeNationalityForeigner', true);
+                setText('nomineeNationalityForeignerText', p1.partnerInfo.nationality);
+            }
+
+            createAndFillCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest, 15);
+            createAndFillCharBoxes('nomineeEmployer', p1.partnerBusiness.occupation, 25);
+
+            let nomineeAddr = p1.partnerInfo.addressSameAsGuest ?
+                `${app.correspondentAddress}` :
+                `${p1.partnerInfo.correspondentAddress}`;
+            createAndFillCharBoxes('nomineeOfficeAddress', nomineeAddr, 40);
+            createAndFillCharBoxes('nomineeOfficePostcode',
+                p1.partnerInfo.addressSameAsGuest ? app.poskod : p1.partnerInfo.poskod,
+                5
+            );
+
             createAndFillCharBoxes('nomineeOfficePhone', p1.partnerInfo.phone || '', 10);
-            createAndFillCharBoxes('nomineeOfficeExt', '', 5); // Not collected
-            createAndFillCharBoxes('nomineeOfficeFax', '', 10); // Not collected
-            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone || '', 10);
+            createAndFillCharBoxes('nomineeOfficeExt', '', 5);
+            createAndFillCharBoxes('nomineeOfficeFax', '', 10);
+            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone, 10);
+
             const p_income = parseFloat((p1.partnerBusiness.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
-            if (p_income > 60000) setCheck('nomineeIncome4', true); else if (p_income >= 36000) setCheck('nomineeIncome3', true); else if (p_income >= 24000) setCheck('nomineeIncome2', true); else if (p_income > 0) setCheck('nomineeIncome1', true);
+            if (p_income > 60000) setCheck('nomineeIncome4', true);
+            else if (p_income >= 36000) setCheck('nomineeIncome3', true);
+            else if (p_income >= 24000) setCheck('nomineeIncome2', true);
+            else if (p_income > 0) setCheck('nomineeIncome1', true);
 
+            // Declaration
             setText('declarationDate', sigs.applicant.date);
-            setSignature('applicantSignature', sigs.applicant.signatureData);
-
-            // Product checkboxes
-            if (p2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
-            if (p2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
-            if (p2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
-
-            // Program ID (for office use only, leave blank)
-            createAndFillCharBoxes('programId', '', 15);
+            if (sigs.applicant && sigs.applicant.signatureData) {
+                const signatureImg = document.getElementById('applicantSignature');
+                if (signatureImg) {
+                    signatureImg.innerHTML = `<img src="${sigs.applicant.signatureData}" class="signature-image">`;
+                }
+            }
         }
 
-        function populateDeclarationForm(data) {
+        function populateBuyerDeclaration(data) {
+            const setText = (id, value = '') => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            };
+
+            const setSignature = (id, url) => {
+                const c = document.getElementById(id);
+                if (c && url) {
+                    c.innerHTML = `<img src="${url}" class="signature-image">`;
+                }
+            };
+
             const sigs = data.signatures;
-            const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
-            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" style="max-width:150px; max-height: 60px; position:absolute; bottom:5px; left:10px;">`; };
-            if (sigs.applicant) { setSignature('applicantSignatureLine', sigs.applicant.signatureData); setText('applicantName', sigs.applicant.name); setText('applicantId', sigs.applicant.ic); setText('applicantDate', sigs.applicant.date); }
-            if (sigs.nominee) { setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData); setText('jointApplicantName', sigs.nominee.name); setText('jointApplicantId', sigs.nominee.ic); setText('jointApplicantDate', sigs.nominee.date); }
-            if (sigs.witness) { setSignature('witnessSignatureLine', sigs.witness.signatureData); setText('witnessName', sigs.witness.name); setText('witnessId', sigs.witness.ic); setText('witnessDate', sigs.witness.date); }
+
+            // Applicant signature section
+            if (sigs.applicant) {
+                setSignature('applicantSignatureLine', sigs.applicant.signatureData);
+                setText('applicantName', sigs.applicant.name);
+                setText('applicantId', sigs.applicant.ic);
+                setText('applicantDate', sigs.applicant.date);
+            }
+
+            // Joint Applicant (Nominee) signature section
+            if (sigs.nominee) {
+                setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData);
+                setText('jointApplicantName', sigs.nominee.name);
+                setText('jointApplicantId', sigs.nominee.ic);
+                setText('jointApplicantDate', sigs.nominee.date);
+            }
+
+            // Witness signature section
+            if (sigs.witness) {
+                setSignature('witnessSignatureLine', sigs.witness.signatureData);
+                setText('witnessName', sigs.witness.name);
+                setText('witnessId', sigs.witness.ic);
+                setText('witnessDate', sigs.witness.date);
+            }
         }
 
         function populateAmlaForm(data) {
-            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
-            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
-            const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
-            const setSig = (id, url) => { const el = document.getElementById(id); if (el && url) el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`; };
-            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
-            let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
-            let mailAddr = app.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.poskod} ${app.city}` : `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`;
-            setVal('amlaName', app.fullName); setVal('amlaNric', app.icPassport);
-            setVal('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
-            setVal('amlaMailingAddress', mailAddr);
-            setVal('amlaMobile', app.phone); setVal('amlaEmail', app.email); setVal('amlaOccupation', appBiz.occupation);
-            if (sigs.applicant) { setSig('amlaSig', sigs.applicant.signatureData); setVal('amlaSigName', sigs.applicant.name); setVal('amlaSigDate', sigs.applicant.date); }
-            if (sigs.consultant) { setText('receiver-name', sigs.consultant.name); setSig('receiver-sig', sigs.consultant.signatureData); setText('receiver-date', sigs.consultant.date); }
-            if (sigs.witness) { setText('witness-name', sigs.witness.name); setSig('witness-sig', sigs.witness.signatureData); setText('witness-date', sigs.witness.date); }
+            const setText = (id, value = '') => {
+                const el = document.getElementById(id);
+                if (el) el.value = value;
+            };
+
+            const setSignature = (id, url) => {
+                const el = document.getElementById(id);
+                if (el && url) {
+                    el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`;
+                }
+            };
+
+            const p1 = data.part1;
+            const p2 = data.part2;
+            const sigs = data.signatures;
+            const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+
+            // Subscriber Details
+            setText('amlaName', app.fullName);
+            setText('amlaNric', app.icPassport);
+            setText('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
+
+            const mailAddr = app.mailingSameAsCorrespondent ?
+                `${app.correspondentAddress}, ${app.poskod} ${app.city}` :
+                `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`;
+            setText('amlaMailingAddress', mailAddr);
+
+            setText('amlaMobile', app.phone);
+            setText('amlaEmail', app.email);
+            setText('amlaOccupation', app.occupation);
+
+            // Signatures
+            if (sigs.applicant) {
+                setSignature('amlaSig', sigs.applicant.signatureData);
+                setText('amlaSigName', sigs.applicant.name);
+                setText('amlaSigDate', sigs.applicant.date);
+            }
+
+            // Office Use Section
+            if (sigs.consultant) {
+                setText('receiver-name', sigs.consultant.name);
+                setSignature('receiver-sig', sigs.consultant.signatureData);
+                setText('receiver-date', sigs.consultant.date);
+            }
+
+            if (sigs.witness) {
+                setText('witness-name', sigs.witness.name);
+                setSignature('witness-sig', sigs.witness.signatureData);
+                setText('witness-date', sigs.witness.date);
+            }
         }
 
         function populateProfitForm(data) {
-            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
-            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
-            const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
-            const setSig = (id, url) => { const el = document.getElementById(id); if (el && url) el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`; };
-            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
-            setVal('pdName', app.fullName); setVal('pdNric', app.icPassport);
-            setVal('pdAccountNo', p2.applicantBanking.accountNumber); setVal('pdBankName', p2.applicantBanking.bankName);
-            setVal('pdPhone', app.phone); setVal('pdEmail', app.email);
-            if (sigs.applicant) { setSig('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', sigs.applicant.date); }
-            if (sigs.consultant) { setSig('pdManagerSig', sigs.consultant.signatureData); setText('pdManagerDate', sigs.consultant.date); }
+            const setText = (id, value = '') => {
+                const el = document.getElementById(id);
+                if (el) el.value = value;
+            };
+
+            const setSignature = (id, url) => {
+                const el = document.getElementById(id);
+                if (el && url) {
+                    el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`;
+                }
+            };
+
+            const p1 = data.part1;
+            const p2 = data.part2;
+            const sigs = data.signatures;
+            const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+
+            // Subscriber Details
+            setText('pdName', app.fullName);
+            setText('pdNric', app.icPassport);
+            setText('pdAccountNo', p2.applicantBanking.accountNumber);
+            setText('pdBankName', p2.applicantBanking.bankName);
+            setText('pdPhone', app.phone);
+            setText('pdEmail', app.email);
+
+            // Signatures
+            if (sigs.applicant) {
+                setSignature('pdPrincipalSig', sigs.applicant.signatureData);
+                setText('pdPrincipalDate', sigs.applicant.date);
+            }
+
+            if (sigs.consultant) {
+                setSignature('pdManagerSig', sigs.consultant.signatureData);
+                setText('pdManagerDate', sigs.consultant.date);
+            }
         }
 
         // --- Page Initialization ---
