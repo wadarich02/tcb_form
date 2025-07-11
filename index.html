@@ -886,7 +886,6 @@
             </div>
         </div>
     </div>
-
     <script>
         const { jsPDF } = window.jspdf;
         let currentSection = 1;
@@ -894,7 +893,7 @@
         let signatures = {};
         let signaturePadsInitialized = false;
 
-        // --- NEW: Pre-load templates ---
+        // --- Pre-load templates from separate files ---
         const templateCache = {};
 
         async function preloadTemplates() {
@@ -913,7 +912,6 @@
                     console.log(`Successfully preloaded ${file}`);
                 } catch (error) {
                     console.error(`Could not preload template ${file}:`, error);
-                    // This error will now appear in the browser's console (F12) if a file is missing or misspelled.
                 }
             }
         }
@@ -921,10 +919,7 @@
 
         // --- Core UI and Form Navigation Functions ---
 
-        function showSection(sectionNumber) {
-            document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; }
-        }
-
+        function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
         function nextSection() { if (validateCurrentSection() && currentSection < totalSections) { showSection(currentSection + 1); } }
         function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
         function updateProgress() { const progress = ((currentSection - 1) / (totalSections - 1)) * 100; document.getElementById('progressFill').style.width = progress + '%'; }
@@ -1046,7 +1041,7 @@
             try {
                 const html = templateCache[file];
                 if (!html) {
-                    throw new Error(`Template for ${file} was not pre-loaded. Check for console errors during page load.`);
+                    throw new Error(`Template for ${file} was not pre-loaded. Please check for errors in the console during page load.`);
                 }
 
                 const renderContainer = document.getElementById('pdf-render-container');
@@ -1054,7 +1049,6 @@
 
                 populateTemplate(file, formData);
 
-                // Wait for the browser to paint the new content before capturing
                 await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 50)));
 
                 const contentToCapture = renderContainer.firstElementChild;
@@ -1064,11 +1058,11 @@
                     scale: 1.5,
                     useCORS: true,
                     logging: false,
-                    backgroundColor: '#ffffff' // Explicitly set background
+                    backgroundColor: '#ffffff'
                 });
 
                 const imgData = canvas.toDataURL('image/png');
-                if (!imgData || imgData === 'data:,') throw new Error("Generated image data is empty for " + file);
+                if (imgData.length < 200) throw new Error("Generated image data is empty for " + file);
 
                 const A4_WIDTH = 210;
                 const A4_HEIGHT = 297;
@@ -1100,38 +1094,82 @@
         }
 
         function populateGreenForm(data) {
-            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
+            const createAndFillCharBoxes = (containerId, text, max) => {
+                const container = document.getElementById(containerId);
+                if (!container) { console.warn(`Container with ID ${containerId} not found.`); return; }
+                if (typeof text !== 'string') text = ''; // Ensure text is a string
+
+                let html = '';
+                for (let i = 0; i < max; i++) {
+                    const char = text[i] ? text[i].toUpperCase() : ' ';
+                    html += `<div class="char-box">${char}</div>`;
+                }
+                container.innerHTML = html;
+            };
+
             const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
             const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox'); if (cb) cb.textContent = '✓'; } };
-            const setCharBoxes = (id, text, max) => { const c = document.getElementById(id); if (!c || !text) return; let h = ''; for (let i = 0; i < max; i++) { h += `<div class="char-box">${(text[i] || '').toUpperCase()}</div>`; } c.innerHTML = h; };
-            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" style="max-width:150px; max-height: 70px; position:absolute; bottom:5px; left:20px;">`; };
+            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`; };
+
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
             let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
             let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
-            setCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 40);
-            setCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 40);
-            setCharBoxes('appNric', app.icPassport, 14);
-            setCharBoxes('appDate', new Date().toLocaleDateString('en-GB').replace(/\//g, ''), 8);
-            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) { document.getElementById('appNationalityMalaysian').textContent = '✓'; } else { document.getElementById('appNationalityForeigner').textContent = '✓'; setText('appNationalityForeignerText', app.nationality); }
+
+            createAndFillCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 40);
+            createAndFillCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 40);
+            createAndFillCharBoxes('appNric', app.icPassport, 14);
+            createAndFillCharBoxes('appDate', new Date().toLocaleDateString('en-GB').replace(/\//g, ''), 8);
+
+            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) { document.getElementById('appNationalityMalaysian').textContent = '✓'; }
+            else { document.getElementById('appNationalityForeigner').textContent = '✓'; setText('appNationalityForeignerText', app.nationality); }
+
             if (app.maritalStatus === 'Single') document.getElementById('appMaritalSingle').textContent = '✓';
             if (app.maritalStatus === 'Married') document.getElementById('appMaritalMarried').textContent = '✓';
-            let homeAddr = app.correspondentAddress + ', ' + app.city;
-            setCharBoxes('appHomeAddress', homeAddr, 40);
-            setCharBoxes('appHomePostcode', app.poskod, 5);
-            let mailAddr = p1.guestInfo.mailingSameAsCorrespondent ? homeAddr : (p1.guestInfo.mailingAddress + ", " + p1.guestInfo.mailingCity);
-            setCharBoxes('appMailingAddress', mailAddr, 50);
-            setCharBoxes('appHp', app.phone, 11);
-            setText('appEmail', app.email); setText('appOccupation', appBiz.occupation);
+
+            let homeAddr = `${app.correspondentAddress}, ${app.city}`;
+            createAndFillCharBoxes('appHomeAddress', homeAddr, 40);
+            createAndFillCharBoxes('appHomePostcode', app.poskod, 5);
+
+            let mailAddr = p1.guestInfo.mailingSameAsCorrespondent ? homeAddr : `${p1.guestInfo.mailingAddress}, ${p1.guestInfo.mailingCity}`;
+            createAndFillCharBoxes('appMailingAddress', mailAddr, 50);
+
+            createAndFillCharBoxes('appHp', app.phone, 11);
+            setText('appEmail', app.email);
+            setText('appOccupation', appBiz.occupation);
+
             const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
-            if (income > 60000) document.getElementById('appIncome4').textContent = '✓'; else if (income > 36000) document.getElementById('appIncome3').textContent = '✓'; else if (income > 24000) document.getElementById('appIncome2').textContent = '✓'; else if (income > 0) document.getElementById('appIncome1').textContent = '✓';
-            setText('appEmployer', appBiz.industry); setText('appIndustry', appBiz.industry);
-            setCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
-            setCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
-            setCharBoxes('nomineeName', p1.partnerInfo.fullName, 40);
-            setCharBoxes('nomineeNric', p1.partnerInfo.icPassport, 14);
-            setCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest, 15);
-            setCharBoxes('nomineeHp', p1.partnerInfo.phone, 11);
+            if (income > 60000) document.getElementById('appIncome4').textContent = '✓';
+            else if (income > 36000) document.getElementById('appIncome3').textContent = '✓';
+            else if (income > 24000) document.getElementById('appIncome2').textContent = '✓';
+            else if (income > 0) document.getElementById('appIncome1').textContent = '✓';
+
+            setText('appEmployer', appBiz.industry);
+            setText('appIndustry', appBiz.industry);
+            createAndFillCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
+            createAndFillCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
+
+            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName, 40);
+            createAndFillCharBoxes('nomineeNric', p1.partnerInfo.icPassport, 14);
+            setText('nomineeEmail', ''); // Nominee email not collected
+            if (p1.partnerInfo.nationality && p1.partnerInfo.nationality.toLowerCase().includes('malaysian')) { document.getElementById('nomineeNationalityMalaysian').textContent = '✓'; }
+            else { document.getElementById('nomineeNationalityForeigner').textContent = '✓'; setText('nomineeNationalityForeignerText', p1.partnerInfo.nationality); }
+            createAndFillCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest, 15);
+            createAndFillCharBoxes('nomineeEmployer', p1.partnerBusiness.occupation, 25);
+            let partnerOfficeAddr = p1.partnerInfo.addressSameAsGuest ? homeAddr : `${p1.partnerInfo.correspondentAddress}, ${p1.partnerInfo.city}`;
+            let partnerOfficePostcode = p1.partnerInfo.addressSameAsGuest ? app.poskod : p1.partnerInfo.poskod;
+            createAndFillCharBoxes('nomineeOfficeAddress', partnerOfficeAddr, 40);
+            createAndFillCharBoxes('nomineeOfficePostcode', partnerOfficePostcode, 5);
+            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone, 11);
+
+            const p_income = parseFloat((p1.partnerBusiness.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
+            if (p_income > 60000) document.getElementById('nomineeIncome4').textContent = '✓';
+            else if (p_income > 36000) document.getElementById('nomineeIncome3').textContent = '✓';
+            else if (p_income > 24000) document.getElementById('nomineeIncome2').textContent = '✓';
+            else if (p_income > 0) document.getElementById('nomineeIncome1').textContent = '✓';
+
             setText('declarationDate', sigs.applicant.date);
             setSignature('applicantSignature', sigs.applicant.signatureData);
+
             if (p2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
             if (p2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
             if (p2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
@@ -1190,6 +1228,7 @@
             document.getElementById('payorIsApplicant').addEventListener('change', function () { document.getElementById('thirdPartyPayorFields').style.display = this.checked ? 'none' : 'grid'; });
         });
     </script>
+
 </body>
 
 </html>
