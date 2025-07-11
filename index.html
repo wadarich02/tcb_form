@@ -383,18 +383,15 @@
         }
 
         #pdf-render-container {
-            /* --- THIS IS THE FINAL FIX --- */
-            visibility: hidden;
-            /* Make the container invisible but keep its dimensions */
+            /* This is the new, robust style */
             position: absolute;
-            /* Take it out of the normal flow */
             top: 0;
             left: 0;
             width: 900px;
-            /* Define a stable width for rendering */
             background-color: white;
+            /* It no longer needs to be hidden! The overlay will hide it. */
             z-index: -1;
-            /* Place it behind everything else */
+            /* Place it behind the spinner text */
         }
 
         #loadingOverlay {
@@ -404,6 +401,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.75);
+            /* Make sure the z-index is very high */
             z-index: 10000;
             display: none;
             justify-content: center;
@@ -446,9 +444,10 @@
 </head>
 
 <body>
-    <!-- Hidden container for rendering PDFs -->
-    <div id="pdf-render-container"></div>
     <div id="loadingOverlay">
+        <!-- The render container is now INSIDE the overlay -->
+        <div id="pdf-render-container"></div>
+
         <div>
             <div class="spinner"></div>
             <p>Generating PDF...<br><span id="loadingStatus">Initializing...</span></p>
