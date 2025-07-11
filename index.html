@@ -1047,7 +1047,6 @@
             const loadingStatus = document.getElementById('loadingStatus');
             const loadingOverlay = document.getElementById('loadingOverlay');
 
-            // If we've processed all files, save the PDF and exit.
             if (index >= files.length) {
                 loadingStatus.textContent = 'Saving PDF...';
                 const guestName = formData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant';
@@ -1062,38 +1061,42 @@
             try {
                 const html = templateCache[file];
                 if (!html) {
-                    throw new Error(`Template for ${file} was not pre-loaded. Please check for errors in the console during page load.`);
+                    throw new Error(`Template for ${file} was not pre-loaded.`);
                 }
 
                 const renderContainer = document.getElementById('pdf-render-container');
                 renderContainer.innerHTML = html;
 
-                // Populate the newly injected template with data.
                 populateTemplate(file, formData);
 
-                // *** MAJOR FIX HERE ***
-                // We wait for a longer period (300ms) to ensure the browser has enough time
-                // to render the complex layouts (especially the hundreds of char-boxes from the Green form)
-                // and load any images like the logo. 50ms was too short, causing a race condition.
-                await new Promise(resolve => setTimeout(resolve, 300));
+                // *** NEW, MORE ROBUST WAITING MECHANISM ***
+                // Instead of a fixed setTimeout, we wait for the browser to signal
+                // that it has completed painting the new DOM elements. This is the
+                // most reliable method for complex, dynamic layouts.
+                await new Promise(resolve => {
+                    requestAnimationFrame(() => {
+                        // We do it twice to be extra safe, ensuring one full render/paint cycle has completed.
+                        requestAnimationFrame(resolve);
+                    });
+                });
 
                 const contentToCapture = renderContainer.firstElementChild;
                 if (!contentToCapture) {
                     throw new Error("Render container is empty, cannot capture.");
                 }
 
-                // For debugging, you can log the element to see if it's correct.
-                // console.log(`Capturing element for ${file}:`, contentToCapture);
-
                 const canvas = await html2canvas(contentToCapture, {
-                    scale: 2, // Increased scale for better quality
+                    scale: 2,
                     useCORS: true,
-                    logging: false, // Set to true for more debug info from html2canvas
-                    backgroundColor: '#ffffff'
+                    backgroundColor: '#ffffff',
+                    // Adding these options can help with viewport-related rendering bugs
+                    scrollY: -window.scrollY,
+                    windowWidth: document.documentElement.offsetWidth,
+                    windowHeight: document.documentElement.offsetHeight
                 });
 
                 const imgData = canvas.toDataURL('image/png');
-                if (imgData.length < 500) { // Stricter check for empty image
+                if (imgData.length < 1000) { // Increased threshold slightly for safety
                     throw new Error(`Generated image data is suspiciously small for ${file}. Render likely failed.`);
                 }
 
@@ -1101,37 +1104,34 @@
                 const A4_HEIGHT_MM = 297;
                 const imgProps = pdf.getImageProperties(imgData);
 
-                // Calculate the image's height in the PDF, maintaining aspect ratio.
                 const pdfImgWidth = A4_WIDTH_MM;
                 const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width;
 
                 let heightLeft = pdfImgHeight;
                 let position = 0;
+                let pageCount = 0;
 
                 // If this is not the very first form, add a new page before rendering.
                 if (!isFirstPage) {
                     pdf.addPage();
                 }
 
-                // Loop to add the image, creating new pages if it's taller than one A4 page.
-                // This correctly handles the 2-page Green form.
+                // *** IMPROVED MULTI-PAGE LOGIC ***
+                // This correctly adds new pages for content taller than one page.
                 while (heightLeft > 0) {
-                    // addImage(imageData, format, x, y, width, height)
+                    // Add a new page for the 2nd, 3rd, etc., pages of the SAME form.
+                    if (pageCount > 0) {
+                        pdf.addPage();
+                    }
                     pdf.addImage(imgData, 'PNG', 0, position, pdfImgWidth, pdfImgHeight);
                     heightLeft -= A4_HEIGHT_MM;
-
-                    // If there's more content to render, add a new page and reset the position.
-                    if (heightLeft > 0) {
-                        pdf.addPage();
-                        position = -A4_HEIGHT_MM; // Move the image "up" on the new page
-                    }
+                    position -= A4_HEIGHT_MM; // This moves the "view" of the source image up
+                    pageCount++;
                 }
 
-                // Clear the container for the next form.
                 renderContainer.innerHTML = '';
 
-                // Process the next file in the sequence.
-                // Pass 'false' for isFirstPage from now on.
+                // Process the next file in the sequence, marking it as not the first page.
                 await processFilesSequentially(index + 1, pdf, files, formData, false);
 
             } catch (error) {
@@ -1140,7 +1140,6 @@
                 loadingOverlay.style.display = 'none';
             }
         }
-
         // --- Template Population Functions ---
 
         function populateTemplate(fileName, data) {
