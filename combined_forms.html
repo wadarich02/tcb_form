@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TAMU Capital Berhad - Compiled Forms</title>
+    <style>
+        /* General Style for Printing */
+        body { margin: 0; font-family: Arial, sans-serif; background-color: white; }
+        .form-page { width: 100%; max-width: 850px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
+        .page-break-before { page-break-before: always; }
+        @media print {
+            body, .form-page { margin: 0; box-shadow: none; }
+            .page-break-before { page-break-before: always; }
+        }
+
+        /* --- STYLES FROM 2_Application_Form_Green.html --- */
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .logo-container { width: 30%; }
+        .logo { width: 150px; }
+        .address-container { text-align: center; width: 40%; font-size: 0.9em; line-height: 1.4; }
+        .program-container { width: 30%; text-align: right; font-size: 0.9em; }
+        .program-box { display: inline-block; width: 22px; height: 22px; border: 2px solid #333; vertical-align: middle; margin-left: 5px; text-align: center; line-height: 22px; font-weight: bold; }
+        .form-title { text-align: center; font-size: 1.1em; font-weight: bold; margin: 20px 0; padding: 8px; background-color: #006400; color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .section { margin-bottom: 15px; }
+        .section-title { font-weight: bold; padding: 8px; background-color: #006400; color: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 1.1em; }
+        .form-row { display: flex; align-items: center; margin: 12px 0; flex-wrap: wrap; }
+        .form-label { width: 140px; font-size: 0.9em; padding-right: 10px; line-height: 1.3; }
+        .form-field { flex: 1; }
+        .char-box { display: inline-block; width: 22px; height: 28px; border: 1px solid #999; margin-right: 1px; vertical-align: middle; text-align: center; line-height: 28px; font-weight: bold; font-size: 0.9em; }
+        .char-box-grid { display: flex; flex-wrap: wrap; min-height: 30px; }
+        .checkbox-option { display: inline-flex; align-items: center; margin-right: 15px; font-size: 0.9em; }
+        .checkbox { width: 18px; height: 18px; border: 1px solid #999; margin-right: 8px; text-align: center; line-height: 18px; font-weight: bold; }
+        .underline { border-bottom: 1px solid #333; display: inline-block; min-width: 150px; height: 1.2em; vertical-align: bottom; font-weight: bold; padding: 0 5px; }
+        .d-flex { display: flex; }
+        .signature-line { border-bottom: 1px dotted #333; height: 70px; margin-bottom: 10px; position: relative; }
+        .signature-image { max-width: 200px; max-height: 50px; position: absolute; bottom: 5px; left: 25px; }
+
+        /* --- STYLES FROM 3_Buyer_Declaration.html --- */
+        .buyer-declaration .title { text-align: center; font-size: 1.5em; font-weight: bold; margin-bottom: 30px; text-decoration: underline; }
+        .buyer-declaration .declaration-list { list-style-type: decimal; padding-left: 20px; }
+        .buyer-declaration .declaration-list li { margin-bottom: 15px; }
+        .buyer-declaration h4 { margin: 0 0 5px 0; font-size: 1em; }
+        .buyer-declaration .signatures { display: flex; justify-content: space-between; margin-top: 50px; flex-wrap: wrap; }
+        .buyer-declaration .signature-block { width: 30%; min-width: 200px; margin-top: 20px; }
+        .buyer-declaration .signature-block p { margin: 8px 0; font-size: 0.9em; }
+        .buyer-declaration .info-data { font-weight: bold; }
+
+        /* --- STYLES FROM 4_AMLA_NEW.html --- */
+        .amla-form h1 { font-size: 1.2em; margin: 15px 0; text-transform: uppercase; text-align: center; }
+        .amla-form .form-table { width: 100%; border-collapse: collapse; }
+        .amla-form .form-table td { padding: 8px 4px; vertical-align: top; }
+        .amla-form .form-table td:first-child { width: 35%; font-weight: bold; }
+        .amla-form input { width: 100%; padding: 8px; border: 1px solid #ccc; box-sizing: border-box; background: #f9f9f9; }
+        .amla-form .signature-section { margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .amla-form .signature-field { width: 45%; }
+        .amla-form .office-use-section { border: 1px solid #ccc; padding: 20px; margin-top: 40px; }
+        .amla-form .office-use-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px; }
+        .amla-form .line-input { border: none; border-bottom: 1px solid #333; width: 100%; padding: 5px 0; min-height: 24px; }
+        .amla-form .sig-line { height: 50px; border-bottom: 1px solid #333; position: relative; }
+
+        /* --- STYLES FROM 5_Profit_Distribution.html --- */
+        .profit-form h1 { font-size: 1.5em; margin: 15px 0; text-transform: uppercase; text-align: center; }
+        .profit-form .details-section { border: 2px solid #555; padding: 10px; margin-bottom: 30px; }
+        .profit-form .details-section h2 { text-align: center; background-color: #e0e0e0; margin: -10px -10px 15px -10px; padding: 8px; font-size: 1.1em; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .profit-form .details-table { width: 100%; border-collapse: collapse; }
+        .profit-form .details-table td { padding: 8px 5px; }
+        .profit-form .details-table td:first-child { width: 30%; font-weight: bold; }
+        .profit-form input { width: 100%; padding: 8px; border: 1px solid #ccc; box-sizing: border-box; background: #f9f9f9; }
+        .profit-form .signature-section { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .profit-form .request-text { margin-bottom: 20px; }
+        .profit-form .date-field { margin-top: 20px; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Placeholders for Dynamic Content -->
+    <div id="content1" class="form-page"></div>
+    <div class="page-break-before"></div>
+    <div id="content2" class="form-page buyer-declaration"></div>
+    <div class="page-break-before"></div>
+    <div id="content3" class="form-page amla-form"></div>
+    <div class="page-break-before"></div>
+    <div id="content4" class="form-page profit-form"></div>
+
+    <!-- The Script to Fetch, Populate, and Print -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dataString = localStorage.getItem('tamuPrintData');
+            if (!dataString) {
+                document.body.innerHTML = '<h1>Error: No data found. Please generate from the main form.</h1>';
+                return;
+            }
+            const data = JSON.parse(dataString);
+
+            const filesToLoad = [
+                { file: '2_Application_Form_Green.html', target: 'content1' },
+                { file: '3_Buyer_Declaration.html', target: 'content2' },
+                { file: '4_AMLA_NEW.html', target: 'content3' },
+                { file: '5_Profit_Distribution.html', target: 'content4' }
+            ];
+
+            const fetchPromises = filesToLoad.map(item => {
+                return fetch(item.file)
+                    .then(response => {
+                        if (!response.ok) throw new Error(`Could not load ${item.file}: ${response.statusText}`);
+                        return response.text();
+                    })
+                    .then(html => {
+                        // Extract only the content within the <body> tag from the fetched HTML
+                        const bodyContent = html.substring(html.indexOf('<body>') + 6, html.lastIndexOf('</body>'));
+                        document.getElementById(item.target).innerHTML = body-content;
+                    });
+            });
+
+            Promise.all(fetchPromises)
+                .then(() => {
+                    console.log('All forms loaded successfully.');
+                    
+                    populateGreenForm(data);
+                    populateBuyerDeclaration(data);
+                    populateAmlaForm(data);
+                    populateProfitForm(data);
+
+                    console.log('All forms populated. Triggering print...');
+                    setTimeout(() => window.print(), 500);
+                })
+                .catch(error => {
+                    console.error('Error loading forms:', error);
+                    document.body.innerHTML = `<h1>Error loading forms:</h1><p>${error.message}</p>`;
+                });
+        });
+
+        // --- DATA POPULATION FUNCTIONS ---
+
+        function populateGreenForm(data) {
+            const createAndFillCharBoxes = (containerId, text = '', max) => {
+                const container = document.getElementById(containerId);
+                if (!container) { console.warn(`Container with ID ${containerId} not found.`); return; }
+                if (typeof text !== 'string') text = '';
+                let html = '';
+                for (let i = 0; i < max; i++) {
+                    const char = text[i] ? text[i].toUpperCase() : '&nbsp;';
+                    html += `<div class="char-box">${char}</div>`;
+                }
+                container.innerHTML = html;
+            };
+            const setText = (id, value = '') => { const el = document.getElementById(id); if (el) el.textContent = value; };
+            const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox, .program-box'); if (cb) cb.textContent = '✓'; } };
+            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`; };
+
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
+            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+            let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
+
+            createAndFillCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 28);
+            createAndFillCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 28);
+            createAndFillCharBoxes('appNric', app.icPassport, 14);
+            createAndFillCharBoxes('appDate', (sigs.applicant.date || '').replace(/-/g, ''), 8);
+            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) { setCheck('appNationalityMalaysian', true); } else { setCheck('appNationalityForeigner', true); setText('appNationalityForeignerText', app.nationality); }
+            if (app.maritalStatus === 'Single') { setCheck('appMaritalSingle', true); } else if (app.maritalStatus === 'Married') { setCheck('appMaritalMarried', true); }
+            createAndFillCharBoxes('appHomeAddress', `${app.correspondentAddress}, ${app.city}`, 56);
+            createAndFillCharBoxes('appHomePostcode', app.poskod, 5);
+            let mailAddr = p1.guestInfo.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.city}` : `${p1.guestInfo.mailingAddress}, ${p1.guestInfo.mailingCity}`;
+            createAndFillCharBoxes('appMailingAddress', mailAddr, 56);
+            createAndFillCharBoxes('appHp', app.phone, 10);
+            setText('appEmail', app.email);
+            setText('appOccupation', appBiz.occupation);
+            const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
+            if (income > 60000) setCheck('appIncome4', true); else if (income >= 36000) setCheck('appIncome3', true); else if (income >= 24000) setCheck('appIncome2', true); else if (income > 0) setCheck('appIncome1', true);
+            createAndFillCharBoxes('appEmployer', appBiz.industry, 25);
+            setText('appIndustry', appBiz.industry);
+            createAndFillCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
+            createAndFillCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
+            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName, 28);
+            createAndFillCharBoxes('nomineeNric', p1.partnerInfo.icPassport, 14);
+            setText('nomineeEmail', '');
+            if (p1.partnerInfo.nationality && p1.partnerInfo.nationality.toLowerCase().includes('malaysian')) { setCheck('nomineeNationalityMalaysian', true); } else { setCheck('nomineeNationalityForeigner', true); setText('nomineeNationalityForeignerText', p1.partnerInfo.nationality); }
+            createAndFillCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest, 15);
+            createAndFillCharBoxes('nomineeEmployer', p1.partnerBusiness.occupation, 25);
+            let partnerOfficeAddr = p1.partnerInfo.addressSameAsGuest ? `${app.correspondentAddress}, ${app.city}` : `${p1.partnerInfo.correspondentAddress}, ${p1.partnerInfo.city}`;
+            createAndFillCharBoxes('nomineeOfficeAddress', partnerOfficeAddr, 40);
+            createAndFillCharBoxes('nomineeOfficePostcode', p1.partnerInfo.addressSameAsGuest ? app.poskod : p1.partnerInfo.poskod, 5);
+            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone, 10);
+            const p_income = parseFloat((p1.partnerBusiness.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
+            if (p_income > 60000) setCheck('nomineeIncome4', true); else if (p_income >= 36000) setCheck('nomineeIncome3', true); else if (p_income >= 24000) setCheck('nomineeIncome2', true); else if (p_income > 0) setCheck('nomineeIncome1', true);
+            setText('declarationDate', sigs.applicant.date);
+            setSignature('applicantSignature', sigs.applicant.signatureData);
+            if (p2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
+            if (p2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
+            if (p2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
+        }
+
+        function populateBuyerDeclaration(data) {
+            const sigs = data.signatures;
+            const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
+            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`; };
+            if (sigs.applicant) { setSignature('applicantSignatureLine', sigs.applicant.signatureData); setText('applicantName', sigs.applicant.name); setText('applicantId', sigs.applicant.ic); setText('applicantDate', sigs.applicant.date); }
+            if (sigs.nominee) { setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData); setText('jointApplicantName', sigs.nominee.name); setText('jointApplicantId', sigs.nominee.ic); setText('jointApplicantDate', sigs.nominee.date); }
+            if (sigs.witness) { setSignature('witnessSignatureLine', sigs.witness.signatureData); setText('witnessName', sigs.witness.name); setText('witnessId', sigs.witness.ic); setText('witnessDate', sigs.witness.date); }
+        }
+
+        function populateAmlaForm(data) {
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
+            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
+            const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
+            const setSig = (id, url) => { const el = document.getElementById(id); if (el && url) el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`; };
+            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+            let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
+            let mailAddr = app.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.poskod} ${app.city}` : `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`;
+            setVal('amlaName', app.fullName); setVal('amlaNric', app.icPassport);
+            setVal('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
+            setVal('amlaMailingAddress', mailAddr);
+            setVal('amlaMobile', app.phone); setVal('amlaEmail', app.email); setVal('amlaOccupation', appBiz.occupation);
+            if (sigs.applicant) { setSig('amlaSig', sigs.applicant.signatureData); setVal('amlaSigName', sigs.applicant.name); setVal('amlaSigDate', sigs.applicant.date); }
+            const receiverNameEl = document.getElementById('receiver-name');
+            if (receiverNameEl) receiverNameEl.textContent = sigs.consultant.name;
+            setSig('receiver-sig', sigs.consultant.signatureData);
+            const receiverDateEl = document.getElementById('receiver-date');
+            if(receiverDateEl) receiverDateEl.textContent = sigs.consultant.date;
+            const witnessNameEl = document.getElementById('witness-name');
+            if(witnessNameEl) witnessNameEl.textContent = sigs.witness.name;
+            setSig('witness-sig', sigs.witness.signatureData);
+            const witnessDateEl = document.getElementById('witness-date');
+            if(witnessDateEl) witnessDateEl.textContent = sigs.witness.date;
+        }
+
+        function populateProfitForm(data) {
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
+            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
+            const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
+            const setSig = (id, url) => { const el = document.getElementById(id); if (el && url) el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`; };
+            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+            setVal('pdName', app.fullName); setVal('pdNric', app.icPassport);
+            setVal('pdAccountNo', p2.applicantBanking.accountNumber); setVal('pdBankName', p2.applicantBanking.bankName);
+            setVal('pdPhone', app.phone); setVal('pdEmail', app.email);
+            if (sigs.applicant) { setSig('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', sigs.applicant.date); }
+            if (sigs.consultant) { setSig('pdManagerSig', sigs.consultant.signatureData); setText('pdManagerDate', sigs.consultant.date); }
+        }
+    </script>
+</body>
+</html>

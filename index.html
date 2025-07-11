@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TAMU Capital Berhad - Digital Form</title>
-    <!-- LIBRARIES FOR PDF GENERATION -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- NOTE: jspdf and html2canvas are NO LONGER NEEDED for the combined PDF -->
     <style>
         * {
             margin: 0;
@@ -382,49 +380,7 @@
             margin-bottom: 10px;
         }
 
-        #pdf-render-container {
-            position: absolute;
-            left: -9999px;
-            top: 0;
-            width: 900px;
-            background-color: white;
-        }
-
-        #loadingOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            z-index: 10000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 1.5em;
-            text-align: center;
-        }
-
-        #loadingOverlay .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        /* NOTE: The #loadingOverlay and #pdf-render-container styles are no longer needed */
 
         @media (max-width: 768px) {
             .form-grid {
@@ -439,14 +395,7 @@
 </head>
 
 <body>
-    <div id="pdf-render-container"></div>
-
-    <div id="loadingOverlay">
-        <div>
-            <div class="spinner"></div>
-            <p>Generating PDF...<br><span id="loadingStatus">Initializing...</span></p>
-        </div>
-    </div>
+    <!-- NOTE: The #loadingOverlay and #pdf-render-container elements are no longer needed -->
 
     <div class="container">
         <div class="header">
@@ -477,10 +426,9 @@
                                 <option value="Female">Female</option>
                             </select></div>
                         <div class="form-group"><label for="guestNationality">Nationality</label><input type="text"
-                                id="guestNationality" value="Malaysian" required></div>
+                                id="guestNationality" required></div>
                         <div class="form-group"><label>Marital Status</label>
-                            <div class="checkbox-group"><label><input type="radio" name="maritalStatus" value="Married"
-                                        required>
+                            <div class="checkbox-group"><label><input type="radio" name="maritalStatus" value="Married">
                                     Married</label><label><input type="radio" name="maritalStatus" value="Single">
                                     Single</label><label><input type="radio" name="maritalStatus" value="Others">
                                     Others</label></div>
@@ -520,10 +468,11 @@
                         <div class="form-group full-width"><label for="guestMonthlyIncome">Monthly Income</label><select
                                 id="guestMonthlyIncome" required>
                                 <option value="" disabled selected>Select Income Range</option>
-                                <!-- CORRECTED VALUES -->
-                                <option value="4k-6k">RM 4,000 - RM 6,000</option>
-                                <option value="6k-10k">RM 6,001 - RM 10,000</option>
-                                <option value="10k+">RM 10,001 and above</option>
+                                <option value="4,000-6,000">4,000 - 6,000</option>
+                                <option value="6,001-10,000">6,001 - 10,000</option>
+                                <option value="10,001-15,000">10,001 - 15,000</option>
+                                <option value="15,001-20,000">15,001 - 20,000</option>
+                                <option value="20,001 and above">20,001 and above</option>
                             </select></div>
                     </div>
                 </div>
@@ -542,7 +491,7 @@
                                 <option value="Female">Female</option>
                             </select></div>
                         <div class="form-group"><label for="partnerNationality">Nationality</label><input type="text"
-                                id="partnerNationality" value="Malaysian"></div>
+                                id="partnerNationality"></div>
                         <div class="form-group"><label for="partnerPhone">Phone Number</label><input type="tel"
                                 id="partnerPhone"></div>
                         <div class="form-group"><label for="relationshipToGuest">Relationship to guest</label><select
@@ -578,10 +527,11 @@
                         <div class="form-group full-width"><label for="partnerMonthlyIncome">Monthly
                                 Income</label><select id="partnerMonthlyIncome">
                                 <option value="" disabled selected>Select Income Range</option>
-                                <!-- CORRECTED VALUES -->
-                                <option value="4k-6k">RM 4,000 - RM 6,000</option>
-                                <option value="6k-10k">RM 6,001 - RM 10,000</option>
-                                <option value="10k+">RM 10,001 and above</option>
+                                <option value="4,000-6,000">4,000 - 6,000</option>
+                                <option value="6,001-10,000">6,001 - 10,000</option>
+                                <option value="10,001-15,000">10,001 - 15,000</option>
+                                <option value="15,001-20,000">15,001 - 20,000</option>
+                                <option value="20,001 and above">20,001 and above</option>
                             </select></div>
                     </div>
                 </div>
@@ -605,8 +555,7 @@
                     <h3>3. Membership Applicant</h3>
                     <div class="form-grid">
                         <div class="form-group"><label>Applicant is</label>
-                            <div class="checkbox-group"><label><input type="radio" name="applicantType" value="Guest's"
-                                        required>
+                            <div class="checkbox-group"><label><input type="radio" name="applicantType" value="Guest's">
                                     Guest's</label><label><input type="radio" name="applicantType"
                                         value="Guest's Partner"> Guest's Partner</label></div>
                         </div>
@@ -639,9 +588,9 @@
                     <h3>3.c Applicant Banking Details</h3>
                     <div class="form-grid">
                         <div class="form-group"><label for="applicantBankName">Bank Name</label><input type="text"
-                                id="applicantBankName" required></div>
+                                id="applicantBankName"></div>
                         <div class="form-group"><label for="applicantAccountNumber">Account Number</label><input
-                                type="text" id="applicantAccountNumber" required></div>
+                                type="text" id="applicantAccountNumber"></div>
                     </div>
                 </div>
                 <div class="subsection">
@@ -650,6 +599,13 @@
                                 id="nomineeSameAsPartner"> Nominee is the same as Guest's Partner</label></div>
                     <p>If not the same as partner, please fill in the partner section (in Part 1) with the nominee's
                         details.</p>
+                    <h4 style="margin-top: 20px; color: #34495e;">Nominee Banking Details</h4>
+                    <div class="form-grid" style="margin-top: 10px;">
+                        <div class="form-group"><label for="nomineeBankName">Bank Name</label><input type="text"
+                                id="nomineeBankName"></div>
+                        <div class="form-group"><label for="nomineeAccountNumber">Account Number</label><input
+                                type="text" id="nomineeAccountNumber"></div>
+                    </div>
                 </div>
                 <div class="subsection">
                     <h3>5. Third Party Payor</h3>
@@ -666,17 +622,15 @@
                     <h3>Sales Detail (To be filled out by consultant)</h3>
                     <div class="form-grid">
                         <div class="form-group"><label class="checkbox-group-title">Product</label>
-                            <div class="checkbox-group"><label><input type="checkbox" name="productType" value="Dirham"
-                                        required>
+                            <div class="checkbox-group"><label><input type="checkbox" name="productType" value="Dirham">
                                     Dirham</label><label><input type="checkbox" name="productType" value="Dinar">
                                     Dinar</label><label><input type="checkbox" name="productType" value="Almas">
                                     Almas</label></div>
                         </div>
                         <div class="form-group"><label class="checkbox-group-title">Method of Transaction</label>
                             <div class="checkbox-group"><label><input type="radio" name="transactionMethod"
-                                        value="Debit/Credit/Cash/Cheque" required>
-                                    Debit/Credit/Cash/Cheque</label><label><input type="radio" name="transactionMethod"
-                                        value="Others"> Others</label></div>
+                                        value="Debit/Credit/Cash/Cheque"> Debit/Credit/Cash/Cheque</label><label><input
+                                        type="radio" name="transactionMethod" value="Others"> Others</label></div>
                         </div>
                         <div class="form-group"><label for="worksheetCode">Worksheet Code</label><input type="text"
                                 id="worksheetCode"></div>
@@ -806,7 +760,6 @@
         </div>
     </div>
 
-    <!-- MODAL DEFINITIONS -->
     <div id="rulesModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -890,122 +843,94 @@
             </div>
         </div>
     </div>
-
     <script>
-        const { jsPDF } = window.jspdf;
         let currentSection = 1;
         const totalSections = 4;
         let signatures = {};
         let signaturePadsInitialized = false;
 
-        const templateCache = {};
-
-        async function preloadTemplates() {
-            const files = [
-                '2_Application_Form_Green.html',
-                '3_Buyer_Declaration.html',
-                '4_AMLA_NEW.html',
-                '5_Profit_Distribution.html'
-            ];
-            console.log("Preloading templates...");
-            for (const file of files) {
-                try {
-                    const response = await fetch(file);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    templateCache[file] = await response.text();
-                    console.log(`Successfully preloaded ${file}`);
-                } catch (error) {
-                    console.error(`Could not preload template ${file}:`, error);
-                    alert(`Failed to load a required form template (${file}). Please check the file exists and the network connection.`);
-                }
-            }
-        }
+        // --- Core UI and Form Navigation Functions ---
 
         function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
-        function nextSection() { if (validateCurrentSection() && currentSection < totalSections) { showSection(currentSection + 1); } }
+        function nextSection() { if (validateCurrentSection()) { currentSection < totalSections && showSection(currentSection + 1); } }
         function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
         function updateProgress() { const progress = ((currentSection - 1) / (totalSections - 1)) * 100; document.getElementById('progressFill').style.width = progress + '%'; }
 
-        // --- REVISED VALIDATION LOGIC ---
         function validateCurrentSection() {
             const section = document.getElementById(`section${currentSection}`);
             const requiredFields = section.querySelectorAll('[required]');
             let isValid = true;
             for (let field of requiredFields) {
-                let isFieldValid = true;
-                if (field.type === 'radio' || field.type === 'checkbox') {
-                    const name = field.name;
-                    if (name) { // Check if any in the group is checked
-                        if (!document.querySelector(`input[name="${name}"]:checked`)) {
-                            isFieldValid = false;
-                        }
-                    } else { // It's a standalone checkbox
-                        if (!field.checked) isFieldValid = false;
+                if (field.type === 'radio' && field.name) {
+                    const radioGroup = document.getElementsByName(field.name);
+                    if (![...radioGroup].some(r => r.checked)) {
+                        alert(`Please make a selection for: ${field.closest('.form-group,.checkbox-group').parentElement.querySelector('label, .checkbox-group-title').textContent}`);
+                        field.focus();
+                        isValid = false;
+                        break;
                     }
-                } else if (!field.value.trim()) {
-                    isFieldValid = false;
-                }
-
-                if (!isFieldValid) {
-                    const label = field.closest('.form-group, .checkbox-group, .consent-checkbox')?.querySelector('label, .checkbox-group-title, span')?.textContent || field.id;
-                    alert(`Please complete the required field: ${label.trim()}`);
+                } else if (field.type === 'checkbox' && !field.checked) {
+                    alert(`Please agree to the required terms.`);
+                    field.focus();
+                    isValid = false;
+                    break;
+                } else if (field.type !== 'checkbox' && field.type !== 'radio' && !field.value.trim()) {
+                    alert(`Please fill in the required field: ${field.closest('.form-group')?.querySelector('label')?.textContent || field.id}`);
                     field.focus();
                     isValid = false;
                     break;
                 }
             }
+            if (!isValid) return false;
+
             if (currentSection === 4 && !signatures['applicantSignature']) {
                 alert('Applicant signature is required.');
-                isValid = false;
+                return false;
             }
-            return isValid;
+            return true;
         }
 
-        function validateAllSections() {
-            const allRequiredFields = document.querySelectorAll('.form-section [required]');
-            let allValid = true;
-            for (const field of allRequiredFields) {
-                let isFieldValid = true;
-                const fieldSection = field.closest('.form-section');
 
-                // Only validate fields in visible sections (or all sections if you want to be stricter)
-                // This logic validates all sections regardless of visibility.
-                if (field.type === 'radio' || field.type === 'checkbox') {
-                    const name = field.name;
-                    if (name) {
-                        if (!document.querySelector(`input[name="${name}"]:checked`)) isFieldValid = false;
-                    } else {
-                        if (!field.checked) isFieldValid = false;
-                    }
-                } else if (!field.value.trim()) {
-                    isFieldValid = false;
-                }
-
-                if (!isFieldValid) {
-                    const label = field.closest('.form-group, .checkbox-group, .consent-checkbox')?.querySelector('label, .checkbox-group-title, span')?.textContent || field.id;
-                    const sectionId = fieldSection.id;
-                    const sectionNum = sectionId.replace('section', '');
-                    alert(`Incomplete Form: Please go back to Section ${sectionNum} and fill out the required field: "${label.trim()}"`);
-                    showSection(parseInt(sectionNum, 10)); // Switch to the section with the error
-                    field.focus();
-                    allValid = false;
-                    break;
-                }
-            }
-            if (allValid && !signatures['applicantSignature']) {
-                alert('Applicant signature is required in Section 4.');
-                showSection(4);
-                allValid = false;
-            }
-            return allValid;
-        }
+        // --- Modal and Signature Pad Functions ---
 
         function showModal(modalId) { document.getElementById(modalId).style.display = "block"; }
         function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
         window.onclick = function (event) { document.querySelectorAll('.modal').forEach(modal => { if (event.target == modal) { modal.style.display = "none"; } }); }
+
         function initializeAllSignaturePads() { ['applicantSignature', 'nomineeSignature', 'consultantSignature', 'witnessSignature'].forEach(initializeSignatureCanvas); }
-        function initializeSignatureCanvas(canvasId) { const canvas = document.getElementById(canvasId); if (!canvas) return; const ctx = canvas.getContext('2d'); let drawing = false; canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; const getPos = (e) => { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; }; const startDrawing = (e) => { e.preventDefault(); drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }; const draw = (e) => { if (!drawing) return; e.preventDefault(); const pos = getPos(e); ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#2c3e50'; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }; const stopDrawing = () => { if (!drawing) return; drawing = false; signatures[canvasId] = canvas.toDataURL('image/png'); }; canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove', draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing); }
+        function initializeSignatureCanvas(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+
+            function resizeCanvas() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            const getPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            };
+            const startDrawing = (e) => { e.preventDefault(); drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); };
+            const draw = (e) => { if (!drawing) return; e.preventDefault(); const pos = getPos(e); ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#2c3e50'; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); };
+            const stopDrawing = () => { if (!drawing) return; drawing = false; signatures[canvasId] = canvas.toDataURL('image/png'); };
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            canvas.addEventListener('touchstart', startDrawing, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDrawing);
+        }
         function clearSignature(canvasId) { const canvas = document.getElementById(canvasId); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); delete signatures[canvasId]; }
+
+        // --- Data Management Functions ---
 
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
@@ -1032,200 +957,60 @@
                 }
             };
         }
-        function importData() { const file = document.getElementById('importFile').files[0]; if (!file) { alert('Please select a file to import.'); return; } const reader = new FileReader(); reader.onload = (e) => { try { const data = JSON.parse(e.target.result); populateForm(data); alert('Data imported successfully!'); } catch (error) { alert('Error importing data. Please check the file format.'); console.error('Import Error:', error); } }; reader.readAsText(file); }
-        function populateForm(data) { const setVal = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.value = value; }; const setCheck = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.checked = value; }; const setRadio = (name, value) => { if (value) { const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if (el) el.checked = true; } }; const setMultiCheck = (name, values) => { if (values && Array.isArray(values)) { document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = values.includes(cb.value)); } }; if (data.part1) { const { guestInfo, guestBusiness, partnerInfo, partnerBusiness } = data.part1; if (guestInfo) { Object.keys(guestInfo).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestInfo[key])); setRadio('maritalStatus', guestInfo.maritalStatus); setCheck('mailingSameAsCorrespondent', guestInfo.mailingSameAsCorrespondent); document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change')); } if (guestBusiness) { Object.keys(guestBusiness).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestBusiness[key])); } if (partnerInfo) { Object.keys(partnerInfo).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerInfo[key])); setVal('relationshipToGuest', partnerInfo.relationshipToGuest); setCheck('partnerSameAddress', partnerInfo.addressSameAsGuest); document.getElementById('partnerSameAddress').dispatchEvent(new Event('change')); } if (partnerBusiness) { Object.keys(partnerBusiness).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerBusiness[key])); } } if (data.part2) { const { membershipApplicant, applicantOffice, applicantBanking, nominee, thirdPartyPayor, salesDetail } = data.part2; if (membershipApplicant) { setRadio('applicantType', membershipApplicant.applicantType); setVal('applicantTitle', membershipApplicant.title); setVal('applicantNameOnCard', membershipApplicant.nameOnCard); } if (applicantOffice) { setVal('applicantOfficeAddress', applicantOffice.address); setVal('applicantOfficePoskod', applicantOffice.poskod); setVal('applicantOfficeCity', applicantOffice.city); setVal('applicantOfficeTel', applicantOffice.tel); setVal('applicantFax', applicantOffice.fax); } if (applicantBanking) { setVal('applicantBankName', applicantBanking.bankName); setVal('applicantAccountNumber', applicantBanking.accountNumber); } if (nominee) { setCheck('nomineeSameAsPartner', nominee.sameAsPartner); setVal('nomineeBankName', nominee.bankName); setVal('nomineeAccountNumber', nominee.accountNumber); } if (thirdPartyPayor) { setCheck('payorIsApplicant', thirdPartyPayor.isApplicant); document.getElementById('payorIsApplicant').dispatchEvent(new Event('change')); setVal('payorOfficeAddress', thirdPartyPayor.officeAddress); } if (salesDetail) { setMultiCheck('productType', salesDetail.productTypes); setRadio('transactionMethod', salesDetail.transactionMethod); setVal('worksheetCode', salesDetail.worksheetCode); setVal('orNumber', salesDetail.orNumber); setVal('aprCode', salesDetail.aprCode); setVal('consultantName', salesDetail.consultantName); setVal('consultantCode', salesDetail.consultantCode); } } if (data.signatures) { Object.keys(data.signatures).forEach(key => { const sig = data.signatures[key]; if (sig) { setVal(`${key}SignatureName`, sig.name); setVal(`${key}SignatureIC`, sig.ic); setVal(`${key}SignatureDate`, sig.date); } }); } }
 
-        function generateCheckInPdf() { if (!validateCurrentSection()) return; const data = collectData(); localStorage.setItem('tamuPrintData', JSON.stringify(data)); window.open('print_preview.html', '_blank'); }
-        function exportPart1Data() { if (!validateCurrentSection()) return; const fullData = collectData(); const dataToExport = { part1: fullData.part1 }; const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Part1_Check-In.json`; const dataStr = JSON.stringify(dataToExport, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Data exported successfully as ${fileName}`); }
-        function exportFullData() { if (!validateAllSections()) return; const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Full_Application.json`; const dataStr = JSON.stringify(fullData, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Full application data exported successfully as ${fileName}`); }
-
-        async function generateCombinedPdf() {
-            // Use the new comprehensive validation function
-            if (!validateAllSections()) {
-                return;
-            }
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'flex';
-
-            const formData = collectData();
-            console.log('--- STARTING PDF GENERATION ---');
-            console.log('Collected Form Data:', formData);
-
-            const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-
-            const filesToProcess = [
-                '2_Application_Form_Green.html',
-                '3_Buyer_Declaration.html',
-                '4_AMLA_NEW.html',
-                '5_Profit_Distribution.html'
-            ];
-
-            await processFilesSequentially(0, pdf, filesToProcess, formData, true);
-        }
-
-        async function processFilesSequentially(index, pdf, files, formData, isFirstPage) {
-            const loadingStatus = document.getElementById('loadingStatus');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-
-            if (index >= files.length) {
-                loadingStatus.textContent = 'Saving PDF...';
-                const guestName = formData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant';
-                pdf.save(`${guestName}_Compiled_Forms.pdf`);
-                console.log('--- PDF GENERATION COMPLETE ---');
-                loadingOverlay.style.display = 'none';
-                return;
-            }
-
-            const file = files[index];
-            console.log(`[${index + 1}/${files.length}] Processing file: ${file}`);
-            loadingStatus.textContent = `Processing ${file} (${index + 1}/${files.length})...`;
-
-            try {
-                const html = templateCache[file];
-                if (!html) throw new Error(`Template for ${file} was not pre-loaded.`);
-
-                const renderContainer = document.getElementById('pdf-render-container');
-                renderContainer.innerHTML = html;
-
-                populateTemplate(file, formData, renderContainer);
-                console.log(`[${index + 1}] Populated template. Final HTML for capture:`, renderContainer.innerHTML);
-
-                await new Promise(resolve => {
-                    requestAnimationFrame(() => {
-                        setTimeout(resolve, 100);
-                    });
-                });
-
-                if (!renderContainer.firstElementChild) throw new Error("Render container is empty. Cannot capture.");
-
-                const canvas = await html2canvas(renderContainer.firstElementChild, {
-                    scale: 3,
-                    useCORS: true,
-                    backgroundColor: '#ffffff',
-                    logging: true
-                });
-
-                const imgData = canvas.toDataURL('image/png');
-                if (imgData.length < 2000) throw new Error(`Generated image data is suspiciously small for ${file}. Render likely failed.`);
-
-                const A4_WIDTH_MM = 210;
-                const A4_HEIGHT_MM = 297;
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfImgWidth = A4_WIDTH_MM;
-                const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width;
-
-                let finalHeight = pdfImgHeight;
-                let heightLeft = finalHeight;
-                let position = 0;
-
-                if (!isFirstPage) {
-                    pdf.addPage();
-                }
-
-                // Logic to handle content that spans multiple pages
-                while (heightLeft > 0) {
-                    pdf.addImage(imgData, 'PNG', 0, position, pdfImgWidth, finalHeight, undefined, 'FAST');
-                    heightLeft -= A4_HEIGHT_MM;
-                    position -= A4_HEIGHT_MM;
-                    if (heightLeft > 0) {
-                        pdf.addPage();
-                    }
-                }
-
-                console.log(`[${index + 1}] Successfully added ${file} to PDF.`);
-                renderContainer.innerHTML = '';
-
-                await processFilesSequentially(index + 1, pdf, files, formData, false);
-
-            } catch (error) {
-                console.error(`Failed to process ${file}:`, error);
-                alert(`Error: Could not process ${file}. Details: ${error.message}\n\nCheck the console (F12) for more information.`);
-                loadingOverlay.style.display = 'none';
-            }
-        }
-
-        // --- REVISED TEMPLATE POPULATION FUNCTIONS ---
-        function populateTemplate(fileName, data, container) {
-            console.log(`Populating template: ${fileName}`);
-            if (fileName.includes('2_Application_Form_Green.html')) {
-                populateGreenForm(data, container);
-            } else if (fileName.includes('3_Buyer_Declaration.html')) {
-                populateBuyerDeclaration(data, container);
-            } else if (fileName.includes('4_AMLA_NEW.html')) {
-                populateAmlaForm(data, container);
-            } else if (fileName.includes('5_Profit_Distribution.html')) {
-                populateProfitForm(data, container);
-            }
-        }
-
-        function populateGreenForm(data, container) {
-            const createAndFillCharBoxes = (containerId, text = '', max) => {
-                const boxContainer = container.querySelector(`#${containerId}`);
-                if (!boxContainer) { console.warn(`Container with ID ${containerId} not found.`); return; }
-                if (typeof text !== 'string') text = '';
-                let html = '';
-                const upperText = text.toUpperCase();
-                for (let i = 0; i < max; i++) {
-                    const char = upperText[i] ? upperText[i] : ' ';
-                    html += `<div class="char-box">${char}</div>`;
-                }
-                boxContainer.innerHTML = html;
+        function importData() {
+            const file = document.getElementById('importFile').files[0];
+            if (!file) { alert('Please select a file to import.'); return; }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try { const data = JSON.parse(e.target.result); populateForm(data); alert('Data imported successfully!'); }
+                catch (error) { alert('Error importing data. Please check the file format.'); console.error('Import Error:', error); }
             };
-            const setText = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.textContent = value; else console.warn(`Element with ID ${id} not found.`); };
-            const setCheck = (id) => { const el = container.querySelector(`#${id} .checkbox, #${id} .program-box`); if (el) el.textContent = '✓'; else console.warn(`Checkbox with ID ${id} not found.`); };
-            const setSignature = (id, url) => { const el = container.querySelector(`#${id}`); if (el && url) el.innerHTML = `<img src="${url}" class="signature-image">`; };
-
-            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
-            const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
-            const appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
-            const nominee = p1.partnerInfo, nomineeBiz = p1.partnerBusiness;
-
-            p2.salesDetail.productTypes.forEach(p => { if (p === 'Dirham') setCheck('prodDirham'); if (p === 'Dinar') setCheck('prodDinar'); if (p === 'Almas') setCheck('prodAlmas'); });
-
-            createAndFillCharBoxes('appName', `${p2.membershipApplicant.title} ${app.fullName}`, 28);
-            createAndFillCharBoxes('appNameOnCard', `${p2.membershipApplicant.title} ${p2.membershipApplicant.nameOnCard}`, 28);
-            createAndFillCharBoxes('appNric', app.icPassport, 14);
-            createAndFillCharBoxes('appDate', (sigs.applicant.date || '').replace(/-/g, ''), 8);
-            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) container.querySelector('#appNationalityMalaysian').textContent = '✓'; else { container.querySelector('#appNationalityForeigner').textContent = '✓'; setText('appNationalityForeignerText', app.nationality); }
-            if (app.maritalStatus === 'Single') container.querySelector('#appMaritalSingle').textContent = '✓'; else if (app.maritalStatus === 'Married') container.querySelector('#appMaritalMarried').textContent = '✓';
-            createAndFillCharBoxes('appHomeAddress', app.correspondentAddress, 56);
-            createAndFillCharBoxes('appHomePostcode', app.poskod, 5);
-            createAndFillCharBoxes('appMailingAddress', app.mailingSameAsCorrespondent ? app.correspondentAddress : app.mailingAddress, 56);
-            createAndFillCharBoxes('appHp', app.phone, 10);
-            setText('appEmail', app.email);
-            setText('appOccupation', appBiz.occupation);
-
-            const annualIncome = parseFloat((appBiz.monthlyIncome || "0").replace(/[^a-zA-Z0-9]/g, '')) * 12; // Simple parse for annual income
-            if (annualIncome > 60000) container.querySelector('#appIncome4').textContent = '✓'; else if (annualIncome >= 36000) container.querySelector('#appIncome3').textContent = '✓'; else if (annualIncome >= 24000) container.querySelector('#appIncome2').textContent = '✓'; else if (annualIncome > 0) container.querySelector('#appIncome1').textContent = '✓';
-
-            createAndFillCharBoxes('appEmployer', appBiz.industry, 25);
-            setText('appIndustry', appBiz.industry);
-            createAndFillCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
-            createAndFillCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
-            createAndFillCharBoxes('appOfficePhone', p2.applicantOffice.tel || '', 10);
-            createAndFillCharBoxes('appOfficeFax', p2.applicantOffice.fax || '', 10);
-
-            createAndFillCharBoxes('nomineeName', nominee.fullName, 28);
-            createAndFillCharBoxes('nomineeNric', nominee.icPassport, 14);
-            setText('nomineeEmail', nominee.email || '');
-            if (nominee.nationality && nominee.nationality.toLowerCase().includes('malaysian')) container.querySelector('#nomineeNationalityMalaysian').textContent = '✓'; else { container.querySelector('#nomineeNationalityForeigner').textContent = '✓'; setText('nomineeNationalityForeignerText', nominee.nationality); }
-            createAndFillCharBoxes('nomineeRelation', nominee.relationshipToGuest, 15);
-            createAndFillCharBoxes('nomineeEmployer', nomineeBiz.industry, 25);
-            createAndFillCharBoxes('nomineeOfficeAddress', nominee.addressSameAsGuest ? app.correspondentAddress : nominee.correspondentAddress, 40);
-            createAndFillCharBoxes('nomineeOfficePostcode', nominee.addressSameAsGuest ? app.poskod : nominee.poskod, 5);
-            createAndFillCharBoxes('nomineeHp', nominee.phone, 10);
-            const p_annualIncome = parseFloat((nomineeBiz.monthlyIncome || "0").replace(/[^a-zA-Z0-9]/g, '')) * 12;
-            if (p_annualIncome > 60000) container.querySelector('#nomineeIncome4').textContent = '✓'; else if (p_annualIncome >= 36000) container.querySelector('#nomineeIncome3').textContent = '✓'; else if (p_annualIncome >= 24000) container.querySelector('#nomineeIncome2').textContent = '✓'; else if (p_annualIncome > 0) container.querySelector('#nomineeIncome1').textContent = '✓';
-
-            setText('declarationDate', sigs.applicant.date);
-            setSignature('applicantSignature', sigs.applicant.signatureData);
+            reader.readAsText(file);
         }
-        function populateBuyerDeclaration(data, container) { const setText = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.textContent = value; }; const setSignature = (id, url) => { const el = container.querySelector(`#${id}`); if (el && url) el.innerHTML = `<img src="${url}" class="signature-image">`; }; const sigs = data.signatures; if (sigs.applicant) { setSignature('applicantSignatureLine', sigs.applicant.signatureData); setText('applicantName', sigs.applicant.name); setText('applicantId', sigs.applicant.ic); setText('applicantDate', sigs.applicant.date); } if (sigs.nominee && sigs.nominee.signatureData) { setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData); setText('jointApplicantName', sigs.nominee.name); setText('jointApplicantId', sigs.nominee.ic); setText('jointApplicantDate', sigs.nominee.date); } if (sigs.witness && sigs.witness.signatureData) { setSignature('witnessSignatureLine', sigs.witness.signatureData); setText('witnessName', sigs.witness.name); setText('witnessId', sigs.witness.ic); setText('witnessDate', sigs.witness.date); } }
-        function populateAmlaForm(data, container) { const setVal = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) { el.value = value; el.setAttribute('value', value); } }; const setText = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.textContent = value; }; const setSignature = (id, url) => { const el = container.querySelector(`#${id}`); if (el && url) el.innerHTML = `<img src="${url}" class="signature-image">`; }; const p1 = data.part1, p2 = data.part2, sigs = data.signatures; const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo; const appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness; setVal('amlaName', app.fullName); setVal('amlaNric', app.icPassport); setVal('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`); setVal('amlaMailingAddress', app.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.poskod} ${app.city}` : `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`); setVal('amlaMobile', app.phone); setVal('amlaEmail', app.email); setVal('amlaOccupation', appBiz.occupation); if (sigs.applicant) { setSignature('amlaSig', sigs.applicant.signatureData); setVal('amlaSigName', sigs.applicant.name); setVal('amlaSigDate', sigs.applicant.date); } if (sigs.consultant && sigs.consultant.signatureData) { setText('receiver-name', sigs.consultant.name); setSignature('receiver-sig', sigs.consultant.signatureData); setText('receiver-date', sigs.consultant.date); } if (sigs.witness && sigs.witness.signatureData) { setText('witness-name', sigs.witness.name); setSignature('witness-sig', sigs.witness.signatureData); setText('witness-date', sigs.witness.date); } }
-        function populateProfitForm(data, container) { const setVal = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) { el.value = value; el.setAttribute('value', value); } }; const setText = (id, value = '') => { const el = container.querySelector(`#${id}`); if (el) el.textContent = value; }; const setSignature = (id, url) => { const el = container.querySelector(`#${id}`); if (el && url) el.innerHTML = `<img src="${url}" class="signature-image">`; }; const p1 = data.part1, p2 = data.part2, sigs = data.signatures; const app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo; setVal('pdName', app.fullName); setVal('pdNric', app.icPassport); setVal('pdAccountNo', p2.applicantBanking.accountNumber); setVal('pdBankName', p2.applicantBanking.bankName); setVal('pdPhone', app.phone); setVal('pdEmail', app.email); if (sigs.applicant) { setSignature('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', sigs.applicant.date); } if (sigs.consultant && sigs.consultant.signatureData) { setSignature('pdManagerSig', sigs.consultant.signatureData); setText('pdManagerDate', sigs.consultant.date); } }
 
+        function populateForm(data) {
+            const setVal = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.value = value; };
+            const setCheck = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.checked = value; };
+            const setRadio = (name, value) => { if (value) { const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if (el) el.checked = true; } };
+            const setMultiCheck = (name, values) => { if (values && Array.isArray(values)) { document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = values.includes(cb.value)); } };
+            if (data.part1) { const { guestInfo, guestBusiness, partnerInfo, partnerBusiness } = data.part1; if (guestInfo) { Object.keys(guestInfo).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestInfo[key])); setRadio('maritalStatus', guestInfo.maritalStatus); setCheck('mailingSameAsCorrespondent', guestInfo.mailingSameAsCorrespondent); document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change')); } if (guestBusiness) { Object.keys(guestBusiness).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestBusiness[key])); } if (partnerInfo) { Object.keys(partnerInfo).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerInfo[key])); setVal('relationshipToGuest', partnerInfo.relationshipToGuest); setCheck('partnerSameAddress', partnerInfo.addressSameAsGuest); document.getElementById('partnerSameAddress').dispatchEvent(new Event('change')); } if (partnerBusiness) { Object.keys(partnerBusiness).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerBusiness[key])); } }
+            if (data.part2) { const { membershipApplicant, applicantOffice, applicantBanking, nominee, thirdPartyPayor, salesDetail } = data.part2; if (membershipApplicant) { setRadio('applicantType', membershipApplicant.applicantType); setVal('applicantTitle', membershipApplicant.title); setVal('applicantNameOnCard', membershipApplicant.nameOnCard); } if (applicantOffice) { setVal('applicantOfficeAddress', applicantOffice.address); setVal('applicantOfficePoskod', applicantOffice.poskod); setVal('applicantOfficeCity', applicantOffice.city); setVal('applicantOfficeTel', applicantOffice.tel); setVal('applicantFax', applicantOffice.fax); } if (applicantBanking) { setVal('applicantBankName', applicantBanking.bankName); setVal('applicantAccountNumber', applicantBanking.accountNumber); } if (nominee) { setCheck('nomineeSameAsPartner', nominee.sameAsPartner); setVal('nomineeBankName', nominee.bankName); setVal('nomineeAccountNumber', nominee.accountNumber); } if (thirdPartyPayor) { setCheck('payorIsApplicant', thirdPartyPayor.isApplicant); document.getElementById('payorIsApplicant').dispatchEvent(new Event('change')); setVal('payorOfficeAddress', thirdPartyPayor.officeAddress); } if (salesDetail) { setMultiCheck('productType', salesDetail.productTypes); setRadio('transactionMethod', salesDetail.transactionMethod); setVal('worksheetCode', salesDetail.worksheetCode); setVal('orNumber', salesDetail.orNumber); setVal('aprCode', salesDetail.aprCode); setVal('consultantName', salesDetail.consultantName); setVal('consultantCode', salesDetail.consultantCode); } }
+            if (data.signatures) { Object.keys(data.signatures).forEach(key => { const sig = data.signatures[key]; if (sig) { setVal(`${key}SignatureName`, sig.name); setVal(`${key}SignatureIC`, sig.ic); setVal(`${key}SignatureDate`, sig.date); } }); }
+        }
+
+        // --- Button-triggered Functions ---
+
+        function generateCheckInPdf() { alert('This function is not yet implemented.'); }
+        function exportPart1Data() {
+            if (!validateCurrentSection()) return; const fullData = collectData(); const dataToExport = { part1: fullData.part1 }; const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Part1_Check-In.json`; const dataStr = JSON.stringify(dataToExport, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Data exported successfully as ${fileName}`);
+        }
+        function exportFullData() {
+            if (!validateCurrentSection()) { alert("Please complete all required fields before exporting."); return; } const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Full_Application.json`; const dataStr = JSON.stringify(fullData, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Full application data exported successfully as ${fileName}`);
+        }
+
+        // --- NEW AND SIMPLE PDF GENERATION LOGIC ---
+
+        function generateCombinedPdf() {
+            // 1. Validate the final section of the form
+            if (!validateCurrentSection()) {
+                // The validation function already shows an alert
+                return;
+            }
+
+            // 2. Collect all the data from the form
+            const formData = collectData();
+
+            // 3. Store the data where the new tab can access it
+            localStorage.setItem('tamuPrintData', JSON.stringify(formData));
+
+            // 4. Open the combined forms page in a new tab. The script in that page will handle the rest.
+            window.open('combined_forms.html', '_blank');
+        }
+
+
+        // --- Page Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
-            preloadTemplates();
             showSection(1);
             const industries = ['Agriculture', 'Automotive', 'Banking', 'Construction', 'Consulting', 'Education', 'Energy', 'Engineering', 'Entertainment', 'Finance', 'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Information Technology', 'Insurance', 'Legal', 'Logistics', 'Manufacturing', 'Marketing', 'Media', 'Mining', 'Non-Profit', 'Oil & Gas', 'Pharmaceutical', 'Real Estate', 'Retail', 'Science', 'Telecommunications', 'Tourism', 'Transportation', 'Other'];
             const populateDropdown = (id) => { const select = document.getElementById(id); if (select) { select.innerHTML = '<option value="" disabled selected>Select Industry</option>' + industries.map(i => `<option value="${i}">${i}</option>`).join(''); } };
