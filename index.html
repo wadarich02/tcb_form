@@ -1028,6 +1028,7 @@
             loadingOverlay.style.display = 'flex';
 
             const formData = collectData();
+            console.log('Collected Data:', formData); // <-- Add this line
             // Initialize jsPDF. All pages will be added to this instance.
             const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
