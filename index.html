@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TAMU Capital Berhad - Digital Form</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="index_style.css">
 </head>
 
 <body>
-    <!-- NOTE: The #loadingOverlay and #pdf-render-container elements are no longer needed -->
-
     <div class="container">
         <div class="header">
             <h1>TAMU Capital Berhad</h1>
@@ -595,9 +595,21 @@
 
         // --- Button-triggered Functions ---
 
-        function generateCheckInPdf() { alert('This function is not yet implemented.'); }
-        function exportPart1Data() {
-            if (!validateCurrentSection()) return; const fullData = collectData(); const dataToExport = { part1: fullData.part1 }; const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Part1_Check-In.json`; const dataStr = JSON.stringify(dataToExport, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Data exported successfully as ${fileName}`);
+        function generateCheckInPdf() {
+            // 1. Validate the current section (Part 1)
+            if (!validateCurrentSection()) {
+                // The validation function already shows an alert
+                return;
+            }
+
+            // 2. Collect all the data from the form
+            const formData = collectData();
+
+            // 3. Store the data where the new tab can access it
+            localStorage.setItem('tamuPrintData', JSON.stringify(formData));
+
+            // 4. Open the dedicated check-in form page. It will handle the rest.
+            window.open('1_check_in.html', '_blank');
         }
         function exportFullData() {
             if (!validateCurrentSection()) { alert("Please complete all required fields before exporting."); return; } const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Full_Application.json`; const dataStr = JSON.stringify(fullData, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Full application data exported successfully as ${fileName}`);
