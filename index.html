@@ -981,10 +981,10 @@
             const formData = collectData();
             const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
             const filesToProcess = [
-                '/2_Application_Form_Green.html',
-                '/3_Buyer_Declaration.html',
-                '/4_AMLA_NEW.html',
-                '/5_Profit_Distribution.html'
+                '2_Application_Form_Green.html',
+                '3_Buyer_Declaration.html',
+                '4_AMLA_NEW.html',
+                '5_Profit_Distribution.html'
             ];
 
             await processFilesSequentially(0, pdf, filesToProcess, formData);
