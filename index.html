@@ -1080,16 +1080,14 @@
                     });
                 });
 
-                const contentToCapture = renderContainer.firstElementChild;
-                if (!contentToCapture) {
+                if (!renderContainer.hasChildNodes()) {
                     throw new Error("Render container is empty, cannot capture.");
                 }
 
-                const canvas = await html2canvas(contentToCapture, {
+                const canvas = await html2canvas(renderContainer, { // Target the stable parent
                     scale: 2,
                     useCORS: true,
                     backgroundColor: '#ffffff',
-                    // Adding these options can help with viewport-related rendering bugs
                     scrollY: -window.scrollY,
                     windowWidth: document.documentElement.offsetWidth,
                     windowHeight: document.documentElement.offsetHeight
