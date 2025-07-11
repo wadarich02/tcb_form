@@ -894,7 +894,7 @@
         let signatures = {};
         let signaturePadsInitialized = false;
 
-        // --- Pre-load templates into a cache object on page load ---
+        // --- NEW: Pre-load templates ---
         const templateCache = {};
 
         async function preloadTemplates() {
@@ -913,11 +913,9 @@
                     console.log(`Successfully preloaded ${file}`);
                 } catch (error) {
                     console.error(`Could not preload template ${file}:`, error);
-                    // This error will now appear in the browser's console (F12) if a file is missing or misspelled.
                 }
             }
         }
-        // -----------------------------------------------------------
 
 
         // --- Core UI and Form Navigation Functions ---
@@ -1044,7 +1042,7 @@
             try {
                 const html = templateCache[file];
                 if (!html) {
-                    throw new Error(`Template for ${file} was not pre-loaded. Please check for errors in the console.`);
+                    throw new Error(`Template for ${file} was not pre-loaded. Check for console errors during page load.`);
                 }
 
                 const renderContainer = document.getElementById('pdf-render-container');
@@ -1052,11 +1050,22 @@
 
                 populateTemplate(file, formData);
 
-                await new Promise(r => setTimeout(r, 200));
+                // Wait for the browser to paint the new content before capturing
+                await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 50)));
 
                 const contentToCapture = renderContainer.firstElementChild;
-                const canvas = await html2canvas(contentToCapture, { scale: 1.5, useCORS: true, logging: false });
-                const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                if (!contentToCapture) throw new Error("Render container is empty, cannot capture.");
+
+                const canvas = await html2canvas(contentToCapture, {
+                    scale: 1.5,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff' // Explicitly set background
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                if (!imgData || imgData === 'data:,') throw new Error("Generated image data is empty for " + file);
+
                 const A4_WIDTH = 210;
                 const A4_HEIGHT = 297;
                 const imgProps = pdf.getImageProperties(imgData);
@@ -1064,7 +1073,7 @@
                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
                 if (index > 0) pdf.addPage();
-                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, Math.min(pdfHeight, A4_HEIGHT));
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(pdfHeight, A4_HEIGHT));
 
                 renderContainer.innerHTML = '';
 
@@ -1072,7 +1081,7 @@
 
             } catch (error) {
                 console.error(`Failed to process ${file}:`, error);
-                alert(`Error: Could not process ${file}. Please check the browser console (F12) for more details.`);
+                alert(`Error: Could not process ${file}. Details: ${error.message}`);
                 loadingOverlay.style.display = 'none';
             }
         }
@@ -1092,10 +1101,8 @@
             const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox'); if (cb) cb.textContent = '✓'; } };
             const setCharBoxes = (id, text, max) => { const c = document.getElementById(id); if (!c || !text) return; let h = ''; for (let i = 0; i < max; i++) { h += `<div class="char-box">${(text[i] || '').toUpperCase()}</div>`; } c.innerHTML = h; };
             const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" style="max-width:150px; max-height: 70px; position:absolute; bottom:5px; left:20px;">`; };
-
             let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
             let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
-
             setCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 40);
             setCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 40);
             setCharBoxes('appNric', app.icPassport, 14);
@@ -1169,7 +1176,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             preloadTemplates();
-
             showSection(1);
             const industries = ['Agriculture', 'Automotive', 'Banking', 'Construction', 'Consulting', 'Education', 'Energy', 'Engineering', 'Entertainment', 'Finance', 'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Information Technology', 'Insurance', 'Legal', 'Logistics', 'Manufacturing', 'Marketing', 'Media', 'Mining', 'Non-Profit', 'Oil & Gas', 'Pharmaceutical', 'Real Estate', 'Retail', 'Science', 'Telecommunications', 'Tourism', 'Transportation', 'Other'];
             const populateDropdown = (id) => { const select = document.getElementById(id); if (select) { select.innerHTML = '<option value="" disabled selected>Select Industry</option>' + industries.map(i => `<option value="${i}">${i}</option>`).join(''); } };
