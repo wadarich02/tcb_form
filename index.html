@@ -1070,8 +1070,23 @@
                 const pdfWidth = A4_WIDTH;
                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-                if (index > 0) pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(pdfHeight, A4_HEIGHT));
+                let heightLeft = pdfHeight;
+                let position = 0;
+                let page = 0;
+
+                if (index > 0) {
+                    pdf.addPage();
+                }
+
+                while (heightLeft > 0) {
+                    if (page > 0) {
+                        pdf.addPage();
+                    }
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                    heightLeft -= A4_HEIGHT;
+                    position -= A4_HEIGHT;
+                    page++;
+                }
 
                 renderContainer.innerHTML = '';
 
@@ -1094,10 +1109,10 @@
         }
 
         function populateGreenForm(data) {
-            const createAndFillCharBoxes = (containerId, text, max) => {
+            const createAndFillCharBoxes = (containerId, text = '', max) => {
                 const container = document.getElementById(containerId);
                 if (!container) { console.warn(`Container with ID ${containerId} not found.`); return; }
-                if (typeof text !== 'string') text = ''; // Ensure text is a string
+                if (typeof text !== 'string') text = '';
 
                 let html = '';
                 for (let i = 0; i < max; i++) {
@@ -1106,66 +1121,50 @@
                 }
                 container.innerHTML = html;
             };
-
-            const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
-            const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox'); if (cb) cb.textContent = '✓'; } };
+            const setText = (id, value = '') => { const el = document.getElementById(id); if (el) el.textContent = value; };
+            const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox, .program-box'); if (cb) cb.textContent = '✓'; } };
             const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`; };
 
             const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
             let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
             let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
 
-            createAndFillCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 40);
-            createAndFillCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 40);
+            createAndFillCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 28);
+            createAndFillCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 28);
             createAndFillCharBoxes('appNric', app.icPassport, 14);
-            createAndFillCharBoxes('appDate', new Date().toLocaleDateString('en-GB').replace(/\//g, ''), 8);
+            createAndFillCharBoxes('appDate', (sigs.applicant.date || '').replace(/-/g, ''), 8);
 
-            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) { document.getElementById('appNationalityMalaysian').textContent = '✓'; }
-            else { document.getElementById('appNationalityForeigner').textContent = '✓'; setText('appNationalityForeignerText', app.nationality); }
+            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) { setCheck('appNationalityMalaysian', true); } else { setCheck('appNationalityForeigner', true); setText('appNationalityForeignerText', app.nationality); }
+            if (app.maritalStatus === 'Single') { setCheck('appMaritalSingle', true); } else if (app.maritalStatus === 'Married') { setCheck('appMaritalMarried', true); }
 
-            if (app.maritalStatus === 'Single') document.getElementById('appMaritalSingle').textContent = '✓';
-            if (app.maritalStatus === 'Married') document.getElementById('appMaritalMarried').textContent = '✓';
-
-            let homeAddr = `${app.correspondentAddress}, ${app.city}`;
-            createAndFillCharBoxes('appHomeAddress', homeAddr, 40);
+            createAndFillCharBoxes('appHomeAddress', `${app.correspondentAddress}, ${app.city}`, 56);
             createAndFillCharBoxes('appHomePostcode', app.poskod, 5);
-
-            let mailAddr = p1.guestInfo.mailingSameAsCorrespondent ? homeAddr : `${p1.guestInfo.mailingAddress}, ${p1.guestInfo.mailingCity}`;
-            createAndFillCharBoxes('appMailingAddress', mailAddr, 50);
-
-            createAndFillCharBoxes('appHp', app.phone, 11);
+            let mailAddr = p1.guestInfo.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.city}` : `${p1.guestInfo.mailingAddress}, ${p1.guestInfo.mailingCity}`;
+            createAndFillCharBoxes('appMailingAddress', mailAddr, 56);
+            createAndFillCharBoxes('appHp', app.phone, 10);
             setText('appEmail', app.email);
             setText('appOccupation', appBiz.occupation);
 
             const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
-            if (income > 60000) document.getElementById('appIncome4').textContent = '✓';
-            else if (income > 36000) document.getElementById('appIncome3').textContent = '✓';
-            else if (income > 24000) document.getElementById('appIncome2').textContent = '✓';
-            else if (income > 0) document.getElementById('appIncome1').textContent = '✓';
+            if (income > 60000) setCheck('appIncome4', true); else if (income >= 36000) setCheck('appIncome3', true); else if (income >= 24000) setCheck('appIncome2', true); else if (income > 0) setCheck('appIncome1', true);
 
-            setText('appEmployer', appBiz.industry);
+            createAndFillCharBoxes('appEmployer', appBiz.industry, 25);
             setText('appIndustry', appBiz.industry);
             createAndFillCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
             createAndFillCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
 
-            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName, 40);
+            createAndFillCharBoxes('nomineeName', p1.partnerInfo.fullName, 28);
             createAndFillCharBoxes('nomineeNric', p1.partnerInfo.icPassport, 14);
-            setText('nomineeEmail', ''); // Nominee email not collected
-            if (p1.partnerInfo.nationality && p1.partnerInfo.nationality.toLowerCase().includes('malaysian')) { document.getElementById('nomineeNationalityMalaysian').textContent = '✓'; }
-            else { document.getElementById('nomineeNationalityForeigner').textContent = '✓'; setText('nomineeNationalityForeignerText', p1.partnerInfo.nationality); }
+            setText('nomineeEmail', '');
+            if (p1.partnerInfo.nationality && p1.partnerInfo.nationality.toLowerCase().includes('malaysian')) { setCheck('nomineeNationalityMalaysian', true); } else { setCheck('nomineeNationalityForeigner', true); setText('nomineeNationalityForeignerText', p1.partnerInfo.nationality); }
             createAndFillCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest, 15);
             createAndFillCharBoxes('nomineeEmployer', p1.partnerBusiness.occupation, 25);
-            let partnerOfficeAddr = p1.partnerInfo.addressSameAsGuest ? homeAddr : `${p1.partnerInfo.correspondentAddress}, ${p1.partnerInfo.city}`;
-            let partnerOfficePostcode = p1.partnerInfo.addressSameAsGuest ? app.poskod : p1.partnerInfo.poskod;
+            let partnerOfficeAddr = p1.partnerInfo.addressSameAsGuest ? `${app.correspondentAddress}, ${app.city}` : `${p1.partnerInfo.correspondentAddress}, ${p1.partnerInfo.city}`;
             createAndFillCharBoxes('nomineeOfficeAddress', partnerOfficeAddr, 40);
-            createAndFillCharBoxes('nomineeOfficePostcode', partnerOfficePostcode, 5);
-            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone, 11);
-
+            createAndFillCharBoxes('nomineeOfficePostcode', p1.partnerInfo.addressSameAsGuest ? app.poskod : p1.partnerInfo.poskod, 5);
+            createAndFillCharBoxes('nomineeHp', p1.partnerInfo.phone, 10);
             const p_income = parseFloat((p1.partnerBusiness.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
-            if (p_income > 60000) document.getElementById('nomineeIncome4').textContent = '✓';
-            else if (p_income > 36000) document.getElementById('nomineeIncome3').textContent = '✓';
-            else if (p_income > 24000) document.getElementById('nomineeIncome2').textContent = '✓';
-            else if (p_income > 0) document.getElementById('nomineeIncome1').textContent = '✓';
+            if (p_income > 60000) setCheck('nomineeIncome4', true); else if (p_income >= 36000) setCheck('nomineeIncome3', true); else if (p_income >= 24000) setCheck('nomineeIncome2', true); else if (p_income > 0) setCheck('nomineeIncome1', true);
 
             setText('declarationDate', sigs.applicant.date);
             setSignature('applicantSignature', sigs.applicant.signatureData);
@@ -1215,7 +1214,6 @@
         }
 
         // --- Page Initialization ---
-
         document.addEventListener('DOMContentLoaded', () => {
             preloadTemplates();
             showSection(1);
