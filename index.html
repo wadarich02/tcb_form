@@ -382,6 +382,17 @@
             margin-bottom: 10px;
         }
 
+        #pdf-render-container {
+            position: absolute;
+            left: -9999px;
+            /* Moves it off-screen */
+            top: 0;
+            width: 900px;
+            /* CRITICAL: Gives the container a fixed width for rendering */
+            background-color: white;
+            /* Ensures a solid background for html2canvas */
+        }
+
         #loadingOverlay {
             position: fixed;
             top: 0;
@@ -432,7 +443,7 @@
 
 <body>
     <!-- Hidden container for rendering PDFs -->
-    <div id="pdf-render-container" style="position: absolute; left: -9999px; top: 0;"></div>
+    <div id="pdf-render-container"></div>
     <div id="loadingOverlay">
         <div>
             <div class="spinner"></div>
