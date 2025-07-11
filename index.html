@@ -1003,6 +1003,8 @@
 
         // --- PDF Generation Logic (Using Pre-loaded Templates) ---
 
+        // --- PDF Generation Logic (Using Pre-loaded Templates) ---
+
         async function generateCombinedPdf() {
             if (!validateCurrentSection()) {
                 alert("Please complete all required fields in Section 4, including applicant signature, before generating the PDF.");
@@ -1012,7 +1014,9 @@
             loadingOverlay.style.display = 'flex';
 
             const formData = collectData();
+            // Initialize jsPDF. All pages will be added to this instance.
             const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
             const filesToProcess = [
                 '2_Application_Form_Green.html',
                 '3_Buyer_Declaration.html',
@@ -1020,13 +1024,15 @@
                 '5_Profit_Distribution.html'
             ];
 
-            await processFilesSequentially(0, pdf, filesToProcess, formData);
+            // Start processing files one by one. We pass 'true' for the first page.
+            await processFilesSequentially(0, pdf, filesToProcess, formData, true);
         }
 
-        async function processFilesSequentially(index, pdf, files, formData) {
+        async function processFilesSequentially(index, pdf, files, formData, isFirstPage) {
             const loadingStatus = document.getElementById('loadingStatus');
             const loadingOverlay = document.getElementById('loadingOverlay');
 
+            // If we've processed all files, save the PDF and exit.
             if (index >= files.length) {
                 loadingStatus.textContent = 'Saving PDF...';
                 const guestName = formData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant';
@@ -1047,54 +1053,75 @@
                 const renderContainer = document.getElementById('pdf-render-container');
                 renderContainer.innerHTML = html;
 
+                // Populate the newly injected template with data.
                 populateTemplate(file, formData);
 
-                await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 50)));
+                // *** MAJOR FIX HERE ***
+                // We wait for a longer period (300ms) to ensure the browser has enough time
+                // to render the complex layouts (especially the hundreds of char-boxes from the Green form)
+                // and load any images like the logo. 50ms was too short, causing a race condition.
+                await new Promise(resolve => setTimeout(resolve, 300));
 
                 const contentToCapture = renderContainer.firstElementChild;
-                if (!contentToCapture) throw new Error("Render container is empty, cannot capture.");
+                if (!contentToCapture) {
+                    throw new Error("Render container is empty, cannot capture.");
+                }
+
+                // For debugging, you can log the element to see if it's correct.
+                // console.log(`Capturing element for ${file}:`, contentToCapture);
 
                 const canvas = await html2canvas(contentToCapture, {
-                    scale: 1.5,
+                    scale: 2, // Increased scale for better quality
                     useCORS: true,
-                    logging: false,
+                    logging: false, // Set to true for more debug info from html2canvas
                     backgroundColor: '#ffffff'
                 });
 
                 const imgData = canvas.toDataURL('image/png');
-                if (imgData.length < 200) throw new Error("Generated image data is empty for " + file);
+                if (imgData.length < 500) { // Stricter check for empty image
+                    throw new Error(`Generated image data is suspiciously small for ${file}. Render likely failed.`);
+                }
 
-                const A4_WIDTH = 210;
-                const A4_HEIGHT = 297;
+                const A4_WIDTH_MM = 210;
+                const A4_HEIGHT_MM = 297;
                 const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = A4_WIDTH;
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-                let heightLeft = pdfHeight;
+                // Calculate the image's height in the PDF, maintaining aspect ratio.
+                const pdfImgWidth = A4_WIDTH_MM;
+                const pdfImgHeight = (imgProps.height * pdfImgWidth) / imgProps.width;
+
+                let heightLeft = pdfImgHeight;
                 let position = 0;
-                let page = 0;
 
-                if (index > 0) {
+                // If this is not the very first form, add a new page before rendering.
+                if (!isFirstPage) {
                     pdf.addPage();
                 }
 
+                // Loop to add the image, creating new pages if it's taller than one A4 page.
+                // This correctly handles the 2-page Green form.
                 while (heightLeft > 0) {
-                    if (page > 0) {
+                    // addImage(imageData, format, x, y, width, height)
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfImgWidth, pdfImgHeight);
+                    heightLeft -= A4_HEIGHT_MM;
+
+                    // If there's more content to render, add a new page and reset the position.
+                    if (heightLeft > 0) {
                         pdf.addPage();
+                        position = -A4_HEIGHT_MM; // Move the image "up" on the new page
                     }
-                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-                    heightLeft -= A4_HEIGHT;
-                    position -= A4_HEIGHT;
-                    page++;
                 }
 
+                // Clear the container for the next form.
                 renderContainer.innerHTML = '';
 
-                await processFilesSequentially(index + 1, pdf, files, formData);
+                // Process the next file in the sequence.
+                // Pass 'false' for isFirstPage from now on.
+                await processFilesSequentially(index + 1, pdf, files, formData, false);
 
             } catch (error) {
                 console.error(`Failed to process ${file}:`, error);
-                alert(`Error: Could not process ${file}. Details: ${error.message}`);
+                alert(`Error: Could not process ${file}. Details: ${error.message}\n\nCheck the console (F12) for more information.`);
                 loadingOverlay.style.display = 'none';
             }
         }

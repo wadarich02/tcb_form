@@ -120,6 +120,7 @@
         .char-box-grid {
             display: flex;
             flex-wrap: wrap;
+            min-height: 30px;
         }
 
         .checkbox-option {
@@ -184,109 +185,107 @@
 </head>
 
 <body>
-    <!-- PAGE 1 -->
-    <div style="width:100%; height: 100%;">
-        <div class="header">
-            <div class="logo-container"><img src="TCB_LOGO.png" alt="TAMU Logo" class="logo"></div>
-            <div class="address-container">
-                <strong>TAMU CAPITAL BERHAD</strong><br>
-                51C-L1Mezzanine Floor Bangunan Podium<br>
-                53 Jalan Raja Alang, Kampung Bharu<br>
-                50300 Kuala Lumpur
-            </div>
-            <div class="program-container">
-                <strong>Type of Program</strong><br>
-                <div id="prodDirham" class="checkbox-option">Dirham<div class="program-box"></div>
-                </div><br>
-                <div id="prodDinar" class="checkbox-option">Dinar<div class="program-box"></div>
-                </div><br>
-                <div id="prodAlmas" class="checkbox-option">Almas<div class="program-box"></div>
-                </div>
-            </div>
-        </div>
-        <div class="form-title">SUBSCRIPTION APPLICATION FORM - INDIVIDUAL</div>
-        <div class="section">
-            <div class="section-title">(A) INDIVIDUAL INFORMATION</div>
-            <div style="font-size:0.8em; padding: 5px 0 0 5px;">Full name as appeared in NRIC/Passport</div>
-            <div class="form-row">
-                <div class="form-label" style="align-self: flex-start; margin-top: 5px;">Name of
-                    Applicant:<br>(Mr/Mrs/Ms/Mdm)</div>
-                <div class="form-field char-box-grid" id="appName"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">Name on the Card<br>(Mr/Mrs/Ms/Mdm)</div>
-                <div class="form-field char-box-grid" id="appNameOnCard"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">NRIC/Passport</div>
-                <div class="form-field char-box-grid" id="appNric" style="flex:0 0 320px;"></div>
-                <div class="form-label" style="width:auto;margin-left:20px;">Date</div>
-                <div class="form-field char-box-grid" id="appDate" style="flex:0 0 185px;"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">Nationality</div>
-                <div class="form-field d-flex">
-                    <div class="checkbox-option">
-                        <div class="checkbox" id="appNationalityMalaysian"></div> Malaysian
-                    </div>
-                    <div class="checkbox-option">
-                        <div class="checkbox" id="appNationalityForeigner"></div> Foreigner <span class="underline"
-                            id="appNationalityForeignerText"></span>
-                    </div>
-                </div>
-                <div class="form-label ml-4" style="width:auto;">Marital Status</div>
-                <div class="form-field d-flex" style="flex:0 0 200px;">
-                    <div class="checkbox-option">
-                        <div class="checkbox" id="appMaritalSingle"></div> Single
-                    </div>
-                    <div class="checkbox-option">
-                        <div class="checkbox" id="appMaritalMarried"></div> Married
+    <div style="width:100%; height: auto;">
+        <!-- PAGE 1 -->
+        <div>
+            <div class="header">
+                <div class="logo-container"><img src="TCB_LOGO.png" alt="TAMU Logo" class="logo"></div>
+                <div class="address-container"><strong>TAMU CAPITAL BERHAD</strong><br>51C-L1Mezzanine Floor Bangunan
+                    Podium<br>53 Jalan Raja Alang, Kampung Bharu<br>50300 Kuala Lumpur</div>
+                <div class="program-container"><strong>Type of Program</strong><br>
+                    <div id="prodDirham" class="checkbox-option">Dirham<div class="program-box"></div>
+                    </div><br>
+                    <div id="prodDinar" class="checkbox-option">Dinar<div class="program-box"></div>
+                    </div><br>
+                    <div id="prodAlmas" class="checkbox-option">Almas<div class="program-box"></div>
                     </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-label">Home Address</div>
-                <div class="form-field char-box-grid" id="appHomeAddress"></div>
-                <div class="form-label" style="width:auto;margin-left:10px;">Postcode</div>
-                <div class="form-field char-box-grid" id="appHomePostcode" style="flex:0 0 115px;"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">Mailing Address</div>
-                <div class="form-field char-box-grid" id="appMailingAddress"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">Contact No.</div>
-                <div style="width:auto;margin-right:5px;">Home</div>
-                <div class="form-field char-box-grid" style="flex:0 0 210px;"></div>
-                <div style="width:auto;margin:0 5px 0 20px;">Fax</div>
-                <div class="form-field char-box-grid" style="flex:0 0 210px;"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label"></div>
-                <div style="width:auto;margin-right:5px;">H/P</div>
-                <div class="form-field char-box-grid" id="appHp" style="flex:0 0 235px;"></div>
-                <div style="width:auto;margin:0 5px 0 20px;">Email</div>
-                <div class="form-field"><span class="underline" id="appEmail"></span></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">Occupation</div>
-                <div class="form-field"><span class="underline" id="appOccupation"></span></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">Annual Income</div>
-                <div class="form-field d-flex" style="justify-content: space-between;">
-                    <div class="checkbox-option">
-                        <div class="checkbox" id="appIncome1"></div>
-                        <RM24,000< /div>
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="appIncome2"></div> RM24,000-RM36,000
-                            </div>
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="appIncome3"></div> RM36,000-RM60,000
-                            </div>
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="appIncome4"></div> >RM60,000
-                            </div>
+            <div class="form-title">SUBSCRIPTION APPLICATION FORM - INDIVIDUAL</div>
+            <div class="section">
+                <div class="section-title">(A) INDIVIDUAL INFORMATION</div>
+                <div style="font-size:0.8em; padding: 5px 0 0 5px;">Full name as appeared in NRIC/Passport</div>
+                <div class="form-row">
+                    <div class="form-label" style="align-self: flex-start; margin-top: 5px;">Name of
+                        Applicant:<br>(Mr/Mrs/Ms/Mdm)</div>
+                    <div class="form-field char-box-grid" id="appName"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">Name on the Card<br>(Mr/Mrs/Ms/Mdm)</div>
+                    <div class="form-field char-box-grid" id="appNameOnCard"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">NRIC/Passport</div>
+                    <div class="form-field char-box-grid" id="appNric"></div>
+                    <div class="form-label" style="width:auto;margin-left:20px;">Date</div>
+                    <div class="form-field char-box-grid" id="appDate"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">Nationality</div>
+                    <div class="form-field d-flex">
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appNationalityMalaysian"></div> Malaysian
+                        </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appNationalityForeigner"></div> Foreigner (<span class="underline"
+                                id="appNationalityForeignerText"></span>)
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">Marital Status</div>
+                    <div class="form-field d-flex" style="flex:0 0 200px;">
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appMaritalSingle"></div> Single
+                        </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appMaritalMarried"></div> Married
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">Home Address</div>
+                    <div class="form-field char-box-grid" id="appHomeAddress"></div>
+                    <div class="form-label" style="width:auto;margin-left:10px;">Postcode</div>
+                    <div class="form-field char-box-grid" id="appHomePostcode"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">Mailing Address</div>
+                    <div class="form-field char-box-grid" id="appMailingAddress"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">Contact No.</div>
+                    <div style="width:auto;margin-right:5px;">Home</div>
+                    <div class="form-field char-box-grid" id="appHomePhone"></div>
+                    <div style="width:auto;margin:0 5px 0 20px;">Fax</div>
+                    <div class="form-field char-box-grid" id="appFax"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label"></div>
+                    <div style="width:auto;margin-right:5px;">H/P</div>
+                    <div class="form-field char-box-grid" id="appHp"></div>
+                    <div style="width:auto;margin:0 5px 0 20px;">Email</div>
+                    <div class="form-field"><span class="underline" id="appEmail"></span></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">Occupation</div>
+                    <div class="form-field"><span class="underline" id="appOccupation"></span></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label">Annual Income</div>
+                    <div class="form-field d-flex" style="justify-content: space-between;">
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appIncome1"></div> &lt;RM24,000
+                        </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appIncome2"></div> RM24,000-RM36,000
+                        </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appIncome3"></div> RM36,000-RM60,000
+                        </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appIncome4"></div> &gt;RM60,000
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,17 +303,17 @@
                     <div class="form-label">Office Address</div>
                     <div class="form-field char-box-grid" id="appOfficeAddress"></div>
                     <div class="form-label" style="width:auto;margin-left:10px;">Postcode</div>
-                    <div class="form-field char-box-grid" id="appOfficePostcode" style="flex:0 0 115px;"></div>
+                    <div class="form-field char-box-grid" id="appOfficePostcode"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Office No.</div>
-                    <div class="form-field char-box-grid" style="flex:0 0 210px;"></div>
+                    <div class="form-field char-box-grid" id="appOfficePhone"></div>
                     <div style="width:auto;margin:0 5px 0 20px;">Ext</div>
-                    <div class="form-field char-box-grid" style="flex:0 0 95px;"></div>
+                    <div class="form-field char-box-grid" id="appOfficeExt"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Fax</div>
-                    <div class="form-field char-box-grid" style="flex:0 0 210px;"></div>
+                    <div class="form-field char-box-grid" id="appOfficeFax"></div>
                 </div>
             </div>
         </div>
@@ -335,7 +334,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-label">NRIC/Passport</div>
-                    <div class="form-field char-box-grid" id="nomineeNric" style="flex:0 0 320px;"></div>
+                    <div class="form-field char-box-grid" id="nomineeNric"></div>
                     <div class="form-label" style="width:auto;margin-left:20px;">Email:</div>
                     <div class="form-field"><span class="underline" id="nomineeEmail"></span></div>
                 </div>
@@ -363,86 +362,58 @@
                     <div class="form-label">Office Address</div>
                     <div class="form-field char-box-grid" id="nomineeOfficeAddress"></div>
                     <div class="form-label" style="width:auto;margin-left:10px;">Postcode</div>
-                    <div class="form-field char-box-grid" id="nomineeOfficePostcode" style="flex:0 0 115px;"></div>
+                    <div class="form-field char-box-grid" id="nomineeOfficePostcode"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Office Tel. No.</div>
-                    <div class="form-field char-box-grid" style="flex:0 0 210px;"></div>
+                    <div class="form-field char-box-grid" id="nomineeOfficePhone"></div>
                     <div style="width:auto;margin:0 5px 0 20px;">Ext.</div>
-                    <div class="form-field char-box-grid" style="flex:0 0 95px;"></div>
+                    <div class="form-field char-box-grid" id="nomineeOfficeExt"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-label">Fax No. Ext.</div>
-                    <div class="form-field char-box-grid" style="flex:0 0 210px;"></div>
+                    <div class="form-label">Fax No.</div>
+                    <div class="form-field char-box-grid" id="nomineeOfficeFax"></div>
                     <div style="width:auto;margin:0 5px 0 20px;">H/P:</div>
-                    <div class="form-field char-box-grid" id="nomineeHp" style="flex:0 0 235px;"></div>
+                    <div class="form-field char-box-grid" id="nomineeHp"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Annual Income</div>
                     <div class="form-field d-flex" style="justify-content: space-between;">
                         <div class="checkbox-option">
-                            <div class="checkbox" id="nomineeIncome1"></div>
-                            < RM24,000</div>
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="nomineeIncome2"></div> RM24,000-RM36,000
-                                </div>
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="nomineeIncome3"></div> RM36,000-RM60,000
-                                </div>
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="nomineeIncome4"></div> > RM60,000
-                                </div>
+                            <div class="checkbox" id="nomineeIncome1"></div> &lt;RM24,000
                         </div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="section-title">(D) DECLARATION</div>
-                    <p style="padding:10px;">I/We hereby the undersigned declare that all the particulars given are true
-                        to my/our knowledge and belief.</p>
-                    <div class="form-row mt-4" style="justify-content:space-between; padding: 0 10px;">
-                        <div>Date: <span class="underline" id="declarationDate"></span></div>
-                        <div style="text-align:center;">
-                            <div class="signature-line" id="applicantSignature"></div>Signature of Applicant
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="nomineeIncome2"></div> RM24,000-RM36,000
                         </div>
-                    </div>
-                </div>
-                <div class="section" style="border: 2px solid black; margin-top:20px;">
-                    <div style="text-align:center;font-weight:bold;font-size:1.1em;padding:5px;">FOR OFFICE USE ONLY
-                    </div>
-                    <div class="form-row">
-                        <div class="form-label">Program ID No.</div>
-                        <div class="form-field char-box-grid"></div>
-                        <div class="form-label" style="width:auto;margin-left:20px;">Programs Fee (RM)</div>
-                        <div class="form-field"><span class="underline"></span></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-label">Balance</div>
-                        <div class="form-field">RM <span class="underline"></span></div>
-                        <div class="form-label" style="width:auto;margin-left:20px;">Mode of Payment</div>
-                        <div class="form-field">
-                            <div class="checkbox-option">
-                                <div class="checkbox"></div> Cash
-                            </div>
-                            <div class="checkbox-option">
-                                <div class="checkbox"></div> In-House Instalment
-                            </div>
-                            <div class="checkbox-option">
-                                <div class="checkbox"></div> Loan
-                            </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="nomineeIncome3"></div> RM36,000-RM60,000
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-label">Counsellor</div>
-                        <div class="form-field"><span class="underline"></span></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-label">Check By</div>
-                        <div class="form-field"><span class="underline"></span></div>
-                        <div class="form-label" style="width:auto;margin-left:20px;">Date:</div>
-                        <div class="form-field"><span class="underline"></span></div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="nomineeIncome4"></div> &gt;RM60,000
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="section">
+                <div class="section-title">(D) DECLARATION</div>
+                <p style="padding:10px;">I/We hereby the undersigned declare that all the particulars given are true to
+                    my/our knowledge and belief.</p>
+                <div class="form-row mt-4" style="justify-content:space-between; padding: 0 10px;">
+                    <div>Date: <span class="underline" id="declarationDate"></span></div>
+                    <div style="text-align:center;">
+                        <div class="signature-line" id="applicantSignature"></div>Signature of Applicant
+                    </div>
+                </div>
+            </div>
+            <div class="section" style="border: 2px solid black; margin-top:20px;">
+                <div style="text-align:center;font-weight:bold;font-size:1.1em;padding:5px;">FOR OFFICE USE ONLY</div>
+                <div class="form-row">
+                    <div class="form-label">Program ID No.</div>
+                    <div class="form-field char-box-grid" id="programId"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
