@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAMU Capital Berhad - Digital Form</title>
+    <!-- LIBRARIES FOR PDF GENERATION -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 30px 40px;
+        }
+
+        .form-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #e74c3c;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 30px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label,
+        .checkbox-group-title {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #fdfdfd;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        .checkbox-group input[type="checkbox"],
+        .checkbox-group input[type="radio"] {
+            margin-right: 8px;
+            width: auto;
+            transform: scale(1.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .file-input-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input-container input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            left: 0;
+            top: 0;
+        }
+
+        .file-input-label {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .subsection {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .subsection h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .consent-checkbox {
+            background: #eaf6ff;
+            border: 1px solid #a3d5f7;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .consent-checkbox input[type="checkbox"] {
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .signature-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+            margin-top: 15px;
+        }
+
+        .signature-canvas {
+            border: 2px dashed #3498db;
+            border-radius: 6px;
+            cursor: crosshair;
+            background: white;
+            width: 100%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.4em;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        .modal-body {
+            padding: 20px 24px;
+            line-height: 1.7;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-body ol {
+            padding-left: 25px;
+        }
+
+        .modal-body li {
+            margin-bottom: 10px;
+        }
+
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        #loadingOverlay .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hidden container for rendering PDFs -->
+    <div id="pdf-render-container" style="position: absolute; left: -9999px; top: 0;"></div>
+    <div id="loadingOverlay">
+        <div>
+            <div class="spinner"></div>
+            <p>Generating PDF...<br><span id="loadingStatus">Initializing...</span></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>TAMU Capital Berhad</h1>
+            <p>Digital Application Form</p>
+        </div>
+        <div class="form-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- SECTION 1: CHECK-IN FORM -->
+            <div class="form-section active" id="section1">
+                <h2 class="section-title">SECTION 1: CHECK IN FORM</h2>
+                <div class="subsection">
+                    <h3>1.a Guest Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width"><label for="guestFullName">Full Name (As written in
+                                IC/Passport)</label><input type="text" id="guestFullName" required></div>
+                        <div class="form-group"><label for="guestIcPassport">IC/Passport Number</label><input
+                                type="text" id="guestIcPassport" required></div>
+                        <div class="form-group"><label for="guestDob">Date of Birth</label><input type="date"
+                                id="guestDob" required></div>
+                        <div class="form-group"><label for="guestGender">Gender</label><select id="guestGender"
+                                required>
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select></div>
+                        <div class="form-group"><label for="guestNationality">Nationality</label><input type="text"
+                                id="guestNationality" required></div>
+                        <div class="form-group"><label>Marital Status</label>
+                            <div class="checkbox-group"><label><input type="radio" name="maritalStatus" value="Married">
+                                    Married</label><label><input type="radio" name="maritalStatus" value="Single">
+                                    Single</label><label><input type="radio" name="maritalStatus" value="Others">
+                                    Others</label></div>
+                        </div>
+                        <div class="form-group"><label for="guestNumChildren">Number of Children</label><input
+                                type="number" id="guestNumChildren" min="0"></div>
+                        <div class="form-group full-width"><label for="guestCorrespondentAddress">Correspondent
+                                Address</label><textarea id="guestCorrespondentAddress" required></textarea></div>
+                        <div class="form-group"><label for="guestPoskod">Poskod</label><input type="text"
+                                id="guestPoskod" required></div>
+                        <div class="form-group"><label for="guestCity">City/Country</label><input type="text"
+                                id="guestCity" required></div>
+                        <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
+                                    id="mailingSameAsCorrespondent"> Mailing address is the same as correspondent
+                                address</label></div>
+                        <div id="mailingAddressFields" class="form-grid full-width" style="display: none;">
+                            <div class="form-group full-width"><label for="guestMailingAddress">Mailing
+                                    Address</label><textarea id="guestMailingAddress"></textarea></div>
+                            <div class="form-group"><label for="guestMailingPoskod">Mailing Poskod</label><input
+                                    type="text" id="guestMailingPoskod"></div>
+                            <div class="form-group"><label for="guestMailingCity">Mailing City/Country</label><input
+                                    type="text" id="guestMailingCity"></div>
+                        </div>
+                        <div class="form-group"><label for="guestEmail">Email</label><input type="email" id="guestEmail"
+                                required></div>
+                        <div class="form-group"><label for="guestPhone">Phone Number</label><input type="tel"
+                                id="guestPhone" required></div>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3>1.b Guest's Business Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="guestOccupation">Occupation</label><input type="text"
+                                id="guestOccupation" required></div>
+                        <div class="form-group"><label for="guestIndustry">Industry</label><select id="guestIndustry"
+                                required></select></div>
+                        <div class="form-group full-width"><label for="guestMonthlyIncome">Monthly Income</label><select
+                                id="guestMonthlyIncome" required>
+                                <option value="" disabled selected>Select Income Range</option>
+                                <option value="4,000-6,000">4,000 - 6,000</option>
+                                <option value="6,001-10,000">6,001 - 10,000</option>
+                                <option value="10,001-15,000">10,001 - 15,000</option>
+                                <option value="15,001-20,000">15,001 - 20,000</option>
+                                <option value="20,001 and above">20,001 and above</option>
+                            </select></div>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3>2.a Guest's Partner Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width"><label for="partnerFullName">Full Name (As written in
+                                IC/Passport)</label><input type="text" id="partnerFullName"></div>
+                        <div class="form-group"><label for="partnerIcPassport">IC/Passport Number</label><input
+                                type="text" id="partnerIcPassport"></div>
+                        <div class="form-group"><label for="partnerDob">Date of Birth</label><input type="date"
+                                id="partnerDob"></div>
+                        <div class="form-group"><label for="partnerGender">Gender</label><select id="partnerGender">
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select></div>
+                        <div class="form-group"><label for="partnerNationality">Nationality</label><input type="text"
+                                id="partnerNationality"></div>
+                        <div class="form-group"><label for="partnerPhone">Phone Number</label><input type="tel"
+                                id="partnerPhone"></div>
+                        <div class="form-group"><label for="relationshipToGuest">Relationship to guest</label><select
+                                id="relationshipToGuest">
+                                <option value="">Select Relationship</option>
+                                <option value="Spouse">Spouse</option>
+                                <option value="Parent">Parent</option>
+                                <option value="Child">Child</option>
+                                <option value="Sibling">Sibling</option>
+                                <option value="Grandparent">Grandparent</option>
+                                <option value="Relative">Relative</option>
+                                <option value="Friend">Friend</option>
+                                <option value="Legal Guardian">Legal Guardian</option>
+                                <option value="Other">Other</option>
+                            </select></div>
+                        <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
+                                    id="partnerSameAddress"> Correspondent address is the same as guest's</label></div>
+                        <div class="form-group full-width"><label for="partnerCorrespondentAddress">Correspondent
+                                Address</label><textarea id="partnerCorrespondentAddress"></textarea></div>
+                        <div class="form-group"><label for="partnerPoskod">Poskod</label><input type="text"
+                                id="partnerPoskod"></div>
+                        <div class="form-group"><label for="partnerCity">City/Country</label><input type="text"
+                                id="partnerCity"></div>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3>2.b Partner's Business Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="partnerOccupation">Occupation</label><input type="text"
+                                id="partnerOccupation"></div>
+                        <div class="form-group"><label for="partnerIndustry">Industry</label><select
+                                id="partnerIndustry"></select></div>
+                        <div class="form-group full-width"><label for="partnerMonthlyIncome">Monthly
+                                Income</label><select id="partnerMonthlyIncome">
+                                <option value="" disabled selected>Select Income Range</option>
+                                <option value="4,000-6,000">4,000 - 6,000</option>
+                                <option value="6,001-10,000">6,001 - 10,000</option>
+                                <option value="10,001-15,000">10,001 - 15,000</option>
+                                <option value="15,001-20,000">15,001 - 20,000</option>
+                                <option value="20,001 and above">20,001 and above</option>
+                            </select></div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-info" onclick="generateCheckInPdf()">Generate Check-In
+                        PDF</button>
+                    <button type="button" class="btn btn-success" onclick="exportPart1Data()">Export Part 1
+                        JSON</button>
+                    <div class="file-input-container">
+                        <input type="file" id="importFile" accept=".json" onchange="importData()">
+                        <label for="importFile" class="btn file-input-label">Import Data</label>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="nextSection()">Continue to Part 2</button>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CLOSING FORM -->
+            <div class="form-section" id="section2">
+                <h2 class="section-title">PART 2: CLOSING</h2>
+                <div class="subsection">
+                    <h3>3. Membership Applicant</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>Applicant is</label>
+                            <div class="checkbox-group"><label><input type="radio" name="applicantType" value="Guest's">
+                                    Guest's</label><label><input type="radio" name="applicantType"
+                                        value="Guest's Partner"> Guest's Partner</label></div>
+                        </div>
+                        <div class="form-group"><label for="applicantNameOnCard">Name on Card</label>
+                            <div style="display: flex; gap: 10px;"><select id="applicantTitle" style="width: 100px;">
+                                    <option value="Mr">Mr</option>
+                                    <option value="Mrs">Mrs</option>
+                                    <option value="Ms">Ms</option>
+                                    <option value="Mdm">Mdm</option>
+                                </select><input type="text" id="applicantNameOnCard" style="flex-grow: 1;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3>3.b Applicant Office Address</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width"><label for="applicantOfficeAddress">Office
+                                Address</label><textarea id="applicantOfficeAddress"></textarea></div>
+                        <div class="form-group"><label for="applicantOfficePoskod">Poskod</label><input type="text"
+                                id="applicantOfficePoskod"></div>
+                        <div class="form-group"><label for="applicantOfficeCity">City/Country</label><input type="text"
+                                id="applicantOfficeCity"></div>
+                        <div class="form-group"><label for="applicantOfficeTel">Office Tel Number</label><input
+                                type="tel" id="applicantOfficeTel"></div>
+                        <div class="form-group"><label for="applicantFax">Fax</label><input type="text"
+                                id="applicantFax"></div>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3>3.c Applicant Banking Details</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="applicantBankName">Bank Name</label><input type="text"
+                                id="applicantBankName"></div>
+                        <div class="form-group"><label for="applicantAccountNumber">Account Number</label><input
+                                type="text" id="applicantAccountNumber"></div>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3>4. Nominee</h3>
+                    <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
+                                id="nomineeSameAsPartner"> Nominee is the same as Guest's Partner</label></div>
+                    <p>If not the same as partner, please fill in the partner section (in Part 1) with the nominee's
+                        details.</p>
+                    <h4 style="margin-top: 20px; color: #34495e;">Nominee Banking Details</h4>
+                    <div class="form-grid" style="margin-top: 10px;">
+                        <div class="form-group"><label for="nomineeBankName">Bank Name</label><input type="text"
+                                id="nomineeBankName"></div>
+                        <div class="form-group"><label for="nomineeAccountNumber">Account Number</label><input
+                                type="text" id="nomineeAccountNumber"></div>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3>5. Third Party Payor</h3>
+                    <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
+                                id="payorIsApplicant" checked> Payor is the Applicant</label></div>
+                    <div id="thirdPartyPayorFields" class="form-grid full-width" style="display:none;">
+                        <p>If not the applicant, please fill in the guest information section (in Part 1) with the
+                            payor's details and provide the office address below.</p>
+                        <div class="form-group full-width"><label for="payorOfficeAddress">Payor's Office
+                                Address</label><textarea id="payorOfficeAddress"></textarea></div>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3>Sales Detail (To be filled out by consultant)</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label class="checkbox-group-title">Product</label>
+                            <div class="checkbox-group"><label><input type="checkbox" name="productType" value="Dirham">
+                                    Dirham</label><label><input type="checkbox" name="productType" value="Dinar">
+                                    Dinar</label><label><input type="checkbox" name="productType" value="Almas">
+                                    Almas</label></div>
+                        </div>
+                        <div class="form-group"><label class="checkbox-group-title">Method of Transaction</label>
+                            <div class="checkbox-group"><label><input type="radio" name="transactionMethod"
+                                        value="Debit/Credit/Cash/Cheque"> Debit/Credit/Cash/Cheque</label><label><input
+                                        type="radio" name="transactionMethod" value="Others"> Others</label></div>
+                        </div>
+                        <div class="form-group"><label for="worksheetCode">Worksheet Code</label><input type="text"
+                                id="worksheetCode"></div>
+                        <div class="form-group"><label for="orNumber">OR Number</label><input type="text" id="orNumber">
+                        </div>
+                        <div class="form-group"><label for="aprCode">APR Code</label><input type="text" id="aprCode">
+                        </div>
+                        <div class="form-group"><label for="consultantName">Consultant's Name</label><input type="text"
+                                id="consultantName"></div>
+                        <div class="form-group"><label for="consultantCode">Consultant's Code</label><input type="text"
+                                id="consultantCode"></div>
+                    </div>
+                </div>
+                <div class="button-group"><button type="button" class="btn btn-secondary"
+                        onclick="previousSection()">Back</button><button type="button" class="btn btn-primary"
+                        onclick="nextSection()">Continue</button></div>
+            </div>
+
+            <!-- SECTION 3: DECLARATIONS & CONSENT -->
+            <div class="form-section" id="section3">
+                <h2 class="section-title">Declarations & Consent</h2>
+                <p style="margin-bottom: 25px; font-size: 1.1em;">Please read the following sections carefully. By
+                    ticking each box, you acknowledge that you have read, understood, and agreed to the respective
+                    terms.</p>
+                <div class="consent-checkbox"><input type="checkbox" id="rulesRegulationsConsent" required><span>I have
+                        read, understood, and agree to the <button type="button" class="btn btn-warning"
+                            onclick="showModal('rulesModal')">Rules & Regulations</button>.</span></div>
+                <div class="consent-checkbox"><input type="checkbox" id="subscriptionTermsConsent" required><span>I have
+                        read, understood, and agree to the <button type="button" class="btn btn-warning"
+                            onclick="showModal('subscriptionModal')">Subscription Terms & Conditions</button>.</span>
+                </div>
+                <div class="consent-checkbox"><input type="checkbox" id="investmentTermsConsent" required><span>I have
+                        read, understood, and agree to the <button type="button" class="btn btn-warning"
+                            onclick="showModal('investmentModal')">Investment (Wakalah) Terms &
+                            Conditions</button>.</span></div>
+                <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+                <div class="consent-checkbox" style="background: #e8f5e9; border-color: #a5d6a7;"><input type="checkbox"
+                        id="finalConsent" required><span>By continuing, I confirm that the information I have provided
+                        is accurate and I give my consent to be bound by all the above terms.</span></div>
+                <div class="button-group"><button type="button" class="btn btn-secondary"
+                        onclick="previousSection()">Back</button><button type="button" class="btn btn-primary"
+                        onclick="nextSection()">Continue</button></div>
+            </div>
+
+            <!-- SECTION 4: SIGNATURE PAGE -->
+            <div class="form-section" id="section4">
+                <h2 class="section-title">SIGNATURE PAGE</h2>
+                <div class="form-grid">
+                    <div class="subsection">
+                        <h3>Applicant</h3>
+                        <div class="signature-container">
+                            <p>Please sign in the box below</p><canvas id="applicantSignature" class="signature-canvas"
+                                height="150"></canvas>
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
+                                    onclick="clearSignature('applicantSignature')">Clear</button></div>
+                        </div>
+                        <div class="form-group" style="margin-top:15px;"><label
+                                for="applicantSignatureName">Name</label><input type="text" id="applicantSignatureName"
+                                required></div>
+                        <div class="form-group"><label for="applicantSignatureIC">IC</label><input type="text"
+                                id="applicantSignatureIC" required></div>
+                        <div class="form-group"><label for="applicantSignatureDate">Date</label><input type="date"
+                                id="applicantSignatureDate" required></div>
+                    </div>
+                    <div class="subsection">
+                        <h3>Nominee</h3>
+                        <div class="signature-container">
+                            <p>Please sign in the box below</p><canvas id="nomineeSignature" class="signature-canvas"
+                                height="150"></canvas>
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
+                                    onclick="clearSignature('nomineeSignature')">Clear</button></div>
+                        </div>
+                        <div class="form-group" style="margin-top:15px;"><label
+                                for="nomineeSignatureName">Name</label><input type="text" id="nomineeSignatureName">
+                        </div>
+                        <div class="form-group"><label for="nomineeSignatureIC">IC</label><input type="text"
+                                id="nomineeSignatureIC"></div>
+                        <div class="form-group"><label for="nomineeSignatureDate">Date</label><input type="date"
+                                id="nomineeSignatureDate"></div>
+                    </div>
+                    <div class="subsection">
+                        <h3>Consultant</h3>
+                        <div class="signature-container">
+                            <p>Please sign in the box below</p><canvas id="consultantSignature" class="signature-canvas"
+                                height="150"></canvas>
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
+                                    onclick="clearSignature('consultantSignature')">Clear</button></div>
+                        </div>
+                        <div class="form-group" style="margin-top:15px;"><label
+                                for="consultantSignatureName">Name</label><input type="text"
+                                id="consultantSignatureName"></div>
+                        <div class="form-group"><label for="consultantSignatureIC">IC</label><input type="text"
+                                id="consultantSignatureIC"></div>
+                        <div class="form-group"><label for="consultantSignatureDate">Date</label><input type="date"
+                                id="consultantSignatureDate"></div>
+                    </div>
+                    <div class="subsection">
+                        <h3>Witness</h3>
+                        <div class="signature-container">
+                            <p>Please sign in the box below</p><canvas id="witnessSignature" class="signature-canvas"
+                                height="150"></canvas>
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
+                                    onclick="clearSignature('witnessSignature')">Clear</button></div>
+                        </div>
+                        <div class="form-group" style="margin-top:15px;"><label
+                                for="witnessSignatureName">Name</label><input type="text" id="witnessSignatureName">
+                        </div>
+                        <div class="form-group"><label for="witnessSignatureIC">IC</label><input type="text"
+                                id="witnessSignatureIC"></div>
+                        <div class="form-group"><label for="witnessSignatureDate">Date</label><input type="date"
+                                id="witnessSignatureDate"></div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="previousSection()">Back to
+                        Declarations</button>
+                    <button type="button" class="btn btn-primary" onclick="exportFullData()">Export Full JSON</button>
+                    <button type="button" class="btn btn-success" onclick="generateCombinedPdf()">Compile & Download
+                        Forms</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Rules & Regulations</h2><span class="close" onclick="closeModal('rulesModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>As a prospective participant in any TAMU Capital Berhad program, you are required to acknowledge and
+                    adhere to the following rules and general regulations:</p>
+                <ol>
+                    <li>All personal, financial, and contact information provided must be accurate, complete, and
+                        updated promptly in the event of any changes.</li>
+                    <li>Subscribers must be individuals aged 18 and above, of sound mind, and not acting on behalf of
+                        any third party unless explicitly declared.</li>
+                    <li>Participation is subject to the laws of Malaysia, including compliance with the Anti-Money
+                        Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001 (AMLA).</li>
+                    <li>Third-party contributions or payments must be accompanied by full disclosure, including the
+                        payer's name, NRIC/passport number, and relationship to the subscriber.</li>
+                    <li>All required supporting documents, including but not limited to copies of NRIC, proof of
+                        payment, and verification forms, must be submitted when requested.</li>
+                    <li>TAMU Capital Berhad reserves the right to reject or terminate any application or participation
+                        found to be in violation of these regulations or containing false declarations.</li>
+                    <li>Subscriber data will be treated as confidential and handled in accordance with applicable data
+                        protection laws, and will only be used for internal verification and regulatory purposes.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div id="subscriptionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Subscription Terms & Conditions</h2><span class="close"
+                    onclick="closeModal('subscriptionModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>By submitting this application, you confirm that you have read and understood the terms governing the
+                    subscription to TAMU Capital Berhad's programs (Dirham, Dinar, or Almas), and you hereby agree to
+                    the following:</p>
+                <ol>
+                    <li>Program selection and participation are based on the available packages and are subject to TAMU
+                        Capital's discretion and compliance checks.</li>
+                    <li>Payments can be made via cash, in-house instalments, or approved financing options, as per the
+                        chosen package and agreed schedule.</li>
+                    <li>Subscription fees are final and non-refundable unless stated otherwise under specific
+                        circumstances.</li>
+                    <li>Profit distributions, if applicable, are made annually and are based on actual fund performance.
+                        The maximum indicative return is up to 5% per annum.</li>
+                    <li>Early withdrawals or terminations may result in the forfeiture of profit entitlements and may be
+                        subject to specific terms outlined in the final agreement.</li>
+                    <li>TAMU Capital reserves the right to issue all communications, including program updates and
+                        notices, through the contact details provided by the subscriber.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div id="investmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Investment (Wakalah) Terms & Conditions</h2><span class="close"
+                    onclick="closeModal('investmentModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>TAMU Capital Berhad operates under a Shariah-compliant investment structure known as Wakalah Bi
+                    Al-Istithmar. By participating in this investment scheme, you acknowledge and accept the following:
+                </p>
+                <ol>
+                    <li>TAMU Capital Berhad will act as the Wakeel (agent) to manage your invested funds in accordance
+                        with Shariah principles and ethical investment practices.</li>
+                    <li>Investment capital is not guaranteed. Any potential profit is based solely on fund performance,
+                        and there is a possibility of capital loss.</li>
+                    <li>The indicative return is up to 5% per annum, distributed annually over a five-year term.
+                        However, actual returns are not fixed or assured.</li>
+                    <li>Annual investment statements and performance updates will be made available to subscribers upon
+                        request, subject to internal policies.</li>
+                    <li>Subscribers are required to declare that all invested funds are sourced from legitimate means
+                        and not connected to any unlawful or suspicious activity.</li>
+                    <li>TAMU Capital reserves the right to report suspicious transactions or non-compliance to the
+                        relevant authorities in accordance with AMLA 2001.</li>
+                    <li>In the event of disputes or ambiguities, resolution will be pursued through amicable means or,
+                        where applicable, a Shariah-compliant arbitration process.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+        let currentSection = 1;
+        const totalSections = 4;
+        let signatures = {};
+        let signaturePadsInitialized = false;
+
+        function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
+        function nextSection() { if (validateCurrentSection() && currentSection < totalSections) { showSection(currentSection + 1); } }
+        function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
+        function updateProgress() { const progress = ((currentSection - 1) / (totalSections - 1)) * 100; document.getElementById('progressFill').style.width = progress + '%'; }
+
+        function validateCurrentSection() {
+            const section = document.getElementById(`section${currentSection}`);
+            const requiredFields = section.querySelectorAll('[required]');
+            for (let field of requiredFields) {
+                if (field.type === 'radio' && field.name) { const radioGroup = document.getElementsByName(field.name); if (![...radioGroup].some(r => r.checked)) { alert(`Please make a selection for: ${field.closest('.form-group,.checkbox-group').parentElement.querySelector('label, .checkbox-group-title').textContent}`); field.focus(); return false; } }
+                else if (field.type === 'checkbox' && !field.checked) { alert(`Please agree to the required terms.`); field.focus(); return false; }
+                else if (!field.value.trim() && field.type !== 'checkbox' && field.type !== 'radio') { alert(`Please fill in the required field: ${field.closest('.form-group')?.querySelector('label')?.textContent || field.id}`); field.focus(); return false; }
+            }
+            if (currentSection === 4 && !signatures['applicantSignature']) { alert('Applicant signature is required.'); return false; }
+            return true;
+        }
+
+        function showModal(modalId) { document.getElementById(modalId).style.display = "block"; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
+        window.onclick = function (event) { document.querySelectorAll('.modal').forEach(modal => { if (event.target == modal) { modal.style.display = "none"; } }); }
+
+        function initializeAllSignaturePads() { ['applicantSignature', 'nomineeSignature', 'consultantSignature', 'witnessSignature'].forEach(initializeSignatureCanvas); }
+        function initializeSignatureCanvas(canvasId) { const canvas = document.getElementById(canvasId); if (!canvas) return; const ctx = canvas.getContext('2d'); let drawing = false; canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; const getPos = (e) => { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; }; const startDrawing = (e) => { e.preventDefault(); drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }; const draw = (e) => { if (!drawing) return; e.preventDefault(); const pos = getPos(e); ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#2c3e50'; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }; const stopDrawing = () => { if (!drawing) return; drawing = false; signatures[canvasId] = canvas.toDataURL('image/png'); }; canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove', draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing); }
+        function clearSignature(canvasId) { const canvas = document.getElementById(canvasId); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); delete signatures[canvasId]; }
+
+        function collectData() {
+            const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
+            return {
+                part1: {
+                    guestInfo: { fullName: document.getElementById('guestFullName').value, icPassport: document.getElementById('guestIcPassport').value, dob: document.getElementById('guestDob').value, gender: document.getElementById('guestGender').value, nationality: document.getElementById('guestNationality').value, maritalStatus: getCheckedValues('maritalStatus')[0] || '', numChildren: document.getElementById('guestNumChildren').value, correspondentAddress: document.getElementById('guestCorrespondentAddress').value, poskod: document.getElementById('guestPoskod').value, city: document.getElementById('guestCity').value, mailingSameAsCorrespondent: document.getElementById('mailingSameAsCorrespondent').checked, mailingAddress: document.getElementById('guestMailingAddress').value, mailingPoskod: document.getElementById('guestMailingPoskod').value, mailingCity: document.getElementById('guestMailingCity').value, email: document.getElementById('guestEmail').value, phone: document.getElementById('guestPhone').value },
+                    guestBusiness: { occupation: document.getElementById('guestOccupation').value, industry: document.getElementById('guestIndustry').value, monthlyIncome: document.getElementById('guestMonthlyIncome').value, },
+                    partnerInfo: { fullName: document.getElementById('partnerFullName').value, icPassport: document.getElementById('partnerIcPassport').value, dob: document.getElementById('partnerDob').value, gender: document.getElementById('partnerGender').value, nationality: document.getElementById('partnerNationality').value, phone: document.getElementById('partnerPhone').value, relationshipToGuest: document.getElementById('relationshipToGuest').value, addressSameAsGuest: document.getElementById('partnerSameAddress').checked, correspondentAddress: document.getElementById('partnerCorrespondentAddress').value, poskod: document.getElementById('partnerPoskod').value, city: document.getElementById('partnerCity').value, },
+                    partnerBusiness: { occupation: document.getElementById('partnerOccupation').value, industry: document.getElementById('partnerIndustry').value, monthlyIncome: document.getElementById('partnerMonthlyIncome').value, }
+                },
+                part2: {
+                    membershipApplicant: { applicantType: getCheckedValues('applicantType')[0] || '', title: document.getElementById('applicantTitle').value, nameOnCard: document.getElementById('applicantNameOnCard').value, },
+                    applicantOffice: { address: document.getElementById('applicantOfficeAddress').value, poskod: document.getElementById('applicantOfficePoskod').value, city: document.getElementById('applicantOfficeCity').value, tel: document.getElementById('applicantOfficeTel').value, fax: document.getElementById('applicantFax').value, },
+                    applicantBanking: { bankName: document.getElementById('applicantBankName').value, accountNumber: document.getElementById('applicantAccountNumber').value, },
+                    nominee: { sameAsPartner: document.getElementById('nomineeSameAsPartner').checked, bankName: document.getElementById('nomineeBankName').value, accountNumber: document.getElementById('nomineeAccountNumber').value, },
+                    thirdPartyPayor: { isApplicant: document.getElementById('payorIsApplicant').checked, officeAddress: document.getElementById('payorOfficeAddress').value, },
+                    salesDetail: { productTypes: getCheckedValues('productType'), transactionMethod: getCheckedValues('transactionMethod')[0] || '', worksheetCode: document.getElementById('worksheetCode').value, orNumber: document.getElementById('orNumber').value, aprCode: document.getElementById('aprCode').value, consultantName: document.getElementById('consultantName').value, consultantCode: document.getElementById('consultantCode').value, }
+                },
+                signatures: {
+                    applicant: { signatureData: signatures.applicantSignature, name: document.getElementById('applicantSignatureName').value, ic: document.getElementById('applicantSignatureIC').value, date: document.getElementById('applicantSignatureDate').value, },
+                    nominee: { signatureData: signatures.nomineeSignature, name: document.getElementById('nomineeSignatureName').value, ic: document.getElementById('nomineeSignatureIC').value, date: document.getElementById('nomineeSignatureDate').value, },
+                    consultant: { signatureData: signatures.consultantSignature, name: document.getElementById('consultantSignatureName').value, ic: document.getElementById('consultantSignatureIC').value, date: document.getElementById('consultantSignatureDate').value, },
+                    witness: { signatureData: signatures.witnessSignature, name: document.getElementById('witnessSignatureName').value, ic: document.getElementById('witnessSignatureIC').value, date: document.getElementById('witnessSignatureDate').value, }
+                }
+            };
+        }
+
+        function importData() {
+            const file = document.getElementById('importFile').files[0];
+            if (!file) { alert('Please select a file to import.'); return; }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try { const data = JSON.parse(e.target.result); populateForm(data); alert('Data imported successfully!'); }
+                catch (error) { alert('Error importing data. Please check the file format.'); console.error('Import Error:', error); }
+            };
+            reader.readAsText(file);
+        }
+
+        function populateForm(data) {
+            const setVal = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.value = value; };
+            const setCheck = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.checked = value; };
+            const setRadio = (name, value) => { if (value) { const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if (el) el.checked = true; } };
+            const setMultiCheck = (name, values) => { if (values && Array.isArray(values)) { document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = values.includes(cb.value)); } };
+            if (data.part1) { const { guestInfo, guestBusiness, partnerInfo, partnerBusiness } = data.part1; if (guestInfo) { Object.keys(guestInfo).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestInfo[key])); setRadio('maritalStatus', guestInfo.maritalStatus); setCheck('mailingSameAsCorrespondent', guestInfo.mailingSameAsCorrespondent); document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change')); } if (guestBusiness) { Object.keys(guestBusiness).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestBusiness[key])); } if (partnerInfo) { Object.keys(partnerInfo).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerInfo[key])); setVal('relationshipToGuest', partnerInfo.relationshipToGuest); setCheck('partnerSameAddress', partnerInfo.addressSameAsGuest); document.getElementById('partnerSameAddress').dispatchEvent(new Event('change')); } if (partnerBusiness) { Object.keys(partnerBusiness).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerBusiness[key])); } }
+            if (data.part2) { const { membershipApplicant, applicantOffice, applicantBanking, nominee, thirdPartyPayor, salesDetail } = data.part2; if (membershipApplicant) { setRadio('applicantType', membershipApplicant.applicantType); setVal('applicantTitle', membershipApplicant.title); setVal('applicantNameOnCard', membershipApplicant.nameOnCard); } if (applicantOffice) { setVal('applicantOfficeAddress', applicantOffice.address); setVal('applicantOfficePoskod', applicantOffice.poskod); setVal('applicantOfficeCity', applicantOffice.city); setVal('applicantOfficeTel', applicantOffice.tel); setVal('applicantFax', applicantOffice.fax); } if (applicantBanking) { setVal('applicantBankName', applicantBanking.bankName); setVal('applicantAccountNumber', applicantBanking.accountNumber); } if (nominee) { setCheck('nomineeSameAsPartner', nominee.sameAsPartner); setVal('nomineeBankName', nominee.bankName); setVal('nomineeAccountNumber', nominee.accountNumber); } if (thirdPartyPayor) { setCheck('payorIsApplicant', thirdPartyPayor.isApplicant); document.getElementById('payorIsApplicant').dispatchEvent(new Event('change')); setVal('payorOfficeAddress', thirdPartyPayor.officeAddress); } if (salesDetail) { setMultiCheck('productType', salesDetail.productTypes); setRadio('transactionMethod', salesDetail.transactionMethod); setVal('worksheetCode', salesDetail.worksheetCode); setVal('orNumber', salesDetail.orNumber); setVal('aprCode', salesDetail.aprCode); setVal('consultantName', salesDetail.consultantName); setVal('consultantCode', salesDetail.consultantCode); } }
+            if (data.signatures) { Object.keys(data.signatures).forEach(key => { const sig = data.signatures[key]; if (sig) { setVal(`${key}SignatureName`, sig.name); setVal(`${key}SignatureIC`, sig.ic); setVal(`${key}SignatureDate`, sig.date); } }); }
+        }
+
+        function generateCheckInPdf() { if (!validateCurrentSection()) return; const data = collectData(); localStorage.setItem('tamuPrintData', JSON.stringify(data)); window.open('print_preview.html', '_blank'); }
+        function exportPart1Data() { if (!validateCurrentSection()) return; const fullData = collectData(); const dataToExport = { part1: fullData.part1 }; const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Part1_Check-In.json`; const dataStr = JSON.stringify(dataToExport, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Data exported successfully as ${fileName}`); }
+        function exportFullData() { if (!validateCurrentSection()) { alert("Please complete all required fields before exporting."); return; } const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Full_Application.json`; const dataStr = JSON.stringify(fullData, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Full application data exported successfully as ${fileName}`); }
+
+        async function generateCombinedPdf() {
+            if (!validateCurrentSection()) {
+                alert("Please complete all required fields in Section 4, including applicant signature, before generating the PDF.");
+                return;
+            }
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+
+            const formData = collectData();
+            const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+            const filesToProcess = [
+                '/2_Application_Form_Green.html',
+                '/3_Buyer_Declaration.html',
+                '/4_AMLA_NEW.html',
+                '/5_Profit_Distribution.html'
+            ];
+
+            await processFilesSequentially(0, pdf, filesToProcess, formData);
+        }
+
+        async function processFilesSequentially(index, pdf, files, formData) {
+            const loadingStatus = document.getElementById('loadingStatus');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            if (index >= files.length) {
+                loadingStatus.textContent = 'Saving PDF...';
+                const guestName = formData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant';
+                pdf.save(`${guestName}_Compiled_Forms.pdf`);
+                loadingOverlay.style.display = 'none';
+                return;
+            }
+
+            const file = files[index];
+            loadingStatus.textContent = `Processing ${file} (${index + 1}/${files.length})...`;
+
+            try {
+                const response = await fetch(file);
+                if (!response.ok) throw new Error(`Network response was not ok for ${file}`);
+                const html = await response.text();
+
+                const renderContainer = document.getElementById('pdf-render-container');
+                renderContainer.innerHTML = html;
+
+                populateTemplate(file, formData);
+
+                await new Promise(r => setTimeout(r, 200));
+
+                const contentToCapture = renderContainer.firstElementChild;
+                const canvas = await html2canvas(contentToCapture, { scale: 1.5, useCORS: true, logging: false });
+                const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                const A4_WIDTH = 210;
+                const A4_HEIGHT = 297;
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = A4_WIDTH;
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                if (index > 0) pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, Math.min(pdfHeight, A4_HEIGHT));
+
+                renderContainer.innerHTML = '';
+
+                await processFilesSequentially(index + 1, pdf, files, formData);
+
+            } catch (error) {
+                console.error(`Failed to process ${file}:`, error);
+                alert(`Error: Could not load or process ${file}. Please ensure the file exists and you are running this from a web server (like VS Code's Live Server) instead of a local file:// path.`);
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        function populateTemplate(fileName, data) {
+            if (fileName.includes('2_Application_Form_Green.html')) populateGreenForm(data);
+            else if (fileName.includes('3_Buyer_Declaration.html')) populateDeclarationForm(data);
+            else if (fileName.includes('4_AMLA_NEW.html')) populateAmlaForm(data);
+            else if (fileName.includes('5_Profit_Distribution.html')) populateProfitForm(data);
+        }
+
+        function populateGreenForm(data) {
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
+            const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
+            const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox'); if (cb) cb.textContent = '✓'; } };
+            const setCharBoxes = (id, text, max) => { const c = document.getElementById(id); if (!c || !text) return; let h = ''; for (let i = 0; i < max; i++) { h += `<div class="char-box">${(text[i] || '').toUpperCase()}</div>`; } c.innerHTML = h; };
+            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" style="max-width:150px; max-height: 70px; position:absolute; bottom:5px; left:20px;">`; };
+
+            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+            let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
+
+            setCharBoxes('appName', (p2.membershipApplicant.title + ' ' + app.fullName), 40);
+            setCharBoxes('appNameOnCard', (p2.membershipApplicant.title + ' ' + p2.membershipApplicant.nameOnCard), 40);
+            setCharBoxes('appNric', app.icPassport, 14);
+            setCharBoxes('appDate', new Date().toLocaleDateString('en-GB').replace(/\//g, ''), 8);
+            if (app.nationality && app.nationality.toLowerCase().includes('malaysian')) { document.getElementById('appNationalityMalaysian').textContent = '✓'; } else { document.getElementById('appNationalityForeigner').textContent = '✓'; setText('appNationalityForeignerText', app.nationality); }
+            if (app.maritalStatus === 'Single') document.getElementById('appMaritalSingle').textContent = '✓';
+            if (app.maritalStatus === 'Married') document.getElementById('appMaritalMarried').textContent = '✓';
+            let homeAddr = app.correspondentAddress + ', ' + app.city;
+            setCharBoxes('appHomeAddress', homeAddr, 40);
+            setCharBoxes('appHomePostcode', app.poskod, 5);
+            let mailAddr = p1.guestInfo.mailingSameAsCorrespondent ? homeAddr : (p1.guestInfo.mailingAddress + ", " + p1.guestInfo.mailingCity);
+            setCharBoxes('appMailingAddress', mailAddr, 50);
+            setCharBoxes('appHp', app.phone, 11);
+            setText('appEmail', app.email); setText('appOccupation', appBiz.occupation);
+            const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
+            if (income > 60000) document.getElementById('appIncome4').textContent = '✓'; else if (income > 36000) document.getElementById('appIncome3').textContent = '✓'; else if (income > 24000) document.getElementById('appIncome2').textContent = '✓'; else if (income > 0) document.getElementById('appIncome1').textContent = '✓';
+            setText('appEmployer', appBiz.industry); setText('appIndustry', appBiz.industry);
+            setCharBoxes('appOfficeAddress', p2.applicantOffice.address, 40);
+            setCharBoxes('appOfficePostcode', p2.applicantOffice.poskod, 5);
+            setCharBoxes('nomineeName', p1.partnerInfo.fullName, 40);
+            setCharBoxes('nomineeNric', p1.partnerInfo.icPassport, 14);
+            setCharBoxes('nomineeRelation', p1.partnerInfo.relationshipToGuest, 15);
+            setCharBoxes('nomineeHp', p1.partnerInfo.phone, 11);
+            setText('declarationDate', sigs.applicant.date);
+            setSignature('applicantSignature', sigs.applicant.signatureData);
+            if (p2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
+            if (p2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
+            if (p2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
+        }
+
+        function populateDeclarationForm(data) {
+            const sigs = data.signatures;
+            const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
+            const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" style="max-width:150px; max-height: 60px; position:absolute; bottom:5px; left:10px;">`; };
+            if (sigs.applicant) { setSignature('applicantSignatureLine', sigs.applicant.signatureData); setText('applicantName', sigs.applicant.name); setText('applicantId', sigs.applicant.ic); setText('applicantDate', sigs.applicant.date); }
+            if (sigs.nominee) { setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData); setText('jointApplicantName', sigs.nominee.name); setText('jointApplicantId', sigs.nominee.ic); setText('jointApplicantDate', sigs.nominee.date); }
+            if (sigs.witness) { setSignature('witnessSignatureLine', sigs.witness.signatureData); setText('witnessName', sigs.witness.name); setText('witnessId', sigs.witness.ic); setText('witnessDate', sigs.witness.date); }
+        }
+
+        function populateAmlaForm(data) {
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
+            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
+            const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
+            const setSig = (id, url) => { const el = document.getElementById(id); if (el && url) el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`; };
+            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+            let appBiz = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
+            let mailAddr = app.mailingSameAsCorrespondent ? `${app.correspondentAddress}, ${app.poskod} ${app.city}` : `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`;
+            setVal('amlaName', app.fullName); setVal('amlaNric', app.icPassport);
+            setVal('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
+            setVal('amlaMailingAddress', mailAddr);
+            setVal('amlaMobile', app.phone); setVal('amlaEmail', app.email); setVal('amlaOccupation', appBiz.occupation);
+            if (sigs.applicant) { setSig('amlaSig', sigs.applicant.signatureData); setVal('amlaSigName', sigs.applicant.name); setVal('amlaSigDate', sigs.applicant.date); }
+            if (sigs.consultant) { setText('receiver-name', sigs.consultant.name); setSig('receiver-sig', sigs.consultant.signatureData); setText('receiver-date', sigs.consultant.date); }
+            if (sigs.witness) { setText('witness-name', sigs.witness.name); setSig('witness-sig', sigs.witness.signatureData); setText('witness-date', sigs.witness.date); }
+        }
+
+        function populateProfitForm(data) {
+            const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
+            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
+            const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
+            const setSig = (id, url) => { const el = document.getElementById(id); if (el && url) el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`; };
+            let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
+            setVal('pdName', app.fullName); setVal('pdNric', app.icPassport);
+            setVal('pdAccountNo', p2.applicantBanking.accountNumber); setVal('pdBankName', p2.applicantBanking.bankName);
+            setVal('pdPhone', app.phone); setVal('pdEmail', app.email);
+            if (sigs.applicant) { setSig('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', sigs.applicant.date); }
+            if (sigs.consultant) { setSig('pdManagerSig', sigs.consultant.signatureData); setText('pdManagerDate', sigs.consultant.date); }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection(1);
+            const industries = ['Agriculture', 'Automotive', 'Banking', 'Construction', 'Consulting', 'Education', 'Energy', 'Engineering', 'Entertainment', 'Finance', 'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Information Technology', 'Insurance', 'Legal', 'Logistics', 'Manufacturing', 'Marketing', 'Media', 'Mining', 'Non-Profit', 'Oil & Gas', 'Pharmaceutical', 'Real Estate', 'Retail', 'Science', 'Telecommunications', 'Tourism', 'Transportation', 'Other'];
+            const populateDropdown = (id) => { const select = document.getElementById(id); if (select) { select.innerHTML = '<option value="" disabled selected>Select Industry</option>' + industries.map(i => `<option value="${i}">${i}</option>`).join(''); } };
+            populateDropdown('guestIndustry'); populateDropdown('partnerIndustry');
+            document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () { document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid'; });
+            document.getElementById('partnerSameAddress').addEventListener('change', function () { const fields = ['partnerCorrespondentAddress', 'partnerPoskod', 'partnerCity']; if (this.checked) { fields.forEach(id => { const guestField = document.getElementById(id.replace('partner', 'guest')); if (guestField) { document.getElementById(id).value = guestField.value; } document.getElementById(id).disabled = true; }); } else { fields.forEach(id => document.getElementById(id).disabled = false); } });
+            document.getElementById('payorIsApplicant').addEventListener('change', function () { document.getElementById('thirdPartyPayorFields').style.display = this.checked ? 'none' : 'grid'; });
+        });
+    </script>
+</body>
+
+</html>

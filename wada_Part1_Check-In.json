@@ -1,0 +1,45 @@
+{
+  "part1": {
+    "guestInfo": {
+      "fullName": "wada",
+      "icPassport": "333",
+      "dob": "2025-07-03",
+      "gender": "Female",
+      "nationality": "wada",
+      "maritalStatus": "Married",
+      "numChildren": "2",
+      "correspondentAddress": "ww",
+      "poskod": "22",
+      "city": "ww",
+      "mailingSameAsCorrespondent": true,
+      "mailingAddress": "ww",
+      "mailingPoskod": "22",
+      "mailingCity": "ww",
+      "email": "ww",
+      "phone": "ww"
+    },
+    "guestBusiness": {
+      "occupation": "ww",
+      "industry": "Logistics",
+      "monthlyIncome": "4,000-6,000"
+    },
+    "partnerInfo": {
+      "fullName": "www",
+      "icPassport": "22",
+      "dob": "2025-07-11",
+      "gender": "Male",
+      "nationality": "ww",
+      "phone": "222",
+      "relationshipToGuest": "Child",
+      "addressSameAsGuest": true,
+      "correspondentAddress": "ww",
+      "poskod": "22",
+      "city": "ww"
+    },
+    "partnerBusiness": {
+      "occupation": "ww",
+      "industry": "Legal",
+      "monthlyIncome": "4,000-6,000"
+    }
+  }
+}

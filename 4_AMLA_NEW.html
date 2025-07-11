@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AML/CFT Declaration Form - Subscriber</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 40px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #1a3a69;
+        }
+
+        h1 {
+            font-size: 1.2em;
+            margin: 15px 0;
+            text-transform: uppercase;
+        }
+
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .form-table td {
+            padding: 8px 4px;
+            vertical-align: top;
+        }
+
+        .form-table td:first-child {
+            width: 35%;
+            font-weight: bold;
+        }
+
+        .form-table input[type="text"],
+        .form-table input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background: #f9f9f9;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .signature-field {
+            width: 45%;
+        }
+
+        .signature-line {
+            height: 60px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+
+        .signature-image {
+            position: absolute;
+            bottom: 5px;
+            left: 10px;
+            max-height: 50px;
+        }
+
+        .signature-field input {
+            border: none;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            padding: 5px 0;
+            margin-top: 5px;
+        }
+
+        .office-use-section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        .office-use-section legend {
+            font-weight: bold;
+            padding: 0 10px;
+        }
+
+        .office-use-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 40px;
+        }
+
+        .office-use-grid .input-group {
+            margin-bottom: 15px;
+        }
+
+        .office-use-grid label {
+            font-weight: bold;
+            display: block;
+        }
+
+        .office-use-grid .line-input {
+            border: none;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            padding: 5px 0;
+        }
+
+        .office-use-grid .sig-line {
+            height: 50px;
+            border-bottom: 1px solid #333;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <div class="header">
+            <div class="logo">JITAMU <span>CAPITAL BERHAD</span></div>
+            <h1>Anti-Money Laundering and Countering Financing of Terrorism (AML/CFT) Declaration Form - Subscriber</h1>
+        </div>
+        <form>
+            <div class="form-section">
+                <table class="form-table">
+                    <tr>
+                        <td>1 &nbsp; SUBSCRIBER NAME</td>
+                        <td><input type="text" id="amlaName"></td>
+                    </tr>
+                    <tr>
+                        <td>2 &nbsp; NRIC NO.</td>
+                        <td><input type="text" id="amlaNric"></td>
+                    </tr>
+                    <tr>
+                        <td>3 &nbsp; HOME ADDRESS</td>
+                        <td><input type="text" id="amlaHomeAddress"></td>
+                    </tr>
+                    <tr>
+                        <td>4 &nbsp; MAILING ADDRESS</td>
+                        <td><input type="text" id="amlaMailingAddress"></td>
+                    </tr>
+                    <tr>
+                        <td>5 &nbsp; CONTACT DETAILS</td>
+                        <td>
+                            <div><label>MOBILE NO.:</label><input type="text" id="amlaMobile"></div>
+                            <div style="margin-top: 8px;"><label>EMAIL ADDRESS:</label><input type="email"
+                                    id="amlaEmail"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>6 &nbsp; OCCUPATION</td>
+                        <td><input type="text" id="amlaOccupation"></td>
+                    </tr>
+                </table>
+            </div>
+            <fieldset style="border:none; padding:0; margin-top:30px;">
+                <legend style="font-weight:bold;font-size:1.1em;">DECLARATION</legend>
+                <p style="font-size:0.9em; text-align:justify;">We are fully aware of the provisions of the AMLA and
+                    hereby declare that all information give hereunder is true and accurate...</p>
+            </fieldset>
+            <div class="signature-section">
+                <div class="signature-field"><label>SIGNATURE:</label>
+                    <div class="signature-line" id="amlaSig"></div><label style="margin-top:10px;">NAME:</label><input
+                        type="text" id="amlaSigName">
+                </div>
+                <div class="signature-field" style="width: 30%;"><label>DATE:</label><input type="text"
+                        id="amlaSigDate"></div>
+            </div>
+            <fieldset class="office-use-section">
+                <legend>FOR OFFICE USE/ WITNESS INFORMATION</legend>
+                <div class="office-use-grid">
+                    <div class="input-group"><label>RECEIVER NAME:</label>
+                        <div id="receiver-name" class="line-input"></div>
+                    </div>
+                    <div class="input-group"><label>WITNESS NAME:</label>
+                        <div id="witness-name" class="line-input"></div>
+                    </div>
+                    <div class="input-group"><label>SIGNATURE:</label>
+                        <div id="receiver-sig" class="sig-line"></div>
+                    </div>
+                    <div class="input-group"><label>SIGNATURE:</label>
+                        <div id="witness-sig" class="sig-line"></div>
+                    </div>
+                    <div class="input-group"><label>DATE:</label>
+                        <div id="receiver-date" class="line-input"></div>
+                    </div>
+                    <div class="input-group"><label>DATE:</label>
+                        <div id="witness-date" class="line-input"></div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</body>
+
+</html>
