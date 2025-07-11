@@ -23,12 +23,6 @@
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
-        .consent-section p {
-            margin: 4px 0;
-            text-align: justify;
-            /* MODIFIED: Justified text alignment */
-        }
-
         /* Base table styles - reduced spacing */
         table {
             width: 100%;
@@ -40,21 +34,6 @@
         td {
             padding: 4px 4px;
             vertical-align: middle;
-        }
-
-        /* Form sections - optimized spacing */
-        .details-table,
-        .office-use-table {
-            background: white;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-            border-radius: 3px;
-            margin-bottom: 12px;
-        }
-
-        .details-table td,
-        .office-use-table td {
-            padding: 4px 6px;
-            border-bottom: 1px solid #eee;
         }
 
         .line {
@@ -96,18 +75,6 @@
             color: #333;
         }
 
-        /* Header styling - compact */
-        .header-box {
-            border: 1px solid #ddd;
-            padding: 8px;
-            width: 180px;
-            font-size: 8pt;
-            line-height: 1.3;
-            background: white;
-            border-radius: 3px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
         .main-title {
             text-align: center;
             font-weight: 600;
@@ -135,7 +102,6 @@
             color: #444;
         }
 
-        /* Occupation section - single row layout */
         .flex-container {
             display: flex;
             align-items: center;
@@ -165,13 +131,11 @@
             flex-shrink: 0;
         }
 
-        /* Income section - compact single column */
         .income-section {
             margin: 8px 0;
             background: white;
             border: 1px solid #ddd;
             border-radius: 3px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             padding: 8px;
         }
 
@@ -190,19 +154,9 @@
         .income-options {
             display: flex;
             flex-wrap: nowrap;
-
             gap: 15px;
         }
 
-        .checkbox-item {
-            display: inline-flex;
-            align-items: center;
-            margin: 0;
-            padding: 2px 0;
-            white-space: nowrap;
-        }
-
-        /* Consent section - reduced size */
         .consent-section {
             font-size: 7.5pt;
             margin: 15px 0;
@@ -211,38 +165,57 @@
             border: 1px solid #ddd;
             border-radius: 3px;
             line-height: 1.3;
+            text-align: justify;
         }
 
         .consent-section p {
             margin: 4px 0;
         }
 
-        /* Signature section - reduced spacing */
         .signature-section {
             display: flex;
             justify-content: space-between;
-            margin-top: 40px;
-            padding: 0 15px;
+            margin-top: 20px;
         }
 
         .sig-line {
             width: 45%;
+            position: relative;
+        }
+
+        .sig-line.with-signature {
+            padding-top: 45px;
+        }
+
+        .sig-line.with-signature::after {
+            content: '';
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            width: 100%;
             border-top: 1px solid #ccc;
-            padding-top: 6px;
+        }
+
+        .sig-line span {
+            position: relative;
             color: #666;
         }
 
-        /* Office use section - compact */
+        #printGuestSignature {
+            position: absolute;
+            top: 0;
+            left: 10px;
+            height: 50px;
+        }
+
         .office-use-box {
             border: 1px solid #ddd;
             padding: 5px;
             margin-top: 10px;
             background: white;
             border-radius: 3px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
-        /* Print styles */
         @media print {
             body {
                 background: white;
@@ -254,31 +227,17 @@
                 box-shadow: none;
                 border: none;
                 height: 297mm;
-            }
-
-            .details-table,
-            .income-col,
-            .office-use-box,
-            .header-box {
-                box-shadow: none;
-                border: 1px solid #ccc;
-            }
-
-            /* Force page breaks */
-            .page {
                 page-break-after: always;
             }
         }
 
         .title-cell {
             width: 100px;
-            /* Adjust as needed */
         }
 
         .header-container {
             display: flex;
             align-items: center;
-
             padding: 8px 15px;
             border-bottom: 1px solid #e0e0e0;
             margin-bottom: 15px;
@@ -308,21 +267,6 @@
             font-size: 10px;
             line-height: 1.2;
         }
-
-        .address {
-            color: #333;
-            margin-bottom: 2px;
-        }
-
-        .contact-line {
-            color: #555;
-            font-size: 9px;
-        }
-
-        .email-line {
-            color: #2563eb;
-            font-size: 9px;
-        }
     </style>
 </head>
 
@@ -333,24 +277,17 @@
                 <img src="TCB_LOGO.png" alt="TAMU Logo" class="logo">
             </div>
             <div class="contact-info">
-                <div class="address">
-                    51C-L1 Mezzanine Floor Bangunan Podium 53, Jalan Raja Alang Kampung Baru, 53000 Kuala Lumpur
-                </div>
-                <div class="contact-line">
-                    <strong>T:</strong> +603 2698 8789 &nbsp;|&nbsp; <strong>F:</strong> +603 2692 4789
-                </div>
-                <div class="email-line">
-                    <strong>E:</strong> memberservices@tamucapital.com
-                </div>
-                <div class="voucher-no">Voucher No: <span id="printVoucherNo"></span></div>
+                <div>51C-L1 Mezzanine Floor Bangunan Podium 53, Jalan Raja Alang Kampung Baru, 53000 Kuala Lumpur</div>
+                <div><strong>T:</strong> +603 2698 8789  |  <strong>F:</strong> +603 2692 4789</div>
+                <div style="color: #2563eb;"><strong>E:</strong> memberservices@tamucapital.com</div>
+                <div>Voucher No: <span id="printVoucherNo"></span></div>
             </div>
         </div>
 
-        <div class="main-title">PRESENTATION CHECK - IN FORM</div>
+        <div class="main-title">PRESENTATION CHECK-IN FORM</div>
         <div class="sub-title">THANK YOU FOR ATTENDING OUR PRESENTATION TODAY. YOUR PARTICIPATION IS GREATLY
             APPRECIATED.</div>
         <div class="sub-title">HAVE A PLEASANT EXPERIENCE!!!</div>
-
         <div class="confidential-box">INFORMATION GIVEN HERE IS STRICTLY PRIVATE AND CONFIDENTIAL</div>
 
         <table class="details-table">
@@ -395,7 +332,6 @@
             <div class="checkbox-item"><span class="box" id="printMaritalSingle"></span> SINGLE</div>
             <div class="checkbox-item"><span class="box" id="printMaritalMarried"></span> MARRIED</div>
             <div class="checkbox-item"><span class="box" id="printMaritalOthers"></span> OTHERS</div>
-
             <div>| NUMBER OF CHILDREN:</div>
             <div class="line" id="printNumChildren" style="flex-grow: 1;"></div>
         </div>
@@ -418,37 +354,31 @@
         <div class="income-section">
             <div class="income-row">
                 <div class="company-label">HUSBAND:</div>
-                <div class="income-options row">
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome1"></span> RM4k - RM6k</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome2"></span> RM6,001 - RM10,000</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome3"></span> RM10,001 - RM 15,000
-                    </div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome4"></span> RM15,001 - RM 20,000
-                    </div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome5"></span> RM20,001 > </div>
+                <div class="income-options">
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome1"></span> RM4k-RM6k</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome2"></span> RM6,001-RM10k</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome3"></span> RM10,001-RM15k</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome4"></span> RM15,001-RM20k</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome5"></span> RM20,001 ></div>
                 </div>
             </div>
             <div class="income-row">
                 <div class="company-label">WIFE:</div>
                 <div class="income-options">
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome1"></span> RM4k - RM6k
-                    </div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome2"></span> RM6,001 - RM10,000
-                    </div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome3"></span> RM10,001 - RM15,000
-                    </div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome4"></span> RM15,001 - RM 20,000
-                    </div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome1"></span> RM4k-RM6k</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome2"></span> RM6,001-RM10k</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome3"></span> RM10,001-RM15k</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome4"></span> RM15,001-RM20k</div>
                     <div class="checkbox-item"><span class="box" id="printPartnerIncome5"></span> RM20,001 ></div>
                 </div>
             </div>
         </div>
 
+        <!-- This section seems to be missing from the main form, but I'll leave placeholders -->
         <div class="flex-container" style="margin-top: 15px;">
             <div>ARE YOU A CREDIT CARD HOLDER:-</div>
             <div class="checkbox-item"><span class="box" id="printCCYes"></span> YES</div>
-            <div class="checkbox-item"><span class="box" id="printCCNo"></span> NO</div>
-            |
+            <div class="checkbox-item"><span class="box" id="printCCNo"></span> NO</div> |
             <div class="checkbox-item"><span class="box" id="printCCPlatinum"></span> PLATINUM</div>
             <div class="checkbox-item"><span class="box" id="printCCGold"></span> GOLD</div>
             <div class="checkbox-item"><span class="box" id="printCCClassic"></span> CLASSIC</div>
@@ -459,52 +389,60 @@
         </div>
 
         <div class="consent-section">
-            <div class="section-title">CONSENT OF THE DATA PROTECTION AND PRIVACY:</div>
+            <div class="">CONSENT OF THE DATA PROTECTION AND PRIVACY:</div>
             <p>We assure you that all personal data will be treated as confidential and we will implement the
                 appropriate steps of procedures in accordance with the law, rules and regulations to ensure the
                 protection of personal data and prevent unauthorised and unlawful usage, accidental access or
                 disclosure, alteration or destruction of your personal data.</p>
             <p>I agree that <strong>TAMU CAPITAL BERHAD</strong> shall have the right to use my personal data for the
-                purpose of the operational process which might include transfer of data and personal information to its
-                related companies, subsidiaries and/or its holding company, outsourcing partners, and solicitor but not
-                limited to affiliate companies including their outsourcing partners. I further agree that TAMU CAPITAL
-                BERHAD and its related companies, subsidiareis and/or its holding company can share and use my data and
-                personal information for the purpose of promoting the company's and its related companies',
-                subsidiaries' and/or its holding company's products, new services and support requirement, and marketing
+                purpose of the
+                operational process which might include transfer of data and personal information to its related
+                companies, subsidiaries and/or its holding company,
+                outsourcing partners, and solicitor but not limited to affiliate companies including their outsourcing
+                partners. I further agree that <strong>TAMU CAPITAL BERHAD</strong> and
+                its related companies, subsidiareis and/or its holding company can share and use my data and personal
+                information for the purpose of promoting the
+                company's and its related companies', subsidiaries' and/or its holding company's products, new services
+                and support requirement, and marketing
                 campaigns and activities and commercial transaction.</p>
         </div>
 
         <div class="signature-section">
-            <div class="sig-line"><span>Signature:</span></div>
-            <div class="sig-line"><span>Date:</span></div>
+            <div class="sig-line with-signature">
+                <div id="printGuestSignature"></div>
+                <span>Signature:</span>
+            </div>
+            <div class="sig-line">
+                <span>Date: <span id="printSignatureDate"></span></span>
+            </div>
         </div>
 
         <div class="office-use-box">
             <div class="section-title" style="text-align: center;">FOR OFFICE USE ONLY:</div>
             <table class="office-use-table">
                 <tr>
-                    <td style="width: 20%;">DAY:</td>
-                    <td class="line"></td>
-                    <td style="width: 20%;">DATE:</td>
-                    <td class="line"></td>
+                    <td style="width: 10%;">DAY:</td>
+                    <td class="line" id="printOfficeDay" style="width: 40%;"></td>
+                    <td style="width: 10%;">DATE:</td>
+                    <td class="line" id="printOfficeDate" style="width: 40%;"></td>
                 </tr>
                 <tr>
-                    <td style="width: 20%;">TIME IN:</td>
-                    <td class="line"></td>
-                    <td style="width: 20%;">TIME OUT:</td>
-                    <td class="line"></td>
+                    <td style="width: 10%;">TIME IN:</td>
+                    <td class="line" id="printOfficeTimeIn" style="width: 40%;"></td>
+                    <td style="width: 10%;">TIME OUT:</td>
+                    <td class="line" id="printOfficeTimeOut" style="width: 40%;"></td>
                 </tr>
                 <tr>
-                    <td style="width: 20%;">TM CODE:</td>
-                    <td class="line"></td>
-                    <td style="width: 20%;">CONSULTANT:</td>
-                    <td class="line"></td>
+                    <td style="width: 10%;">TM CODE:</td>
+                    <td class="line" id="printOfficeTmCode" style="width: 40%;"></td>
+                    <td style="width: 10%;">CONSULTANT:</td>
+                    <td class="line" id="printOfficeConsultant" style="width: 40%;"></td>
                 </tr>
             </table>
             <div class="flex-container" style="margin-top: 10px; justify-content: space-around;">
-                <div class="checkbox-item"><span class="box"></span> QT</div>
-                <div class="checkbox-item"><span class="box"></span> NQ</div>
-                <div class="checkbox-item"><span class="box"></span> RESCHEDULED</div>
+                <div class="checkbox-item"><span class="box" id="printOfficeStatusQT"></span> QT</div>
+                <div class="checkbox-item"><span class="box" id="printOfficeStatusNQ"></span> NQ</div>
+                <div class="checkbox-item"><span class="box" id="printOfficeStatusRescheduled"></span> RESCHEDULED</div>
             </div>
         </div>
     </div>
@@ -521,68 +459,67 @@
 
             const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
             const setCheck = (id) => { const el = document.getElementById(id); if (el) el.textContent = '✓'; };
-            const calculateAge = (dob) => {
-                if (!dob) return '';
-                const birthDate = new Date(dob);
-                const today = new Date();
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const m = today.getMonth() - birthDate.getMonth();
-                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-                return age;
-            };
+            const setSignature = (id, url) => { const container = document.getElementById(id); if (container && url) { const img = document.createElement('img'); img.src = url; img.style = "max-height: 50px; max-width: 180px;"; container.appendChild(img); } };
+            const calculateAge = (dob) => { if (!dob) return ''; const birthDate = new Date(dob); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } return age; };
 
-            // Determine who is Mr. and Mrs. based on gender
             let guestIsMr = p1.guestInfo.gender === 'Male';
             let partnerIsMrs = p1.partnerInfo.fullName && p1.partnerInfo.gender === 'Female';
-
             const mrInfo = guestIsMr ? p1.guestInfo : (p1.partnerInfo.gender === 'Male' ? p1.partnerInfo : {});
             const mrsInfo = partnerIsMrs ? p1.partnerInfo : (p1.guestInfo.gender === 'Female' ? p1.guestInfo : {});
-
             const mrBiz = guestIsMr ? p1.guestBusiness : (p1.partnerInfo.gender === 'Male' ? p1.partnerBusiness : {});
             const mrsBiz = partnerIsMrs ? p1.partnerBusiness : (p1.guestInfo.gender === 'Female' ? p1.guestBusiness : {});
 
-            // Populate fields
+            // Populate guest and partner info
             setText('printGuestName', mrInfo.fullName);
             setText('printGuestNric', mrInfo.icPassport);
             setText('printGuestAge', calculateAge(mrInfo.dob));
             setText('printGuestPhone', mrInfo.phone);
-
             setText('printPartnerName', mrsInfo.fullName);
             setText('printPartnerNric', mrsInfo.icPassport);
             setText('printPartnerAge', calculateAge(mrsInfo.dob));
             setText('printPartnerPhone', mrsInfo.phone);
 
+            // Populate address and contact
             setText('printAddress', `${p1.guestInfo.correspondentAddress}, ${p1.guestInfo.poskod} ${p1.guestInfo.city}`);
             setText('printEmail', p1.guestInfo.email);
             setText('printNumChildren', p1.guestInfo.numChildren);
 
+            // Populate checkboxes
             if (p1.guestInfo.maritalStatus === 'Single') setCheck('printMaritalSingle');
             if (p1.guestInfo.maritalStatus === 'Married') setCheck('printMaritalMarried');
             if (p1.guestInfo.maritalStatus === 'Others') setCheck('printMaritalOthers');
 
+            // Populate occupation
             setText('printGuestOccupation', mrBiz.occupation);
             setText('printGuestCompany', mrBiz.industry);
             setText('printPartnerOccupation', mrsBiz.occupation);
             setText('printPartnerCompany', mrsBiz.industry);
 
-            const setIncomeCheck = (income, prefix) => {
-                if (!income) return;
-                if (income === '4,000-6,000') setCheck(prefix + '1');
-                if (income === '6,001-10,000') setCheck(prefix + '2');
-                if (income === '10,001-15,000') setCheck(prefix + '3');
-                if (income === '15,001-20,000') setCheck(prefix + '4');
-                if (income === '20,001 and above') setCheck(prefix + '5');
-            };
-
+            // Populate income
+            const setIncomeCheck = (income, prefix) => { if (!income) return; if (income === '4,000-6,000') setCheck(prefix + '1'); if (income === '6,001-10,000') setCheck(prefix + '2'); if (income === '10,001-15,000') setCheck(prefix + '3'); if (income === '15,001-20,000') setCheck(prefix + '4'); if (income === '20,001 and above') setCheck(prefix + '5'); };
             setIncomeCheck(mrBiz.monthlyIncome, 'printGuestIncome');
             setIncomeCheck(mrsBiz.monthlyIncome, 'printPartnerIncome');
 
-            // After a short delay, trigger the print dialog
-            setTimeout(() => {
-                window.print();
-            }, 500);
+            // Populate signature
+            if (p1.guestCheckInSignature) {
+                setSignature('printGuestSignature', p1.guestCheckInSignature.signatureData);
+                setText('printSignatureDate', p1.guestCheckInSignature.date);
+            }
+
+            // Populate Office Use Only
+            if (p1.officeUse) {
+                setText('printOfficeDay', p1.officeUse.day);
+                setText('printOfficeDate', p1.officeUse.date);
+                setText('printOfficeTimeIn', p1.officeUse.timeIn);
+                setText('printOfficeTimeOut', p1.officeUse.timeOut);
+                setText('printOfficeTmCode', p1.officeUse.tmCode);
+                setText('printOfficeConsultant', p1.officeUse.consultant);
+                if (p1.officeUse.status === 'QT') setCheck('printOfficeStatusQT');
+                if (p1.officeUse.status === 'NQ') setCheck('printOfficeStatusNQ');
+                if (p1.officeUse.status === 'RESCHEDULED') setCheck('printOfficeStatusRescheduled');
+            }
+
+            setTimeout(() => { window.print(); }, 500);
         };
     </script>
 </body>
