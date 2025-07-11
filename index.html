@@ -894,6 +894,34 @@
         let signatures = {};
         let signaturePadsInitialized = false;
 
+        // --- Pre-load templates into a cache object on page load ---
+        const templateCache = {};
+
+        async function preloadTemplates() {
+            const files = [
+                '2_Application_Form_Green.html',
+                '3_Buyer_Declaration.html',
+                '4_AMLA_NEW.html',
+                '5_Profit_Distribution.html'
+            ];
+            console.log("Preloading templates...");
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    templateCache[file] = await response.text();
+                    console.log(`Successfully preloaded ${file}`);
+                } catch (error) {
+                    console.error(`Could not preload template ${file}:`, error);
+                    // This error will now appear in the browser's console (F12) if a file is missing or misspelled.
+                }
+            }
+        }
+        // -----------------------------------------------------------
+
+
+        // --- Core UI and Form Navigation Functions ---
+
         function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
         function nextSection() { if (validateCurrentSection() && currentSection < totalSections) { showSection(currentSection + 1); } }
         function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
@@ -911,6 +939,8 @@
             return true;
         }
 
+        // --- Modal and Signature Pad Functions ---
+
         function showModal(modalId) { document.getElementById(modalId).style.display = "block"; }
         function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
         window.onclick = function (event) { document.querySelectorAll('.modal').forEach(modal => { if (event.target == modal) { modal.style.display = "none"; } }); }
@@ -918,6 +948,8 @@
         function initializeAllSignaturePads() { ['applicantSignature', 'nomineeSignature', 'consultantSignature', 'witnessSignature'].forEach(initializeSignatureCanvas); }
         function initializeSignatureCanvas(canvasId) { const canvas = document.getElementById(canvasId); if (!canvas) return; const ctx = canvas.getContext('2d'); let drawing = false; canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; const getPos = (e) => { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; }; const startDrawing = (e) => { e.preventDefault(); drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }; const draw = (e) => { if (!drawing) return; e.preventDefault(); const pos = getPos(e); ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#2c3e50'; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }; const stopDrawing = () => { if (!drawing) return; drawing = false; signatures[canvasId] = canvas.toDataURL('image/png'); }; canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove', draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing); }
         function clearSignature(canvasId) { const canvas = document.getElementById(canvasId); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); delete signatures[canvasId]; }
+
+        // --- Data Management Functions ---
 
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
@@ -966,9 +998,13 @@
             if (data.signatures) { Object.keys(data.signatures).forEach(key => { const sig = data.signatures[key]; if (sig) { setVal(`${key}SignatureName`, sig.name); setVal(`${key}SignatureIC`, sig.ic); setVal(`${key}SignatureDate`, sig.date); } }); }
         }
 
+        // --- Button-triggered Functions ---
+
         function generateCheckInPdf() { if (!validateCurrentSection()) return; const data = collectData(); localStorage.setItem('tamuPrintData', JSON.stringify(data)); window.open('print_preview.html', '_blank'); }
         function exportPart1Data() { if (!validateCurrentSection()) return; const fullData = collectData(); const dataToExport = { part1: fullData.part1 }; const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Part1_Check-In.json`; const dataStr = JSON.stringify(dataToExport, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Data exported successfully as ${fileName}`); }
         function exportFullData() { if (!validateCurrentSection()) { alert("Please complete all required fields before exporting."); return; } const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Full_Application.json`; const dataStr = JSON.stringify(fullData, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Full application data exported successfully as ${fileName}`); }
+
+        // --- PDF Generation Logic (Using Pre-loaded Templates) ---
 
         async function generateCombinedPdf() {
             if (!validateCurrentSection()) {
@@ -1006,9 +1042,10 @@
             loadingStatus.textContent = `Processing ${file} (${index + 1}/${files.length})...`;
 
             try {
-                const response = await fetch(file);
-                if (!response.ok) throw new Error(`Network response was not ok for ${file}`);
-                const html = await response.text();
+                const html = templateCache[file];
+                if (!html) {
+                    throw new Error(`Template for ${file} was not pre-loaded. Please check for errors in the console.`);
+                }
 
                 const renderContainer = document.getElementById('pdf-render-container');
                 renderContainer.innerHTML = html;
@@ -1035,10 +1072,12 @@
 
             } catch (error) {
                 console.error(`Failed to process ${file}:`, error);
-                alert(`Error: Could not load or process ${file}. Please ensure the file exists and you are running this from a web server (like VS Code's Live Server) instead of a local file:// path.`);
+                alert(`Error: Could not process ${file}. Please check the browser console (F12) for more details.`);
                 loadingOverlay.style.display = 'none';
             }
         }
+
+        // --- Template Population Functions ---
 
         function populateTemplate(fileName, data) {
             if (fileName.includes('2_Application_Form_Green.html')) populateGreenForm(data);
@@ -1126,11 +1165,16 @@
             if (sigs.consultant) { setSig('pdManagerSig', sigs.consultant.signatureData); setText('pdManagerDate', sigs.consultant.date); }
         }
 
+        // --- Page Initialization ---
+
         document.addEventListener('DOMContentLoaded', () => {
+            preloadTemplates();
+
             showSection(1);
             const industries = ['Agriculture', 'Automotive', 'Banking', 'Construction', 'Consulting', 'Education', 'Energy', 'Engineering', 'Entertainment', 'Finance', 'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Information Technology', 'Insurance', 'Legal', 'Logistics', 'Manufacturing', 'Marketing', 'Media', 'Mining', 'Non-Profit', 'Oil & Gas', 'Pharmaceutical', 'Real Estate', 'Retail', 'Science', 'Telecommunications', 'Tourism', 'Transportation', 'Other'];
             const populateDropdown = (id) => { const select = document.getElementById(id); if (select) { select.innerHTML = '<option value="" disabled selected>Select Industry</option>' + industries.map(i => `<option value="${i}">${i}</option>`).join(''); } };
-            populateDropdown('guestIndustry'); populateDropdown('partnerIndustry');
+            populateDropdown('guestIndustry');
+            populateDropdown('partnerIndustry');
             document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () { document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid'; });
             document.getElementById('partnerSameAddress').addEventListener('change', function () { const fields = ['partnerCorrespondentAddress', 'partnerPoskod', 'partnerCity']; if (this.checked) { fields.forEach(id => { const guestField = document.getElementById(id.replace('partner', 'guest')); if (guestField) { document.getElementById(id).value = guestField.value; } document.getElementById(id).disabled = true; }); } else { fields.forEach(id => document.getElementById(id).disabled = false); } });
             document.getElementById('payorIsApplicant').addEventListener('change', function () { document.getElementById('thirdPartyPayorFields').style.display = this.checked ? 'none' : 'grid'; });
