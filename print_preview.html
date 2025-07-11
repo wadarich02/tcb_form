@@ -308,11 +308,10 @@
 
         <!-- Signature -->
         <div class="signature-section">
-            <div class="signature-box">
-
+            <div class="signature-box" id="printGuestSignatureContainer">
                 Signature:
             </div>
-            <div class="signature-box">
+            <div class="signature-box" id="printPartnerSignatureContainer">
                 Signature:
             </div>
         </div>
@@ -352,7 +351,7 @@
     </div>
 
     <script>
-        // The Javascript logic is unchanged. It populates the data correctly.
+        // --- CORRECTED SCRIPT LOGIC ---
         window.onload = function () {
             const dataString = localStorage.getItem('tamuPrintData');
             if (!dataString) { document.body.innerHTML = '<h1>Error: No data found.</h1>'; return; }
@@ -364,47 +363,94 @@
             const calculateAge = (dob) => { if (!dob) return ''; const birthDate = new Date(dob); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } return age; };
 
             if (p1.guestInfo) {
-                setText('printGuestName', p1.guestInfo.fullName);
-                setText('printGuestNric', p1.guestInfo.icPassport);
-                setText('printGuestAge', calculateAge(p1.guestInfo.dob));
-                setText('printAddress', p1.guestInfo.correspondentAddress);
+                // Determine which name to put in which box based on gender
+                if (p1.guestInfo.gender === 'Male') {
+                    setText('printGuestName', p1.guestInfo.fullName);
+                    setText('printGuestNric', p1.guestInfo.icPassport);
+                    setText('printGuestAge', calculateAge(p1.guestInfo.dob));
+                    setText('printGuestPhone', p1.guestInfo.phone);
+                } else {
+                    setText('printPartnerName', p1.guestInfo.fullName);
+                    setText('printPartnerNric', p1.guestInfo.icPassport);
+                    setText('printPartnerAge', calculateAge(p1.guestInfo.dob));
+                    setText('printPartnerPhone', p1.guestInfo.phone);
+                }
+
+                setText('printAddress', `${p1.guestInfo.correspondentAddress}, ${p1.guestInfo.poskod} ${p1.guestInfo.city}`);
                 setText('printEmail', p1.guestInfo.email);
-                setText('printGuestPhone', p1.guestInfo.phone);
                 setText('printNumChildren', p1.guestInfo.numChildren);
-                if (p1.guestInfo.maritalStatus) { document.getElementById('printMarital' + p1.guestInfo.maritalStatus).textContent = '✓'; }
+                if (p1.guestInfo.maritalStatus) {
+                    const maritalEl = document.getElementById('printMarital' + p1.guestInfo.maritalStatus);
+                    if (maritalEl) maritalEl.textContent = '✓';
+                }
             }
 
             if (p1.guestBusiness) {
-                setText('printGuestOccupation', p1.guestBusiness.occupation);
-                setText('printGuestCompany', p1.guestBusiness.industry); // Mapping industry to company
-                const income = p1.guestBusiness.monthlyIncome;
-                if (income) {
-                    if (income.includes('4,000')) document.getElementById('printGuestIncome1').textContent = '✓';
-                    if (income.includes('6,001')) document.getElementById('printGuestIncome2').textContent = '✓';
-                    if (income.includes('10,001')) document.getElementById('printGuestIncome3').textContent = '✓';
+                if (p1.guestInfo.gender === 'Male') {
+                    setText('printGuestOccupation', p1.guestBusiness.occupation);
+                    setText('printGuestCompany', p1.guestBusiness.industry);
+                    const income = p1.guestBusiness.monthlyIncome;
+                    if (income) {
+                        if (income === '4k-6k') document.getElementById('printGuestIncome1').textContent = '✓';
+                        if (income === '6k-10k') document.getElementById('printGuestIncome2').textContent = '✓';
+                        if (income === '10k+') document.getElementById('printGuestIncome3').textContent = '✓';
+                    }
+                } else {
+                    setText('printPartnerOccupation', p1.guestBusiness.occupation);
+                    setText('printPartnerCompany', p1.guestBusiness.industry);
+                    const income = p1.guestBusiness.monthlyIncome;
+                    if (income) {
+                        if (income === '4k-6k') document.getElementById('printPartnerIncome1').textContent = '✓';
+                        if (income === '6k-10k') document.getElementById('printPartnerIncome2').textContent = '✓';
+                        if (income === '10k+') document.getElementById('printPartnerIncome3').textContent = '✓';
+                    }
                 }
             }
 
-            if (p1.partnerInfo) {
-                setText('printPartnerName', p1.partnerInfo.fullName);
-                setText('printPartnerNric', p1.partnerInfo.icPassport);
-                setText('printPartnerAge', calculateAge(p1.partnerInfo.dob));
-                setText('printPartnerPhone', p1.partnerInfo.phone);
-            }
-
-            if (p1.partnerBusiness) {
-                setText('printPartnerOccupation', p1.partnerBusiness.occupation);
-                setText('printPartnerCompany', p1.partnerBusiness.industry);
-                const p_income = p1.partnerBusiness.monthlyIncome;
-                if (p_income) {
-                    if (p_income.includes('4,000')) document.getElementById('printPartnerIncome1').textContent = '✓';
-                    if (p_income.includes('6,001')) document.getElementById('printPartnerIncome2').textContent = '✓';
-                    if (p_income.includes('10,001')) document.getElementById('printPartnerIncome3').textContent = '✓';
+            if (p1.partnerInfo && p1.partnerInfo.fullName) {
+                if (p1.partnerInfo.gender === 'Female') {
+                    setText('printPartnerName', p1.partnerInfo.fullName);
+                    setText('printPartnerNric', p1.partnerInfo.icPassport);
+                    setText('printPartnerAge', calculateAge(p1.partnerInfo.dob));
+                    setText('printPartnerPhone', p1.partnerInfo.phone);
+                } else {
+                    setText('printGuestName', p1.partnerInfo.fullName);
+                    setText('printGuestNric', p1.partnerInfo.icPassport);
+                    setText('printGuestAge', calculateAge(p1.partnerInfo.dob));
+                    setText('printGuestPhone', p1.partnerInfo.phone);
                 }
             }
 
-            if (p1.applicantSignature) {
-                document.getElementById('printGuestSignature').src = p1.applicantSignature;
+            if (p1.partnerBusiness && p1.partnerInfo.fullName) {
+                if (p1.partnerInfo.gender === 'Female') {
+                    setText('printPartnerOccupation', p1.partnerBusiness.occupation);
+                    setText('printPartnerCompany', p1.partnerBusiness.industry);
+                    const p_income = p1.partnerBusiness.monthlyIncome;
+                    if (p_income) {
+                        if (p_income === '4k-6k') document.getElementById('printPartnerIncome1').textContent = '✓';
+                        if (p_income === '6k-10k') document.getElementById('printPartnerIncome2').textContent = '✓';
+                        if (p_income === '10k+') document.getElementById('printPartnerIncome3').textContent = '✓';
+                    }
+                } else {
+                    setText('printGuestOccupation', p1.partnerBusiness.occupation);
+                    setText('printGuestCompany', p1.partnerBusiness.industry);
+                    const p_income = p1.partnerBusiness.monthlyIncome;
+                    if (p_income) {
+                        if (p_income === '4k-6k') document.getElementById('printGuestIncome1').textContent = '✓';
+                        if (p_income === '6k-10k') document.getElementById('printGuestIncome2').textContent = '✓';
+                        if (p_income === '10k+') document.getElementById('printGuestIncome3').textContent = '✓';
+                    }
+                }
+            }
+
+            // This part is speculative as signatures are not part of part 1
+            if (data.signatures && data.signatures.applicant && data.signatures.applicant.signatureData) {
+                const sigImg = `<img src="${data.signatures.applicant.signatureData}" class="signature-image">`;
+                document.getElementById('printGuestSignatureContainer').innerHTML += sigImg;
+            }
+            if (data.signatures && data.signatures.nominee && data.signatures.nominee.signatureData) {
+                const sigImg = `<img src="${data.signatures.nominee.signatureData}" class="signature-image">`;
+                document.getElementById('printPartnerSignatureContainer').innerHTML += sigImg;
             }
 
             setTimeout(() => {
