@@ -78,7 +78,18 @@
                         <div class="form-group"><label for="guestOccupation">Occupation</label><input type="text"
                                 id="guestOccupation" required></div>
                         <div class="form-group"><label for="guestIndustry">Industry</label><select id="guestIndustry"
-                                required></select></div>
+                                required>
+                                <option value="" disabled selected>Select Industry</option>
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Banking">Banking</option>
+                                <option value="Construction">Construction</option>
+                                <option value="Education">Education</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Other">Other</option>
+                            </select></div>
                         <div class="form-group full-width"><label for="guestMonthlyIncome">Monthly Income</label><select
                                 id="guestMonthlyIncome" required>
                                 <option value="" disabled selected>Select Income Range</option>
@@ -240,9 +251,11 @@
                     <h3>3. Membership Applicant</h3>
                     <div class="form-grid">
                         <div class="form-group"><label>Applicant is</label>
-                            <div class="checkbox-group"><label><input type="radio" name="applicantType" value="Guest's">
-                                    Guest's</label><label><input type="radio" name="applicantType"
-                                        value="Guest's Partner"> Guest's Partner</label></div>
+                            <div class="checkbox-group"><label><input type="radio" name="applicantType" value="Guest's"
+                                        checked>
+                                    Guest</label><label><input type="radio" name="applicantType"
+                                        value="Guest's Partner"> Guest's
+                                    Partner</label></div>
                         </div>
                         <div class="form-group"><label for="applicantNameOnCard">Name on Card</label>
                             <div style="display: flex; gap: 10px;"><select id="applicantTitle" style="width: 100px;">
@@ -279,46 +292,125 @@
                     </div>
                 </div>
                 <div class="subsection">
-                    <h3>4. Nominee</h3>
-                    <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
-                                id="nomineeSameAsPartner"> Nominee is the same as Guest's Partner</label></div>
-                    <p>If not the same as partner, please fill in the partner section (in Part 1) with the nominee's
-                        details.</p>
-                    <h4 style="margin-top: 20px; color: #34495e;">Nominee Banking Details</h4>
-                    <div class="form-grid" style="margin-top: 10px;">
-                        <div class="form-group"><label for="nomineeBankName">Bank Name</label><input type="text"
-                                id="nomineeBankName"></div>
-                        <div class="form-group"><label for="nomineeAccountNumber">Account Number</label><input
-                                type="text" id="nomineeAccountNumber"></div>
+                    <h3>3.d Source of Funds</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="sourceOfFunds" value="Cash Savings"> Cash Savings</label>
+                        <label><input type="checkbox" name="sourceOfFunds" value="Credit Card"> Credit Card</label>
+                        <label><input type="checkbox" name="sourceOfFunds" value="Inheritance"> Inheritance</label>
+                        <label><input type="checkbox" name="sourceOfFunds" value="Others"> Others</label>
                     </div>
                 </div>
+                <div class="subsection">
+                    <h3>4. Nominee</h3>
+                    <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
+                                id="nomineeIsPartner" checked> Nominee is the same as Guest's Partner (filled in Part
+                            1)</label>
+                    </div>
+
+                    <div id="nomineeDetailsSection" style="display:none;">
+                        <p class="btn-warning"
+                            style="padding: 10px; border-radius: 5px; text-align: center; color: #333; margin-bottom: 15px;">
+                            Please
+                            fill in the details for the nominee below.</p>
+                        <div class="subsection">
+                            <h3>4.a Nominee Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width"><label for="nomineeFullName">Full Name</label><input
+                                        type="text" id="nomineeFullName"></div>
+                                <div class="form-group"><label for="nomineeIcPassport">IC/Passport</label><input
+                                        type="text" id="nomineeIcPassport"></div>
+                                <div class="form-group"><label for="nomineeDob">Date of Birth</label><input type="date"
+                                        id="nomineeDob"></div>
+                                <div class="form-group"><label for="nomineeRelationship">Relationship</label><input
+                                        type="text" id="nomineeRelationship"></div>
+                            </div>
+                        </div>
+                        <div class="subsection">
+                            <h3>4.b Nominee Business Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label for="nomineeOccupation">Occupation</label><input
+                                        type="text" id="nomineeOccupation"></div>
+                                <div class="form-group"><label for="nomineeIndustry">Industry</label><input type="text"
+                                        id="nomineeIndustry"></div>
+                            </div>
+                        </div>
+                        <div class="subsection">
+                            <h3>4.c Nominee Banking Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label for="nomineeBankName">Bank Name</label><input type="text"
+                                        id="nomineeBankName"></div>
+                                <div class="form-group"><label for="nomineeAccountNumber">Account Number</label><input
+                                        type="text" id="nomineeAccountNumber"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="subsection">
                     <h3>5. Third Party Payor</h3>
                     <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
                                 id="payorIsApplicant" checked> Payor is the Applicant</label></div>
-                    <div id="thirdPartyPayorFields" class="form-grid full-width" style="display:none;">
-                        <p>If not the applicant, please fill in the guest information section (in Part 1) with the
-                            payor's details and provide the office address below.</p>
-                        <div class="form-group full-width"><label for="payorOfficeAddress">Payor's Office
-                                Address</label><textarea id="payorOfficeAddress"></textarea></div>
+
+                    <div id="thirdPartyPayorSection" style="display:none;">
+                        <p class="btn-warning"
+                            style="padding: 10px; border-radius: 5px; text-align: center; color: #333; margin-bottom: 15px;">
+                            Please
+                            fill in the details for the Third Party Payor below.</p>
+                        <div class="subsection">
+                            <h3>Payor Personal Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group full-width"><label for="payorFullName">Full Name</label><input
+                                        type="text" id="payorFullName"></div>
+                                <div class="form-group"><label for="payorIcPassport">IC/Passport</label><input
+                                        type="text" id="payorIcPassport"></div>
+                                <div class="form-group"><label for="payorDob">Date of Birth</label><input type="date"
+                                        id="payorDob">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="subsection">
+                            <h3>Payor Business Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label for="payorOccupation">Occupation</label><input
+                                        type="text" id="payorOccupation"></div>
+                                <div class="form-group"><label for="payorIndustry">Industry</label><input type="text"
+                                        id="payorIndustry"></div>
+                                <div class="form-group full-width"><label for="payorOfficeAddress">Payor's Office
+                                        Address</label><textarea id="payorOfficeAddress"></textarea></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="subsection">
                     <h3>Sales Detail (To be filled out by consultant)</h3>
                     <div class="form-grid">
                         <div class="form-group"><label class="checkbox-group-title">Product</label>
-                            <div class="checkbox-group"><label><input type="checkbox" name="productType" value="Dirham">
-                                    Dirham</label><label><input type="checkbox" name="productType" value="Dinar">
-                                    Dinar</label><label><input type="checkbox" name="productType" value="Almas">
-                                    Almas</label></div>
-                        </div>
-                        <div class="form-group"><label class="checkbox-group-title">Method of Transaction</label>
-                            <div class="checkbox-group"><label><input type="radio" name="transactionMethod"
-                                        value="Debit/Credit/Cash/Cheque"> Debit/Credit/Cash/Cheque</label><label><input
-                                        type="radio" name="transactionMethod" value="Others"> Others</label></div>
+                            <div class="checkbox-group"><label><input type="checkbox" name="productType"
+                                        value="Dirham">Dirham</label><label><input type="checkbox" name="productType"
+                                        value="Dinar">Dinar</label><label><input type="checkbox" name="productType"
+                                        value="Almas">Almas</label></div>
                         </div>
                         <div class="form-group"><label for="worksheetCode">Worksheet Code</label><input type="text"
                                 id="worksheetCode"></div>
+                        <div class="form-group"><label for="subscriptionAmount">Subscription Amount (RM)</label><input
+                                type="number" id="subscriptionAmount" value="0"></div>
+                        <div class="form-group"><label for="investmentAmount">Investment Amount (RM)</label><input
+                                type="number" id="investmentAmount" value="0"></div>
+                        <div class="form-group"><label for="totalAmount">Total Amount (RM)</label><input type="number"
+                                id="totalAmount" readonly style="background-color: #e9ecef;"></div>
+                        <div class="form-group"><label>Profit Receiver</label>
+                            <div class="checkbox-group"><label><input type="radio" name="profitReceiver"
+                                        value="Applicant" checked>Applicant</label><label><input type="radio"
+                                        name="profitReceiver" value="Nominee">Nominee</label></div>
+                        </div>
+                        <div class="form-group full-width"><label class="checkbox-group-title">Method of
+                                Transaction</label>
+                            <div class="checkbox-group"><label><input type="radio" name="transactionMethod"
+                                        value="Debit/Credit/Cash/Cheque" checked>
+                                    Debit/Credit/Cash/Cheque</label><label><input type="radio" name="transactionMethod"
+                                        value="Others"> Others</label></div>
+                        </div>
                         <div class="form-group"><label for="orNumber">OR Number</label><input type="text" id="orNumber">
                         </div>
                         <div class="form-group"><label for="aprCode">APR Code</label><input type="text" id="aprCode">
@@ -352,9 +444,21 @@
                             onclick="showModal('investmentModal')">Investment (Wakalah) Terms &
                             Conditions</button>.</span></div>
                 <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-                <div class="consent-checkbox" style="background: #e8f5e9; border-color: #a5d6a7;"><input type="checkbox"
-                        id="finalConsent" required><span>By continuing, I confirm that the information I have provided
-                        is accurate and I give my consent to be bound by all the above terms.</span></div>
+
+                <h3 style="margin-bottom: 15px;">By continuing, you confirm the following:</h3>
+                <div class="consent-checkbox" style="background: #e8f5e9; border-color: #a5d6a7;">
+                    <input type="checkbox" id="finalConsent1" required>
+                    <span>I have read and understood the Rules & Regulations, Subscription Terms & Conditions, and
+                        Investment
+                        (Wakalah) Terms & Conditions provided by TAMU Capital Berhad.</span>
+                </div>
+                <div class="consent-checkbox" style="background: #e8f5e9; border-color: #a5d6a7;">
+                    <input type="checkbox" id="finalConsent2" required>
+                    <span>I agree and give my consent to be bound by all the above terms, and confirm that the
+                        information I have
+                        provided is accurate and compliant with all applicable legal and regulatory requirements.</span>
+                </div>
+
                 <div class="button-group"><button type="button" class="btn btn-secondary"
                         onclick="previousSection()">Back</button><button type="button" class="btn btn-primary"
                         onclick="nextSection()">Continue</button></div>
@@ -369,9 +473,8 @@
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="applicantSignature" class="signature-canvas"
                                 height="150"></canvas>
-                            <div class="signature-controls" style="text-align: right; margin-top: 5px;"><button
-                                    type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em; border-radius: 5px;"
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('applicantSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -387,9 +490,8 @@
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="nomineeSignature" class="signature-canvas"
                                 height="150"></canvas>
-                            <div class="signature-controls" style="text-align: right; margin-top: 5px;"><button
-                                    type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em; border-radius: 5px;"
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('nomineeSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -401,13 +503,30 @@
                                 id="nomineeSignatureDate"></div>
                     </div>
                     <div class="subsection">
+                        <h3>3rd Party Payor</h3>
+                        <div class="signature-container">
+                            <p>Please sign in the box below</p><canvas id="thirdPartyPayorSignature"
+                                class="signature-canvas" height="150"></canvas>
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
+                                    onclick="clearSignature('thirdPartyPayorSignature')">Clear</button></div>
+                        </div>
+                        <div class="form-group" style="margin-top:15px;"><label
+                                for="thirdPartyPayorSignatureName">Name</label><input type="text"
+                                id="thirdPartyPayorSignatureName">
+                        </div>
+                        <div class="form-group"><label for="thirdPartyPayorSignatureIC">IC</label><input type="text"
+                                id="thirdPartyPayorSignatureIC"></div>
+                        <div class="form-group"><label for="thirdPartyPayorSignatureDate">Date</label><input type="date"
+                                id="thirdPartyPayorSignatureDate"></div>
+                    </div>
+                    <div class="subsection">
                         <h3>Consultant</h3>
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="consultantSignature" class="signature-canvas"
                                 height="150"></canvas>
-                            <div class="signature-controls" style="text-align: right; margin-top: 5px;"><button
-                                    type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em; border-radius: 5px;"
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('consultantSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -419,13 +538,12 @@
                                 id="consultantSignatureDate"></div>
                     </div>
                     <div class="subsection">
-                        <h3>Witness</h3>
+                        <h3>Witness/Sale Admin</h3>
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="witnessSignature" class="signature-canvas"
                                 height="150"></canvas>
-                            <div class="signature-controls" style="text-align: right; margin-top: 5px;"><button
-                                    type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em; border-radius: 5px;"
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('witnessSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -435,6 +553,24 @@
                                 id="witnessSignatureIC"></div>
                         <div class="form-group"><label for="witnessSignatureDate">Date</label><input type="date"
                                 id="witnessSignatureDate"></div>
+                    </div>
+                    <div class="subsection">
+                        <h3>Investment Manager</h3>
+                        <div class="signature-container">
+                            <p>Please sign in the box below</p><canvas id="investmentManagerSignature"
+                                class="signature-canvas" height="150"></canvas>
+                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
+                                    style="padding: 5px 15px; font-size: 0.8em;"
+                                    onclick="clearSignature('investmentManagerSignature')">Clear</button></div>
+                        </div>
+                        <div class="form-group" style="margin-top:15px;"><label
+                                for="investmentManagerSignatureName">Name</label><input type="text"
+                                id="investmentManagerSignatureName">
+                        </div>
+                        <div class="form-group"><label for="investmentManagerSignatureIC">IC</label><input type="text"
+                                id="investmentManagerSignatureIC"></div>
+                        <div class="form-group"><label for="investmentManagerSignatureDate">Date</label><input
+                                type="date" id="investmentManagerSignatureDate"></div>
                     </div>
                 </div>
 
@@ -459,17 +595,22 @@
                     adhere to the following rules and general regulations:</p>
                 <ol>
                     <li>All personal, financial, and contact information provided must be accurate, complete, and
-                        updated promptly in the event of any changes.</li>
+                        updated
+                        promptly in the event of any changes.</li>
                     <li>Subscribers must be individuals aged 18 and above, of sound mind, and not acting on behalf of
-                        any third party unless explicitly declared.</li>
+                        any
+                        third party unless explicitly declared.</li>
                     <li>Participation is subject to the laws of Malaysia, including compliance with the Anti-Money
                         Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001 (AMLA).</li>
                     <li>Third-party contributions or payments must be accompanied by full disclosure, including the
-                        payer's name, NRIC/passport number, and relationship to the subscriber.</li>
+                        payer's
+                        name, NRIC/passport number, and relationship to the subscriber.</li>
                     <li>All required supporting documents, including but not limited to copies of NRIC, proof of
-                        payment, and verification forms, must be submitted when requested.</li>
+                        payment,
+                        and verification forms, must be submitted when requested.</li>
                     <li>TAMU Capital Berhad reserves the right to reject or terminate any application or participation
-                        found to be in violation of these regulations or containing false declarations.</li>
+                        found
+                        to be in violation of these regulations or containing false declarations.</li>
                     <li>Subscriber data will be treated as confidential and handled in accordance with applicable data
                         protection laws, and will only be used for internal verification and regulatory purposes.</li>
                 </ol>
@@ -485,20 +626,24 @@
             <div class="modal-body">
                 <p>By submitting this application, you confirm that you have read and understood the terms governing the
                     subscription to TAMU Capital Berhad's programs (Dirham, Dinar, or Almas), and you hereby agree to
-                    the following:</p>
+                    the
+                    following:</p>
                 <ol>
                     <li>Program selection and participation are based on the available packages and are subject to TAMU
                         Capital's discretion and compliance checks.</li>
                     <li>Payments can be made via cash, in-house instalments, or approved financing options, as per the
                         chosen package and agreed schedule.</li>
                     <li>Subscription fees are final and non-refundable unless stated otherwise under specific
-                        circumstances.</li>
+                        circumstances.
+                    </li>
                     <li>Profit distributions, if applicable, are made annually and are based on actual fund performance.
-                        The maximum indicative return is up to 5% per annum.</li>
+                        The
+                        maximum indicative return is up to 5% per annum.</li>
                     <li>Early withdrawals or terminations may result in the forfeiture of profit entitlements and may be
                         subject to specific terms outlined in the final agreement.</li>
                     <li>TAMU Capital reserves the right to issue all communications, including program updates and
-                        notices, through the contact details provided by the subscriber.</li>
+                        notices,
+                        through the contact details provided by the subscriber.</li>
                 </ol>
             </div>
         </div>
@@ -506,7 +651,7 @@
     <div id="investmentModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Investment (Wakalah) Terms & Conditions</h2><span class="close"
+                <h2>WAKALAH (INVESTMENT) TERMS & CONDITIONS</h2><span class="close"
                     onclick="closeModal('investmentModal')">×</span>
             </div>
             <div class="modal-body">
@@ -532,15 +677,14 @@
             </div>
         </div>
     </div>
+
     <script>
         let currentSection = 1;
         const totalSections = 4;
         let signatures = {};
         let signaturePadsInitialized = false;
 
-        // --- Core UI and Form Navigation Functions ---
-
-        function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 1 && !signatures['guestCheckInSignature']) { initializeSignatureCanvas('guestCheckInSignature'); } if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
+        function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
         function nextSection() { if (validateCurrentSection()) { currentSection < totalSections && showSection(currentSection + 1); } }
         function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
         function updateProgress() { const progress = ((currentSection - 1) / (totalSections - 1)) * 100; document.getElementById('progressFill').style.width = progress + '%'; }
@@ -550,107 +694,107 @@
             const requiredFields = section.querySelectorAll('[required]');
             let isValid = true;
             for (let field of requiredFields) {
+                if (field.closest('.form-section').style.display === 'none' || (field.closest('#nomineeDetailsSection') && field.closest('#nomineeDetailsSection').style.display === 'none') || (field.closest('#thirdPartyPayorSection') && field.closest('#thirdPartyPayorSection').style.display === 'none')) continue;
                 if (field.type === 'radio' && field.name) {
                     const radioGroup = document.getElementsByName(field.name);
-                    if (![...radioGroup].some(r => r.checked)) {
-                        alert(`Please make a selection for: ${field.closest('.form-group,.checkbox-group').parentElement.querySelector('label, .checkbox-group-title').textContent}`);
-                        field.focus();
-                        isValid = false;
-                        break;
-                    }
+                    if (![...radioGroup].some(r => r.checked)) { alert(`Please make a selection for: ${field.closest('.form-group,.checkbox-group').parentElement.querySelector('label, .checkbox-group-title').textContent}`); field.focus(); isValid = false; break; }
                 } else if (field.type === 'checkbox' && !field.checked) {
-                    alert(`Please agree to the required terms.`);
-                    field.focus();
-                    isValid = false;
-                    break;
-                } else if (field.type !== 'checkbox' && field.type !== 'radio' && !field.value.trim()) {
-                    alert(`Please fill in the required field: ${field.closest('.form-group')?.querySelector('label')?.textContent || field.id}`);
-                    field.focus();
-                    isValid = false;
-                    break;
-                }
+                    alert(`Please agree to the required terms.`); field.focus(); isValid = false; break;
+                } else if (field.type !== 'checkbox' && field.type !== 'radio' && !field.value.trim()) { alert(`Please fill in the required field: ${field.closest('.form-group')?.querySelector('label')?.textContent || field.id}`); field.focus(); isValid = false; break; }
             }
             if (!isValid) return false;
-
-            if (currentSection === 1 && !signatures['guestCheckInSignature']) {
-                alert('Guest signature is required for the check-in form.');
-                return false;
-            }
-            if (currentSection === 4 && !signatures['applicantSignature']) {
-                alert('Applicant signature is required.');
-                return false;
-            }
+            if (currentSection === 4 && !signatures['applicantSignature']) { alert('Applicant signature is required.'); return false; }
             return true;
         }
-
-
-        // --- Modal and Signature Pad Functions ---
 
         function showModal(modalId) { document.getElementById(modalId).style.display = "block"; }
         function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
         window.onclick = function (event) { document.querySelectorAll('.modal').forEach(modal => { if (event.target == modal) { modal.style.display = "none"; } }); }
 
-        function initializeAllSignaturePads() { ['applicantSignature', 'nomineeSignature', 'consultantSignature', 'witnessSignature'].forEach(initializeSignatureCanvas); }
+        function initializeAllSignaturePads() { ['applicantSignature', 'nomineeSignature', 'thirdPartyPayorSignature', 'consultantSignature', 'witnessSignature', 'investmentManagerSignature'].forEach(initializeSignatureCanvas); }
         function initializeSignatureCanvas(canvasId) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             let drawing = false;
-
-            function resizeCanvas() {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-            }
+            function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
-
-            const getPos = (e) => {
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                return { x: clientX - rect.left, y: clientY - rect.top };
-            };
+            const getPos = (e) => { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; };
             const startDrawing = (e) => { e.preventDefault(); drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); };
             const draw = (e) => { if (!drawing) return; e.preventDefault(); const pos = getPos(e); ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#2c3e50'; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); };
             const stopDrawing = () => { if (!drawing) return; drawing = false; signatures[canvasId] = canvas.toDataURL('image/png'); };
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseout', stopDrawing);
-            canvas.addEventListener('touchstart', startDrawing, { passive: false });
-            canvas.addEventListener('touchmove', draw, { passive: false });
-            canvas.addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove', draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing);
         }
         function clearSignature(canvasId) { const canvas = document.getElementById(canvasId); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); delete signatures[canvasId]; }
-
-        // --- Data Management Functions ---
 
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
             return {
                 part1: {
                     guestInfo: { fullName: document.getElementById('guestFullName').value, icPassport: document.getElementById('guestIcPassport').value, dob: document.getElementById('guestDob').value, gender: document.getElementById('guestGender').value, nationality: document.getElementById('guestNationality').value, maritalStatus: getCheckedValues('maritalStatus')[0] || '', numChildren: document.getElementById('guestNumChildren').value, correspondentAddress: document.getElementById('guestCorrespondentAddress').value, poskod: document.getElementById('guestPoskod').value, city: document.getElementById('guestCity').value, mailingSameAsCorrespondent: document.getElementById('mailingSameAsCorrespondent').checked, mailingAddress: document.getElementById('guestMailingAddress').value, mailingPoskod: document.getElementById('guestMailingPoskod').value, mailingCity: document.getElementById('guestMailingCity').value, email: document.getElementById('guestEmail').value, phone: document.getElementById('guestPhone').value },
-                    guestBusiness: { occupation: document.getElementById('guestOccupation').value, industry: document.getElementById('guestIndustry').value, monthlyIncome: document.getElementById('guestMonthlyIncome').value, },
-                    partnerInfo: { fullName: document.getElementById('partnerFullName').value, icPassport: document.getElementById('partnerIcPassport').value, dob: document.getElementById('partnerDob').value, gender: document.getElementById('partnerGender').value, nationality: document.getElementById('partnerNationality').value, phone: document.getElementById('partnerPhone').value, relationshipToGuest: document.getElementById('relationshipToGuest').value, addressSameAsGuest: document.getElementById('partnerSameAddress').checked, correspondentAddress: document.getElementById('partnerCorrespondentAddress').value, poskod: document.getElementById('partnerPoskod').value, city: document.getElementById('partnerCity').value, },
-                    partnerBusiness: { occupation: document.getElementById('partnerOccupation').value, industry: document.getElementById('partnerIndustry').value, monthlyIncome: document.getElementById('partnerMonthlyIncome').value, },
-                    guestCheckInSignature: { signatureData: signatures.guestCheckInSignature, name: document.getElementById('guestCheckInSignatureName').value, ic: document.getElementById('guestCheckInSignatureIC').value, date: document.getElementById('guestCheckInSignatureDate').value, },
-                    officeUse: { day: document.getElementById('officeUseDay').value, date: document.getElementById('officeUseDate').value, timeIn: document.getElementById('officeUseTimeIn').value, timeOut: document.getElementById('officeUseTimeOut').value, tmCode: document.getElementById('officeUseTmCode').value, consultant: document.getElementById('officeUseConsultant').value, status: getCheckedValues('officeUseStatus')[0] || '' }
+                    guestBusiness: { occupation: document.getElementById('guestOccupation').value, industry: document.getElementById('guestIndustry').value, monthlyIncome: document.getElementById('guestMonthlyIncome').value },
+                    partnerInfo: { fullName: document.getElementById('partnerFullName').value, icPassport: document.getElementById('partnerIcPassport').value, dob: document.getElementById('partnerDob').value, gender: document.getElementById('partnerGender').value, nationality: document.getElementById('partnerNationality').value, phone: document.getElementById('partnerPhone').value, relationshipToGuest: document.getElementById('relationshipToGuest').value },
                 },
                 part2: {
-                    membershipApplicant: { applicantType: getCheckedValues('applicantType')[0] || '', title: document.getElementById('applicantTitle').value, nameOnCard: document.getElementById('applicantNameOnCard').value, },
-                    applicantOffice: { address: document.getElementById('applicantOfficeAddress').value, poskod: document.getElementById('applicantOfficePoskod').value, city: document.getElementById('applicantOfficeCity').value, tel: document.getElementById('applicantOfficeTel').value, fax: document.getElementById('applicantFax').value, },
-                    applicantBanking: { bankName: document.getElementById('applicantBankName').value, accountNumber: document.getElementById('applicantAccountNumber').value, },
-                    nominee: { sameAsPartner: document.getElementById('nomineeSameAsPartner').checked, bankName: document.getElementById('nomineeBankName').value, accountNumber: document.getElementById('nomineeAccountNumber').value, },
-                    thirdPartyPayor: { isApplicant: document.getElementById('payorIsApplicant').checked, officeAddress: document.getElementById('payorOfficeAddress').value, },
-                    salesDetail: { productTypes: getCheckedValues('productType'), transactionMethod: getCheckedValues('transactionMethod')[0] || '', worksheetCode: document.getElementById('worksheetCode').value, orNumber: document.getElementById('orNumber').value, aprCode: document.getElementById('aprCode').value, consultantName: document.getElementById('consultantName').value, consultantCode: document.getElementById('consultantCode').value, }
+                    membershipApplicant: { applicantType: getCheckedValues('applicantType')[0] || '', title: document.getElementById('applicantTitle').value, nameOnCard: document.getElementById('applicantNameOnCard').value },
+                    applicantOffice: { address: document.getElementById('applicantOfficeAddress').value, poskod: document.getElementById('applicantOfficePoskod').value, city: document.getElementById('applicantOfficeCity').value, tel: document.getElementById('applicantOfficeTel').value, fax: document.getElementById('applicantFax').value },
+                    applicantBanking: { bankName: document.getElementById('applicantBankName').value, accountNumber: document.getElementById('applicantAccountNumber').value },
+                    sourceOfFunds: getCheckedValues('sourceOfFunds'),
+                    nominee: {
+                        isPartner: document.getElementById('nomineeIsPartner').checked,
+                        fullName: document.getElementById('nomineeFullName').value, icPassport: document.getElementById('nomineeIcPassport').value, dob: document.getElementById('nomineeDob').value, relationship: document.getElementById('nomineeRelationship').value,
+                        occupation: document.getElementById('nomineeOccupation').value, industry: document.getElementById('nomineeIndustry').value,
+                        bankName: document.getElementById('nomineeBankName').value, accountNumber: document.getElementById('nomineeAccountNumber').value
+                    },
+                    thirdPartyPayor: {
+                        isApplicant: document.getElementById('payorIsApplicant').checked,
+                        fullName: document.getElementById('payorFullName').value, icPassport: document.getElementById('payorIcPassport').value, dob: document.getElementById('payorDob').value,
+                        occupation: document.getElementById('payorOccupation').value, industry: document.getElementById('payorIndustry').value, officeAddress: document.getElementById('payorOfficeAddress').value
+                    },
+                    salesDetail: {
+                        productTypes: getCheckedValues('productType'), worksheetCode: document.getElementById('worksheetCode').value, subscriptionAmount: document.getElementById('subscriptionAmount').value, investmentAmount: document.getElementById('investmentAmount').value, totalAmount: document.getElementById('totalAmount').value,
+                        profitReceiver: getCheckedValues('profitReceiver')[0] || '', transactionMethod: getCheckedValues('transactionMethod')[0] || '', orNumber: document.getElementById('orNumber').value, aprCode: document.getElementById('aprCode').value,
+                        consultantName: document.getElementById('consultantName').value, consultantCode: document.getElementById('consultantCode').value
+                    }
                 },
                 signatures: {
                     applicant: { signatureData: signatures.applicantSignature, name: document.getElementById('applicantSignatureName').value, ic: document.getElementById('applicantSignatureIC').value, date: document.getElementById('applicantSignatureDate').value, },
                     nominee: { signatureData: signatures.nomineeSignature, name: document.getElementById('nomineeSignatureName').value, ic: document.getElementById('nomineeSignatureIC').value, date: document.getElementById('nomineeSignatureDate').value, },
+                    thirdPartyPayor: { signatureData: signatures.thirdPartyPayorSignature, name: document.getElementById('thirdPartyPayorSignatureName').value, ic: document.getElementById('thirdPartyPayorSignatureIC').value, date: document.getElementById('thirdPartyPayorSignatureDate').value, },
                     consultant: { signatureData: signatures.consultantSignature, name: document.getElementById('consultantSignatureName').value, ic: document.getElementById('consultantSignatureIC').value, date: document.getElementById('consultantSignatureDate').value, },
-                    witness: { signatureData: signatures.witnessSignature, name: document.getElementById('witnessSignatureName').value, ic: document.getElementById('witnessSignatureIC').value, date: document.getElementById('witnessSignatureDate').value, }
+                    witness: { signatureData: signatures.witnessSignature, name: document.getElementById('witnessSignatureName').value, ic: document.getElementById('witnessSignatureIC').value, date: document.getElementById('witnessSignatureDate').value, },
+                    investmentManager: { signatureData: signatures.investmentManagerSignature, name: document.getElementById('investmentManagerSignatureName').value, ic: document.getElementById('investmentManagerSignatureIC').value, date: document.getElementById('investmentManagerSignatureDate').value, }
                 }
             };
+        }
+
+        function generateCheckInPdf() {
+            // Simplified this function as Part 1 is now stable and doesn't require validation checks here
+            const formData = collectData();
+            localStorage.setItem('tamuPrintData', JSON.stringify(formData));
+            window.open('1_check_in.html', '_blank');
+        }
+
+        function exportPart1Data() {
+            // This function is for exporting ONLY the data from section 1 (Check-In Form)
+            const fullData = collectData();
+            const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Guest';
+            const fileName = `${guestName}_CheckIn_Data.json`;
+
+            // We only want the 'part1' object for this export
+            const dataStr = JSON.stringify({ part1: fullData.part1 }, null, 2);
+
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert(`Part 1 (Check-In) data exported successfully as ${fileName}`);
         }
 
         function importData() {
@@ -698,26 +842,22 @@
             window.open('combined_forms.html', '_blank');
         }
 
-
-        // --- Page Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             showSection(1);
             const industries = ['Agriculture', 'Automotive', 'Banking', 'Construction', 'Consulting', 'Education', 'Energy', 'Engineering', 'Entertainment', 'Finance', 'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Information Technology', 'Insurance', 'Legal', 'Logistics', 'Manufacturing', 'Marketing', 'Media', 'Mining', 'Non-Profit', 'Oil & Gas', 'Pharmaceutical', 'Real Estate', 'Retail', 'Science', 'Telecommunications', 'Tourism', 'Transportation', 'Other'];
             const populateDropdown = (id) => { const select = document.getElementById(id); if (select) { select.innerHTML = '<option value="" disabled selected>Select Industry</option>' + industries.map(i => `<option value="${i}">${i}</option>`).join(''); } };
             populateDropdown('guestIndustry');
-            populateDropdown('partnerIndustry');
-            document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () { document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid'; });
-            document.getElementById('partnerSameAddress').addEventListener('change', function () { const fields = ['partnerCorrespondentAddress', 'partnerPoskod', 'partnerCity']; if (this.checked) { fields.forEach(id => { const guestField = document.getElementById(id.replace('partner', 'guest')); if (guestField) { document.getElementById(id).value = guestField.value; } document.getElementById(id).disabled = true; }); } else { fields.forEach(id => document.getElementById(id).disabled = false); } });
-            document.getElementById('payorIsApplicant').addEventListener('change', function () { document.getElementById('thirdPartyPayorFields').style.display = this.checked ? 'none' : 'grid'; });
 
-            // Auto-populate guest signature fields
-            document.getElementById('guestFullName').addEventListener('input', (e) => {
-                document.getElementById('guestCheckInSignatureName').value = e.target.value;
-            });
-            document.getElementById('guestIcPassport').addEventListener('input', (e) => {
-                document.getElementById('guestCheckInSignatureIC').value = e.target.value;
-            });
-            document.getElementById('guestCheckInSignatureDate').value = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+            document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () { document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid'; });
+            document.getElementById('nomineeIsPartner').addEventListener('change', function () { document.getElementById('nomineeDetailsSection').style.display = this.checked ? 'none' : 'block'; });
+            document.getElementById('payorIsApplicant').addEventListener('change', function () { document.getElementById('thirdPartyPayorSection').style.display = this.checked ? 'none' : 'block'; });
+
+            const subAmount = document.getElementById('subscriptionAmount');
+            const invAmount = document.getElementById('investmentAmount');
+            const totalAmount = document.getElementById('totalAmount');
+            const updateTotal = () => { totalAmount.value = (parseFloat(subAmount.value) || 0) + (parseFloat(invAmount.value) || 0); };
+            subAmount.addEventListener('input', updateTotal);
+            invAmount.addEventListener('input', updateTotal);
         });
     </script>
 </body>
