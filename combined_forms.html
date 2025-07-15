@@ -9,6 +9,7 @@
 </head>
 
 <body>
+
     <div id="content1" class="form-page green-form"></div>
     <div class="page-break-before"></div>
     <div id="content2" class="form-page buyer-declaration-page"></div>
@@ -56,32 +57,21 @@
             const c = document.getElementById(id);
             if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`;
         };
-
-        const fillCharBoxGrid = (containerId, text = '') => {
+        const fillCharBoxGrid = (containerId, text = '', maxChars = 29) => {
             const container = document.getElementById(containerId);
             if (!container) return;
-            const containerWidth = container.offsetWidth;
-            const boxWidthWithMargin = 21;
-            const numBoxes = Math.floor(containerWidth / boxWidthWithMargin);
             let html = '';
             const upperText = (text || '').toUpperCase();
-            for (let i = 0; i < numBoxes; i++) {
+            for (let i = 0; i < maxChars; i++) {
                 html += `<div class="char-box">${upperText[i] || ''}</div>`;
             }
             container.innerHTML = html;
         };
-
-        const fillDoubleRowCharBoxGrid = (id1, id2, text) => {
-            const container1 = document.getElementById(id1);
-            if (!container1) return;
-            const containerWidth = container1.offsetWidth;
-            const boxWidthWithMargin = 21;
-            const numBoxesPerRow = Math.floor(containerWidth / boxWidthWithMargin);
+        const fillDoubleRowCharBoxGrid = (id1, id2, text, maxChars = 29) => {
             const textUpper = (text || '').toUpperCase();
-            fillCharBoxGrid(id1, textUpper.substring(0, numBoxesPerRow));
-            fillCharBoxGrid(id2, textUpper.substring(numBoxesPerRow));
+            fillCharBoxGrid(id1, textUpper.substring(0, maxChars));
+            fillCharBoxGrid(id2, textUpper.substring(maxChars));
         };
-
         const fillFixedCharBoxGroup = (containerId, text = '', count) => {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -98,70 +88,81 @@
             const app = (part2.membershipApplicant.applicantType === "Guest's Partner") ? part1.partnerInfo : part1.guestInfo;
             const appBiz = (part2.membershipApplicant.applicantType === "Guest's Partner") ? part1.partnerBusiness : part1.guestBusiness;
             const nominee = part2.nominee.isPartner ? part1.partnerInfo : part2.nominee;
+            const nomineeBiz = part2.nominee.isPartner ? part1.partnerBusiness : part2.nominee;
 
-            // Re-run box generation after a short delay to ensure containers have correct width
-            setTimeout(() => {
-                if (part2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
-                if (part2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
-                if (part2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
+            if (part2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
+            if (part2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
+            if (part2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
 
-                fillDoubleRowCharBoxGrid('appName', 'appName2', `${part2.membershipApplicant.title} ${app.fullName}`);
-                fillDoubleRowCharBoxGrid('appNameOnCard', 'appNameOnCard2', `${part2.membershipApplicant.title} ${part2.membershipApplicant.nameOnCard}`);
-                fillFixedCharBoxGroup('appNric', app.icPassport, 12);
-                fillFixedCharBoxGroup('appDate', formatDate(signatures.applicant.date).replace(/\//g, ''), 8);
-                setCheck('appNationality' + (app.nationality?.toLowerCase().includes('malaysian') ? 'Malaysian' : 'Foreigner'), true);
-                setCheck('appMarital' + (app.maritalStatus || 'Single'), true);
+            fillDoubleRowCharBoxGrid('appName', 'appName2', `${part2.membershipApplicant.title} ${app.fullName}`);
+            fillDoubleRowCharBoxGrid('appNameOnCard', 'appNameOnCard2', `${part2.membershipApplicant.title} ${part2.membershipApplicant.nameOnCard}`);
+            fillFixedCharBoxGroup('appNric', app.icPassport, 12);
+            fillFixedCharBoxGroup('appDate', formatDate(signatures.applicant.date).replace(/\//g, ''), 8);
+            setCheck('appNationality' + (app.nationality?.toLowerCase().includes('malaysian') ? 'Malaysian' : 'Foreigner'), true);
+            setCheck('appMarital' + (app.maritalStatus || 'Single'), true);
 
-                const homeAddress = `${app.correspondentAddress}, ${app.city}`;
-                fillDoubleRowCharBoxGrid('appHomeAddress', 'appHomeAddress2', homeAddress);
-                fillFixedCharBoxGroup('appHomePostcode', app.poskod, 5);
+            const homeAddress = `${app.correspondentAddress}, ${app.city}`;
+            fillDoubleRowCharBoxGrid('appHomeAddress', 'appHomeAddress2', homeAddress);
+            fillFixedCharBoxGroup('appHomePostcode', app.poskod, 5);
+            const mailAddr = part1.guestInfo.mailingSameAsCorrespondent ? homeAddress : `${part1.guestInfo.mailingAddress}, ${part1.guestInfo.mailingCity}, ${part1.guestInfo.mailingPoskod}`;
+            fillDoubleRowCharBoxGrid('appMailingAddress', 'appMailingAddress2', mailAddr);
 
-                const mailAddr = part1.guestInfo.mailingSameAsCorrespondent ? homeAddress : `${part1.guestInfo.mailingAddress}, ${part1.guestInfo.mailingCity}, ${part1.guestInfo.mailingPoskod}`;
-                fillDoubleRowCharBoxGrid('appMailingAddress', 'appMailingAddress2', mailAddr);
+            const fax = (part2.applicantOffice.fax || '').replace(/\D/g, '');
+            fillFixedCharBoxGroup('appFaxPrefix', fax.substring(0, 2), 2); fillFixedCharBoxGroup('appFaxNum', fax.substring(2, 10), 8);
+            const hp = (app.phone || '').replace(/\D/g, '');
+            fillFixedCharBoxGroup('appHpPrefix', hp.substring(0, 3), 3); fillFixedCharBoxGroup('appHpNum', hp.substring(3, 11), 8);
+            setText('appEmail', app.email);
+            fillCharBoxGrid('appOccupation', appBiz.occupation);
 
-                const fax = (part2.applicantOffice.fax || '').replace(/\D/g, '');
-                fillFixedCharBoxGroup('appFaxPrefix', fax.substring(0, 2), 2); fillFixedCharBoxGroup('appFaxNum', fax.substring(2, 10), 8);
-                const hp = (app.phone || '').replace(/\D/g, '');
-                fillFixedCharBoxGroup('appHpPrefix', hp.substring(0, 3), 3); fillFixedCharBoxGroup('appHpNum', hp.substring(3, 11), 8);
-                setText('appEmail', app.email);
+            if (appBiz.monthlyIncome) {
+                const incomeVal = parseFloat(appBiz.monthlyIncome.split('-')[0].replace(/,/g, '')) * 12;
+                if (incomeVal > 60000) setCheck('appIncome4', true);
+                else if (incomeVal >= 36000) setCheck('appIncome3', true);
+                else if (incomeVal >= 24000) setCheck('appIncome2', true);
+                else setCheck('appIncome1', true);
+            }
 
-                fillCharBoxGrid('appOccupation', appBiz.occupation);
-                if (appBiz.monthlyIncome) {
-                    const incomeVal = parseFloat(appBiz.monthlyIncome.replace(/[^0-9.-]+/g, ""));
-                    if (incomeVal > 20000) setCheck('appIncome4', true);
-                    else if (incomeVal > 15000) setCheck('appIncome4', true); // No specific option in green form
-                    else if (incomeVal > 10000) setCheck('appIncome3', true);
-                    else if (incomeVal > 6000) setCheck('appIncome3', true);
-                    else if (incomeVal >= 4000) setCheck('appIncome2', true);
-                    else setCheck('appIncome1', true);
-                }
+            fillCharBoxGrid('appEmployer', appBiz.industry);
+            fillCharBoxGrid('appIndustry', appBiz.industry);
+            const officeAddr = `${part2.applicantOffice.address}, ${part2.applicantOffice.city}`;
+            fillDoubleRowCharBoxGrid('appOfficeAddress', 'appOfficeAddress2', officeAddr);
+            fillFixedCharBoxGroup('appOfficePostcode', part2.applicantOffice.poskod, 5);
+            const officeTel = (part2.applicantOffice.tel || '').replace(/\D/g, '');
+            fillFixedCharBoxGroup('appOfficePhonePrefix', officeTel.substring(0, 2), 2); fillFixedCharBoxGroup('appOfficePhoneNum', officeTel.substring(2, 10), 8);
+            fillFixedCharBoxGroup('appOfficeExt', '', 4);
+            fillFixedCharBoxGroup('appOfficeFaxPrefix', fax.substring(0, 2), 2); fillFixedCharBoxGroup('appOfficeFaxNum', fax.substring(2, 10), 8);
 
-                fillCharBoxGrid('appEmployer', appBiz.industry);
-                fillCharBoxGrid('appIndustry', appBiz.industry);
-                const officeAddr = `${part2.applicantOffice.address}, ${part2.applicantOffice.city}`;
-                fillDoubleRowCharBoxGrid('appOfficeAddress', 'appOfficeAddress2', officeAddr);
-                fillFixedCharBoxGroup('appOfficePostcode', part2.applicantOffice.poskod, 5);
-                const officeTel = (part2.applicantOffice.tel || '').replace(/\D/g, '');
-                fillFixedCharBoxGroup('appOfficePhonePrefix', officeTel.substring(0, 2), 2); fillFixedCharBoxGroup('appOfficePhoneNum', officeTel.substring(2, 10), 8);
-                fillFixedCharBoxGroup('appOfficeExt', '', 4);
-                fillFixedCharBoxGroup('appOfficeFaxPrefix', fax.substring(0, 2), 2); fillFixedCharBoxGroup('appOfficeFaxNum', fax.substring(2, 10), 8);
+            fillCharBoxGrid('nomineeName', nominee.fullName);
+            fillFixedCharBoxGroup('nomineeNric', nominee.icPassport, 12);
+            setText('nomineeEmail', part2.nominee.email || '');
+            setCheck('nomineeNationality' + (nominee.nationality?.toLowerCase().includes('malaysian') ? 'Malaysian' : 'Foreigner'), true);
+            if (!nominee.nationality?.toLowerCase().includes('malaysian')) setText('nomineeNationalityForeignerText', nominee.nationality);
+            fillCharBoxGrid('nomineeRelation', nominee.relationshipToGuest || nominee.relationship);
+            fillCharBoxGrid('nomineeEmployer', nomineeBiz.occupation);
+            fillDoubleRowCharBoxGrid('nomineeOfficeAddress', 'nomineeOfficeAddress2', ''); // No data for this
+            fillFixedCharBoxGroup('nomineeOfficePostcode', '', 5);
+            fillFixedCharBoxGroup('nomineeOfficePhonePrefix', '', 2); fillFixedCharBoxGroup('nomineeOfficePhoneNum', '', 8);
+            fillFixedCharBoxGroup('nomineeOfficeExt', '', 4);
+            fillFixedCharBoxGroup('nomineeOfficeFaxPrefix', '', 2); fillFixedCharBoxGroup('nomineeOfficeFaxNum', '', 8);
+            const nomineeHp = (nominee.phone || '').replace(/\D/g, '');
+            fillFixedCharBoxGroup('nomineeHpPrefix', nomineeHp.substring(0, 3), 3); fillFixedCharBoxGroup('nomineeHpNum', nomineeHp.substring(3, 11), 8);
 
-                fillCharBoxGrid('nomineeName', nominee.fullName);
-                fillFixedCharBoxGroup('nomineeNric', nominee.icPassport, 12);
-
-                setText('declarationDate', formatDate(signatures.applicant.date));
-                setSignature('applicantSignature', signatures.applicant.signatureData);
-                fillFixedCharBoxGroup('programId', part1.officeUse.tmCode, 6);
-                setText('programsFee', part2.salesDetail.totalAmount);
-                setText('counsellor', part1.officeUse.consultant);
-                setText('checkBy', signatures.witness.name);
-                setText('checkByDate', formatDate(signatures.witness.date));
-            }, 200); // Delay to allow layout rendering
+            setText('declarationDate', formatDate(signatures.applicant.date));
+            setSignature('applicantSignature', signatures.applicant.signatureData);
+            fillFixedCharBoxGroup('programId', part1.officeUse.tmCode, 6);
+            setText('programsFee', part2.salesDetail.totalAmount);
+            setText('balance', '0.00');
+            if (part2.salesDetail.transactionMethod === 'Debit/Credit/Cash/Cheque') setCheck('paymentCash', true);
+            else if (part2.salesDetail.transactionMethod.toLowerCase().includes('instal')) setCheck('paymentInstalment', true);
+            else if (part2.salesDetail.transactionMethod === 'Loan') setCheck('paymentLoan', true);
+            setText('counsellor', part1.officeUse.consultant);
+            setText('checkBy', signatures.witness.name);
+            setText('checkByDate', formatDate(signatures.witness.date));
         }
 
         function populateBuyerDeclaration(data) {
             const { consents, signatures: sigs, part2 } = data;
-            if (consents && consents.rulesRegulationsConsent && consents.subscriptionTermsConsent && consents.investmentTermsConsent) {
+            if (consents && consents.rulesRegulationsConsent) {
                 for (let i = 1; i <= 13; i++) setCheck(`dec_${i}`, true);
             }
             const priceSpan = document.querySelector('.buyer-declaration-page .underline');
@@ -185,7 +186,7 @@
             setText('amlaName', app.fullName); setText('amlaNric', app.icPassport);
             setText('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
             setText('amlaMailingAddress', app.mailingSameAsCorrespondent ? 'SAME AS HOME ADDRESS' : `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`);
-            setText('amlaMobile', app.phone); setText('amlaOfficePhone', part2.applicantOffice.tel); setText('amlaEmail', app.email);
+            setText('amlaMobile', app.phone); setText('amlaEmail', app.email);
             setText('amlaOccupation', appBiz.occupation);
 
             if (sigs.applicant) { setSignature('amlaSig', sigs.applicant.signatureData); setText('amlaSigName', ` ${sigs.applicant.name} `); setText('amlaSigDate', ` ${formatDate(sigs.applicant.date)} `); }

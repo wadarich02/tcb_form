@@ -254,28 +254,35 @@ body {
   font-weight: bold;
   margin: 15px 0 10px 0;
 }
-.amla-page .field {
-  display: flex;
-  margin-bottom: 12px;
-  align-items: flex-start;
+.amla-page .amla-table {
+  width: 100%;
+  border-collapse: collapse;
 }
-.amla-page .label {
-  width: 200px;
-  flex-shrink: 0;
-  font-size: 0.9em;
-  line-height: 1.5;
+.amla-page .amla-table td {
+  padding: 8px 5px;
+  border: 1px solid #ccc;
+  vertical-align: top;
 }
-.amla-page .input {
-  border-bottom: 1px solid #000;
-  flex-grow: 1;
-  min-height: 1.5em;
+.amla-page .amla-table td.label {
+  width: 30%;
   font-weight: bold;
-  padding: 0 5px;
 }
-.amla-page .checkbox-group {
-  display: flex;
-  gap: 30px;
-  border-bottom: none;
+.amla-page .amla-table td.data {
+  font-weight: normal;
+}
+.amla-page .checkbox-option {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 15px;
+}
+.amla-page .checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #000;
+  margin-right: 8px;
+  text-align: center;
+  line-height: 16px;
+  font-weight: bold;
 }
 .amla-page .declaration {
   font-size: 0.9em;
@@ -292,13 +299,9 @@ body {
 .amla-page .flex-item {
   flex: 1;
 }
-.amla-page .checkbox {
-  width: 14px;
-  height: 14px;
-  border: 1px solid #000;
+.amla-page .line {
+  border-bottom: 1px dotted #000;
   display: inline-block;
-  margin-right: 5px;
-  vertical-align: middle;
 }
 
 /* === PROFIT DISTRIBUTION STYLES (.profit-page) === */
