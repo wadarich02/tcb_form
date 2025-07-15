@@ -7,7 +7,30 @@
     <title>TAMU Capital Berhad - Digital Form</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="index_style.css">
+    <style>
+        /* Override datepicker styles to match your form */
+        .ui-datepicker {
+            font-size: 14px;
+        }
+
+        .ui-datepicker select.ui-datepicker-month,
+        .ui-datepicker select.ui-datepicker-year {
+            width: 45%;
+        }
+
+        /* Make date inputs consistent */
+        input[type="date"] {
+            height: 38px;
+            padding: 6px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,8 +54,9 @@
                                 IC/Passport)</label><input type="text" id="guestFullName" required></div>
                         <div class="form-group"><label for="guestIcPassport">IC/Passport Number</label><input
                                 type="text" id="guestIcPassport" required></div>
-                        <div class="form-group"><label for="guestDob">Date of Birth</label><input type="date"
-                                id="guestDob" required></div>
+                        <div class="form-group"><label for="guestDob">Date of Birth</label>
+                            <input type="text" id="guestDob" required>
+                        </div>
                         <div class="form-group"><label for="guestGender">Gender</label><select id="guestGender"
                                 required>
                                 <option value="" disabled selected>Select Gender</option>
@@ -133,8 +157,9 @@
                                 IC/Passport)</label><input type="text" id="partnerFullName"></div>
                         <div class="form-group"><label for="partnerIcPassport">IC/Passport Number</label><input
                                 type="text" id="partnerIcPassport"></div>
-                        <div class="form-group"><label for="partnerDob">Date of Birth</label><input type="date"
-                                id="partnerDob"></div>
+                        <div class="form-group"><label for="partnerDob">Date of Birth</label>
+                            <input type="text" id="partnerDob">
+                        </div>
                         <div class="form-group"><label for="partnerGender">Gender</label><select id="partnerGender">
                                 <option value="" disabled selected>Select Gender</option>
                                 <option value="Male">Male</option>
@@ -238,7 +263,8 @@
                         </div>
                         <div class="form-group">
                             <label>Date</label>
-                            <input type="text" id="guestCheckInSignatureDate" readonly style="background: #e9ecef;">
+                            <input type="text" id="guestCheckInSignatureDate" data-default-today="true" readonly
+                                style="background: #e9ecef;">
                         </div>
                     </div>
                 </div>
@@ -261,7 +287,7 @@
                         </div>
                         <div class="form-group">
                             <label for="officeUseDate">Date</label>
-                            <input type="date" id="officeUseDate">
+                            <input type="text" id="officeUseDate" data-default-today="true">
                         </div>
                         <div class="form-group">
                             <label for="officeUseTimeIn">Time In</label>
@@ -545,8 +571,10 @@
                                 required></div>
                         <div class="form-group"><label for="applicantSignatureIC">IC</label><input type="text"
                                 id="applicantSignatureIC" required></div>
-                        <div class="form-group"><label for="applicantSignatureDate">Date</label><input type="date"
-                                id="applicantSignatureDate" required></div>
+                        <div class="form-group">
+                            <label for="applicantSignatureDate">Date</label>
+                            <input type="text" id="applicantSignatureDate" data-default-today="true" required>
+                        </div>
                     </div>
                     <div class="subsection">
                         <h3>Nominee</h3>
@@ -562,8 +590,8 @@
                         </div>
                         <div class="form-group"><label for="nomineeSignatureIC">IC</label><input type="text"
                                 id="nomineeSignatureIC"></div>
-                        <div class="form-group"><label for="nomineeSignatureDate">Date</label><input type="date"
-                                id="nomineeSignatureDate"></div>
+                        <div class="form-group"><label for="nomineeSignatureDate">Date</label><input type="text"
+                                id="nomineeSignatureDate" data-default-today="true"></div>
                     </div>
                     <div class="subsection">
                         <h3>3rd Party Payor</h3>
@@ -580,8 +608,8 @@
                         </div>
                         <div class="form-group"><label for="thirdPartyPayorSignatureIC">IC</label><input type="text"
                                 id="thirdPartyPayorSignatureIC"></div>
-                        <div class="form-group"><label for="thirdPartyPayorSignatureDate">Date</label><input type="date"
-                                id="thirdPartyPayorSignatureDate"></div>
+                        <div class="form-group"><label for="thirdPartyPayorSignatureDate">Date</label><input type="text"
+                                id="thirdPartyPayorSignatureDate" data-default-today="true"></div>
                     </div>
                     <div class="subsection">
                         <h3>Consultant</h3>
@@ -597,8 +625,8 @@
                                 id="consultantSignatureName"></div>
                         <div class="form-group"><label for="consultantSignatureIC">IC</label><input type="text"
                                 id="consultantSignatureIC"></div>
-                        <div class="form-group"><label for="consultantSignatureDate">Date</label><input type="date"
-                                id="consultantSignatureDate"></div>
+                        <div class="form-group"><label for="consultantSignatureDate">Date</label><input type="text"
+                                id="consultantSignatureDate" data-default-today="true"></div>
                     </div>
                     <div class="subsection">
                         <h3>Witness/Sale Admin</h3>
@@ -614,8 +642,8 @@
                         </div>
                         <div class="form-group"><label for="witnessSignatureIC">IC</label><input type="text"
                                 id="witnessSignatureIC"></div>
-                        <div class="form-group"><label for="witnessSignatureDate">Date</label><input type="date"
-                                id="witnessSignatureDate"></div>
+                        <div class="form-group"><label for="witnessSignatureDate">Date</label><input type="text"
+                                id="witnessSignatureDate" data-default-today="true"></div>
                     </div>
                     <div class="subsection">
                         <h3>Investment Manager</h3>
@@ -633,7 +661,7 @@
                         <div class="form-group"><label for="investmentManagerSignatureIC">IC</label><input type="text"
                                 id="investmentManagerSignatureIC"></div>
                         <div class="form-group"><label for="investmentManagerSignatureDate">Date</label><input
-                                type="date" id="investmentManagerSignatureDate"></div>
+                                type="text" id="investmentManagerSignatureDate" data-default-today="true"></div>
                     </div>
                 </div>
 
@@ -752,6 +780,13 @@
                 signaturePadsInitialized.section4 = true;
             }
         }
+
+        // Add this function to handle date formatting
+        function formatDateInput(input) {
+            if (!input) return '';
+            return moment(input).format('DD/MM/YYYY');
+        }
+
         function nextSection() {
             if (validateCurrentSection()) {
                 currentSection < totalSections &&
@@ -862,133 +897,159 @@
 
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
+
+            // Helper function to get formatted date value
+            const getDateValue = (elementId) => {
+                const el = document.getElementById(elementId);
+                if (!el) return '';
+                // Get the stored date value in YYYY-MM-DD format
+                const dateValue = $(el).attr('data-date');
+                return dateValue ? moment(dateValue).format('DD/MM/YYYY') : '';
+            };
+
             return {
                 part1: {
                     guestInfo: {
-                        fullName: document.getElementById('guestFullName').value, icPassport:
-                            document.getElementById('guestIcPassport').value, dob: document.getElementById('guestDob').value, gender:
-                            document.getElementById('guestGender').value, nationality: document.getElementById('guestNationality').value,
-                        maritalStatus: getCheckedValues('maritalStatus')[0] || '', numChildren:
-                            document.getElementById('guestNumChildren').value, correspondentAddress:
-                            document.getElementById('guestCorrespondentAddress').value, poskod:
-                            document.getElementById('guestPoskod').value, city: document.getElementById('guestCity').value,
-                        mailingSameAsCorrespondent: document.getElementById('mailingSameAsCorrespondent').checked, mailingAddress:
-                            document.getElementById('guestMailingAddress').value, mailingPoskod:
-                            document.getElementById('guestMailingPoskod').value, mailingCity:
-                            document.getElementById('guestMailingCity').value, email: document.getElementById('guestEmail').value, phone:
-                            document.getElementById('guestPhone').value
+                        fullName: document.getElementById('guestFullName').value,
+                        icPassport: document.getElementById('guestIcPassport').value,
+                        dob: getDateValue('guestDob'),
+                        gender: document.getElementById('guestGender').value,
+                        nationality: document.getElementById('guestNationality').value,
+                        maritalStatus: getCheckedValues('maritalStatus')[0] || '',
+                        numChildren: document.getElementById('guestNumChildren').value,
+                        correspondentAddress: document.getElementById('guestCorrespondentAddress').value,
+                        poskod: document.getElementById('guestPoskod').value,
+                        city: document.getElementById('guestCity').value,
+                        mailingSameAsCorrespondent: document.getElementById('mailingSameAsCorrespondent').checked,
+                        mailingAddress: document.getElementById('guestMailingAddress').value,
+                        mailingPoskod: document.getElementById('guestMailingPoskod').value,
+                        mailingCity: document.getElementById('guestMailingCity').value,
+                        email: document.getElementById('guestEmail').value,
+                        phone: document.getElementById('guestPhone').value
                     },
                     guestBusiness: {
-                        occupation: document.getElementById('guestOccupation').value, industry:
-                            document.getElementById('guestIndustry').value, monthlyIncome:
-                            document.getElementById('guestMonthlyIncome').value
+                        occupation: document.getElementById('guestOccupation').value,
+                        industry: document.getElementById('guestIndustry').value,
+                        monthlyIncome: document.getElementById('guestMonthlyIncome').value
                     },
                     partnerInfo: {
-                        fullName: document.getElementById('partnerFullName').value, icPassport:
-                            document.getElementById('partnerIcPassport').value, dob: document.getElementById('partnerDob').value, gender:
-                            document.getElementById('partnerGender').value, nationality:
-                            document.getElementById('partnerNationality').value, phone: document.getElementById('partnerPhone').value,
+                        fullName: document.getElementById('partnerFullName').value,
+                        icPassport: document.getElementById('partnerIcPassport').value,
+                        dob: getDateValue('partnerDob'),
+                        gender: document.getElementById('partnerGender').value,
+                        nationality: document.getElementById('partnerNationality').value,
+                        phone: document.getElementById('partnerPhone').value,
                         relationshipToGuest: document.getElementById('relationshipToGuest').value
                     },
                     partnerBusiness: {
-                        occupation: document.getElementById('partnerOccupation').value, industry:
-                            document.getElementById('partnerIndustry').value, monthlyIncome:
-                            document.getElementById('partnerMonthlyIncome').value
+                        occupation: document.getElementById('partnerOccupation').value,
+                        industry: document.getElementById('partnerIndustry').value,
+                        monthlyIncome: document.getElementById('partnerMonthlyIncome').value
                     },
                     guestCheckInSignature: {
-                        signatureData: signatures.guestCheckInSignature, name:
-                            document.getElementById('guestCheckInSignatureName').value, ic:
-                            document.getElementById('guestCheckInSignatureIC').value, date:
-                            document.getElementById('guestCheckInSignatureDate').value
+                        signatureData: signatures.guestCheckInSignature,
+                        name: document.getElementById('guestCheckInSignatureName').value,
+                        ic: document.getElementById('guestCheckInSignatureIC').value,
+                        date: getDateValue('guestCheckInSignatureDate')
                     },
                     officeUse: {
-                        day: document.getElementById('officeUseDay').value, date:
-                            document.getElementById('officeUseDate').value, timeIn: document.getElementById('officeUseTimeIn').value,
-                        timeOut: document.getElementById('officeUseTimeOut').value, tmCode:
-                            document.getElementById('officeUseTmCode').value, consultant:
-                            document.getElementById('officeUseConsultant').value, status: getCheckedValues('officeUseStatus')[0] || ''
+                        day: document.getElementById('officeUseDay').value,
+                        date: getDateValue('officeUseDate'),
+                        timeIn: document.getElementById('officeUseTimeIn').value,
+                        timeOut: document.getElementById('officeUseTimeOut').value,
+                        tmCode: document.getElementById('officeUseTmCode').value,
+                        consultant: document.getElementById('officeUseConsultant').value,
+                        status: getCheckedValues('officeUseStatus')[0] || ''
                     }
                 },
                 part2: {
                     membershipApplicant: {
-                        applicantType: getCheckedValues('applicantType')[0] || '', title:
-                            document.getElementById('applicantTitle').value, nameOnCard:
-                            document.getElementById('applicantNameOnCard').value
+                        applicantType: getCheckedValues('applicantType')[0] || '',
+                        title: document.getElementById('applicantTitle').value,
+                        nameOnCard: document.getElementById('applicantNameOnCard').value
                     },
                     applicantOffice: {
-                        address: document.getElementById('applicantOfficeAddress').value, poskod:
-                            document.getElementById('applicantOfficePoskod').value, city:
-                            document.getElementById('applicantOfficeCity').value, tel: document.getElementById('applicantOfficeTel').value,
+                        address: document.getElementById('applicantOfficeAddress').value,
+                        poskod: document.getElementById('applicantOfficePoskod').value,
+                        city: document.getElementById('applicantOfficeCity').value,
+                        tel: document.getElementById('applicantOfficeTel').value,
                         fax: document.getElementById('applicantFax').value
                     },
                     applicantBanking: {
-                        bankName: document.getElementById('applicantBankName').value, accountNumber:
-                            document.getElementById('applicantAccountNumber').value
+                        bankName: document.getElementById('applicantBankName').value,
+                        accountNumber: document.getElementById('applicantAccountNumber').value
                     },
                     sourceOfFunds: getCheckedValues('sourceOfFunds'),
                     nominee: {
                         isPartner: document.getElementById('nomineeIsPartner').checked,
-                        fullName: document.getElementById('nomineeFullName').value, icPassport:
-                            document.getElementById('nomineeIcPassport').value, dob: document.getElementById('nomineeDob').value,
+                        fullName: document.getElementById('nomineeFullName').value,
+                        icPassport: document.getElementById('nomineeIcPassport').value,
+                        dob: getDateValue('nomineeDob'),
                         relationship: document.getElementById('nomineeRelationship').value,
-                        occupation: document.getElementById('nomineeOccupation').value, industry:
-                            document.getElementById('nomineeIndustry').value,
-                        bankName: document.getElementById('nomineeBankName').value, accountNumber:
-                            document.getElementById('nomineeAccountNumber').value
+                        occupation: document.getElementById('nomineeOccupation').value,
+                        industry: document.getElementById('nomineeIndustry').value,
+                        bankName: document.getElementById('nomineeBankName').value,
+                        accountNumber: document.getElementById('nomineeAccountNumber').value
                     },
                     thirdPartyPayor: {
                         isApplicant: document.getElementById('payorIsApplicant').checked,
-                        fullName: document.getElementById('payorFullName').value, icPassport:
-                            document.getElementById('payorIcPassport').value, dob: document.getElementById('payorDob').value,
-                        occupation: document.getElementById('payorOccupation').value, industry:
-                            document.getElementById('payorIndustry').value, officeAddress:
-                            document.getElementById('payorOfficeAddress').value
+                        fullName: document.getElementById('payorFullName').value,
+                        icPassport: document.getElementById('payorIcPassport').value,
+                        dob: getDateValue('payorDob'),
+                        occupation: document.getElementById('payorOccupation').value,
+                        industry: document.getElementById('payorIndustry').value,
+                        officeAddress: document.getElementById('payorOfficeAddress').value
                     },
                     salesDetail: {
-                        productTypes: getCheckedValues('productType'), worksheetCode: document.getElementById('worksheetCode').value,
-                        subscriptionAmount: document.getElementById('subscriptionAmount').value, investmentAmount:
-                            document.getElementById('investmentAmount').value, totalAmount: document.getElementById('totalAmount').value,
-                        profitReceiver: getCheckedValues('profitReceiver')[0] || '', transactionMethod:
-                            getCheckedValues('transactionMethod')[0] || '', orNumber: document.getElementById('orNumber').value, aprCode:
-                            document.getElementById('aprCode').value,
-                        consultantName: document.getElementById('consultantName').value, consultantCode:
-                            document.getElementById('consultantCode').value
+                        productTypes: getCheckedValues('productType'),
+                        worksheetCode: document.getElementById('worksheetCode').value,
+                        subscriptionAmount: document.getElementById('subscriptionAmount').value,
+                        investmentAmount: document.getElementById('investmentAmount').value,
+                        totalAmount: document.getElementById('totalAmount').value,
+                        profitReceiver: getCheckedValues('profitReceiver')[0] || '',
+                        transactionMethod: getCheckedValues('transactionMethod')[0] || '',
+                        orNumber: document.getElementById('orNumber').value,
+                        aprCode: document.getElementById('aprCode').value,
+                        consultantName: document.getElementById('consultantName').value,
+                        consultantCode: document.getElementById('consultantCode').value
                     }
                 },
                 signatures: {
                     applicant: {
-                        signatureData: signatures.applicantSignature, name:
-                            document.getElementById('applicantSignatureName').value, ic:
-                            document.getElementById('applicantSignatureIC').value, date:
-                            document.getElementById('applicantSignatureDate').value,
+                        signatureData: signatures.applicantSignature,
+                        name: document.getElementById('applicantSignatureName').value,
+                        ic: document.getElementById('applicantSignatureIC').value,
+                        date: getDateValue('applicantSignatureDate')
                     },
                     nominee: {
-                        signatureData: signatures.nomineeSignature, name:
-                            document.getElementById('nomineeSignatureName').value, ic: document.getElementById('nomineeSignatureIC').value,
-                        date: document.getElementById('nomineeSignatureDate').value,
+                        signatureData: signatures.nomineeSignature,
+                        name: document.getElementById('nomineeSignatureName').value,
+                        ic: document.getElementById('nomineeSignatureIC').value,
+                        date: getDateValue('nomineeSignatureDate')
                     },
                     thirdPartyPayor: {
-                        signatureData: signatures.thirdPartyPayorSignature, name:
-                            document.getElementById('thirdPartyPayorSignatureName').value, ic:
-                            document.getElementById('thirdPartyPayorSignatureIC').value, date:
-                            document.getElementById('thirdPartyPayorSignatureDate').value,
+                        signatureData: signatures.thirdPartyPayorSignature,
+                        name: document.getElementById('thirdPartyPayorSignatureName').value,
+                        ic: document.getElementById('thirdPartyPayorSignatureIC').value,
+                        date: getDateValue('thirdPartyPayorSignatureDate')
                     },
                     consultant: {
-                        signatureData: signatures.consultantSignature, name:
-                            document.getElementById('consultantSignatureName').value, ic:
-                            document.getElementById('consultantSignatureIC').value, date:
-                            document.getElementById('consultantSignatureDate').value,
+                        signatureData: signatures.consultantSignature,
+                        name: document.getElementById('consultantSignatureName').value,
+                        ic: document.getElementById('consultantSignatureIC').value,
+                        date: getDateValue('consultantSignatureDate')
                     },
                     witness: {
-                        signatureData: signatures.witnessSignature, name:
-                            document.getElementById('witnessSignatureName').value, ic: document.getElementById('witnessSignatureIC').value,
-                        date: document.getElementById('witnessSignatureDate').value,
+                        signatureData: signatures.witnessSignature,
+                        name: document.getElementById('witnessSignatureName').value,
+                        ic: document.getElementById('witnessSignatureIC').value,
+                        date: getDateValue('witnessSignatureDate')
                     },
                     investmentManager: {
-                        signatureData: signatures.investmentManagerSignature, name:
-                            document.getElementById('investmentManagerSignatureName').value, ic:
-                            document.getElementById('investmentManagerSignatureIC').value, date:
-                            document.getElementById('investmentManagerSignatureDate').value,
+                        signatureData: signatures.investmentManagerSignature,
+                        name: document.getElementById('investmentManagerSignatureName').value,
+                        ic: document.getElementById('investmentManagerSignatureIC').value,
+                        date: getDateValue('investmentManagerSignatureDate')
                     }
                 }
             };
@@ -1166,16 +1227,59 @@
             window.open('combined_forms.html', '_blank');
         }
 
+        // Initialize datepicker for an input
+        function initDatepicker(inputId, defaultToday = false) {
+            $(`#${inputId}`).datepicker({
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '-100:+0',
+                maxDate: inputId === 'guestDob' ? '-18Y' : '+0D', // For DOB, limit to 18 years ago
+                onSelect: function (dateText) {
+                    // Store the formatted date for form submission
+                    $(this).attr('data-date', moment(dateText, 'DD/MM/YYYY').format('YYYY-MM-DD'));
+                }
+            });
+
+            if (defaultToday) {
+                $(`#${inputId}`).datepicker('setDate', new Date());
+            }
+
+            // Remove the type="date" attribute to prevent browser's default datepicker
+            $(`#${inputId}`).attr('type', 'text');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             showSection(1);
 
+            // Initialize all date inputs with datepicker
+            const dateInputs = [
+                { id: 'guestDob', defaultToday: false },
+                { id: 'partnerDob', defaultToday: false },
+                { id: 'guestCheckInSignatureDate', defaultToday: true },
+                { id: 'officeUseDate', defaultToday: true },
+                { id: 'nomineeDob', defaultToday: false },
+                { id: 'payorDob', defaultToday: false },
+                { id: 'applicantSignatureDate', defaultToday: true },
+                { id: 'nomineeSignatureDate', defaultToday: true },
+                { id: 'thirdPartyPayorSignatureDate', defaultToday: true },
+                { id: 'consultantSignatureDate', defaultToday: true },
+                { id: 'witnessSignatureDate', defaultToday: true },
+                { id: 'investmentManagerSignatureDate', defaultToday: true }
+            ];
+
+            dateInputs.forEach(input => {
+                initDatepicker(input.id, input.defaultToday);
+            });
+
+            // Set up other event listeners
             document.getElementById('guestFullName').addEventListener('input', (e) => {
                 document.getElementById('guestCheckInSignatureName').value = e.target.value;
             });
+
             document.getElementById('guestIcPassport').addEventListener('input', (e) => {
                 document.getElementById('guestCheckInSignatureIC').value = e.target.value;
             });
-            document.getElementById('guestCheckInSignatureDate').value = moment().format('YYYY-MM-DD');
 
             document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () {
                 document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid';

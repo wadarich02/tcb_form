@@ -5,6 +5,31 @@
     <meta charset="UTF-8">
     <title>Tamu Capital Berhad - Buyer Declarations</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Format all date inputs
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                // Set the initial value if it exists
+                if (input.value) {
+                    const formattedDate = moment(input.value).format('DD/MM/YYYY');
+                    input.value = formattedDate;
+                }
+
+                // Format new values on change
+                input.addEventListener('change', (e) => {
+                    const formattedDate = moment(e.target.value).format('DD/MM/YYYY');
+                    e.target.value = formattedDate;
+                });
+            });
+
+            // Set current date in dd/mm/yyyy format for all date fields
+            const currentDate = moment().format('DD/MM/YYYY');
+            document.getElementById('applicantDate').textContent = currentDate;
+            document.getElementById('jointApplicantDate').textContent = currentDate;
+            document.getElementById('witnessDate').textContent = currentDate;
+        });
+    </script>
 </head>
 
 <body>
