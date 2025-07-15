@@ -898,13 +898,10 @@
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
 
-            // Helper function to get formatted date value
+            // SIMPLIFIED: Get date value directly from the input field
             const getDateValue = (elementId) => {
                 const el = document.getElementById(elementId);
-                if (!el) return '';
-                // Get the stored date value in YYYY-MM-DD format
-                const dateValue = $(el).attr('data-date');
-                return dateValue ? moment(dateValue).format('DD/MM/YYYY') : '';
+                return el ? el.value : '';
             };
 
             return {
@@ -945,12 +942,6 @@
                         occupation: document.getElementById('partnerOccupation').value,
                         industry: document.getElementById('partnerIndustry').value,
                         monthlyIncome: document.getElementById('partnerMonthlyIncome').value
-                    },
-                    guestCheckInSignature: {
-                        signatureData: signatures.guestCheckInSignature,
-                        name: document.getElementById('guestCheckInSignatureName').value,
-                        ic: document.getElementById('guestCheckInSignatureIC').value,
-                        date: getDateValue('guestCheckInSignatureDate')
                     },
                     officeUse: {
                         day: document.getElementById('officeUseDay').value,
@@ -1014,7 +1005,7 @@
                         consultantCode: document.getElementById('consultantCode').value
                     }
                 },
-                consents: { // ADD THIS NEW OBJECT
+                consents: {
                     rulesRegulationsConsent: document.getElementById('rulesRegulationsConsent').checked,
                     subscriptionTermsConsent: document.getElementById('subscriptionTermsConsent').checked,
                     investmentTermsConsent: document.getElementById('investmentTermsConsent').checked,
