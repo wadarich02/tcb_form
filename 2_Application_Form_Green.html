@@ -25,17 +25,29 @@
 
         .char-box-grid {
             display: grid;
-            grid-template-columns: repeat(29, 1fr);
+            grid-template-columns: repeat(29, minmax(20px, 1fr));
             gap: 1px;
             width: 100%;
+            margin-bottom: 10px;
         }
 
-        .char-box-grid input {
+        .char-box {
             width: 20px;
             height: 25px;
             border: 1px solid #000;
             text-align: center;
             text-transform: uppercase;
+        }
+
+        .phone-number {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .phone-box-group {
+            display: flex;
+            gap: 1px;
         }
 
         .double-row {
@@ -170,29 +182,19 @@
                 </div>
                 <div class="form-row">
                     <div class="form-label">Contact No.</div>
-                    <div style="width:auto;margin-right:5px;">Home</div>
-                    <div class="form-field split-field" style="flex-grow: 0;">
-                        <div id="appHomePhonePrefix" class="char-box-group"></div>
-                        <span class="split-field-sep">-</span>
-                        <div id="appHomePhoneNum" class="char-box-group"></div>
-                    </div>
-                    <div style="width:auto;margin:0 5px 0 20px;">Fax</div>
-                    <div class="form-field split-field">
-                        <div id="appFaxPrefix" class="char-box-group"></div>
-                        <span class="split-field-sep">-</span>
-                        <div id="appFaxNum" class="char-box-group"></div>
+                    <div class="phone-number">
+                        <span>Home</span>
+                        <div class="phone-box-group" id="appHomePhone"></div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-label"></div>
-                    <div style="width:auto;margin-right:5px;">H/P</div>
-                    <div class="form-field split-field" style="flex-grow: 0;">
-                        <div id="appHpPrefix" class="char-box-group"></div>
-                        <span class="split-field-sep">-</span>
-                        <div id="appHpNum" class="char-box-group"></div>
+                    <div class="phone-number">
+                        <span>H/P</span>
+                        <div class="phone-box-group" id="appHpPhone"></div>
+                        <span style="margin-left: 20px;">Fax</span>
+                        <div class="phone-box-group" id="appFaxPhone"></div>
                     </div>
-                    <div style="width:auto;margin:0 5px 0 20px;">Email</div>
-                    <div class="form-field"><span class="underline" id="appEmail"></span></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Occupation</div>
@@ -217,19 +219,6 @@
                     </div>
                 </div>
                 <!-- End of Section A -->
-                <div class="page-break"></div>
-                <!-- Start of Section B -->
-                <div class="header">
-                    <div class="logo-container">
-                        <img src="TCB_LOGO.png" alt="TAMU Logo" class="logo">
-                    </div>
-                    <div class="address-container">
-                        <strong>TAMU CAPITAL BERHAD</strong><br>
-                        51C-L1Mezzanine Floor Bangunan Podium<br>
-                        53 Jalan Raja Alang, Kampung Bharu<br>
-                        50300 Kuala Lumpur
-                    </div>
-                </div>
                 <div class="section">
                     <div class="section-title">(B) BUSINESS/EMPLOYMENT INFORMATION</div>
                     <div class="form-row">
@@ -254,13 +243,11 @@
                     </div>
                     <div class="form-row">
                         <div class="form-label">Office No.</div>
-                        <div class="form-field split-field" style="flex-grow: 0;">
-                            <div id="appOfficePhonePrefix" class="char-box-group"></div>
-                            <span class="split-field-sep">-</span>
-                            <div id="appOfficePhoneNum" class="char-box-group"></div>
+                        <div class="phone-number">
+                            <div class="phone-box-group" id="appOfficePhone"></div>
+                            <span style="margin-left: 20px;">Ext</span>
+                            <div class="phone-box-group" id="appOfficeExt" style="width: 60px;"></div>
                         </div>
-                        <div style="width:auto;margin:0 5px 0 20px;">Ext</div>
-                        <div class="form-field char-box-grid" id="appOfficeExt" style="flex-grow:0;"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Fax</div>
