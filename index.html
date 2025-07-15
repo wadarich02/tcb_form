@@ -1014,6 +1014,13 @@
                         consultantCode: document.getElementById('consultantCode').value
                     }
                 },
+                consents: { // ADD THIS NEW OBJECT
+                    rulesRegulationsConsent: document.getElementById('rulesRegulationsConsent').checked,
+                    subscriptionTermsConsent: document.getElementById('subscriptionTermsConsent').checked,
+                    investmentTermsConsent: document.getElementById('investmentTermsConsent').checked,
+                    finalConsent1: document.getElementById('finalConsent1').checked,
+                    finalConsent2: document.getElementById('finalConsent2').checked,
+                },
                 signatures: {
                     applicant: {
                         signatureData: signatures.applicantSignature,

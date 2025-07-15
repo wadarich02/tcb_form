@@ -49,7 +49,7 @@
         };
 
         const setText = (id, value = '') => { const el = document.getElementById(id); if (el) el.textContent = value; };
-        const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { const cb = el.querySelector('.checkbox, .program-box'); if (cb) cb.textContent = '✓'; } };
+        const setCheck = (id, checked) => { const el = document.getElementById(id); if (el && checked) { el.textContent = '✓'; } };
         const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`; };
 
         const fillCharBoxGrid = (containerId, text = '') => {
@@ -61,7 +61,18 @@
             let html = '';
             const upperText = (text || '').toUpperCase();
             for (let i = 0; i < numBoxes; i++) {
-                html += `<div class="char-box">${upperText[i] || ' '}</div>`;
+                html += `<div class="char-box">${upperText[i] || ''}</div>`;
+            }
+            container.innerHTML = html;
+        };
+
+        const fillFixedCharBoxGrid = (containerId, text = '', count) => {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            let html = '';
+            const upperText = (text || '').replace(/[^A-Z0-9]/ig, '').toUpperCase();
+            for (let i = 0; i < count; i++) {
+                html += `<div class="char-box">${upperText[i] || ''}</div>`;
             }
             container.innerHTML = html;
         };
@@ -78,10 +89,16 @@
             if (part2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
             if (part2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
 
-            fillCharBoxGrid('appName', `${part2.membershipApplicant.title} ${app.fullName}`);
-            fillCharBoxGrid('appNameOnCard', `${part2.membershipApplicant.title} ${part2.membershipApplicant.nameOnCard}`);
-            fillCharBoxGrid('appNric', app.icPassport);
-            fillCharBoxGrid('appDate', formatDate(signatures.applicant.date).replace(/\//g, ''));
+            const appFullName = `${part2.membershipApplicant.title} ${app.fullName}`;
+            fillCharBoxGrid('appName', appFullName.substring(0, 35));
+            fillCharBoxGrid('appName2', appFullName.substring(35));
+
+            const appNameCard = `${part2.membershipApplicant.title} ${part2.membershipApplicant.nameOnCard}`;
+            fillCharBoxGrid('appNameOnCard', appNameCard.substring(0, 35));
+            fillCharBoxGrid('appNameOnCard2', appNameCard.substring(35));
+
+            fillFixedCharBoxGrid('appNric', app.icPassport, 12);
+            fillFixedCharBoxGrid('appDate', formatDate(signatures.applicant.date).replace(/\//g, ''), 6);
 
             if (app.nationality?.toLowerCase().includes('malaysian')) setCheck('appNationalityMalaysian', true); else setCheck('appNationalityForeigner', true);
             if (app.maritalStatus === 'Single') setCheck('appMaritalSingle', true); else if (app.maritalStatus === 'Married') setCheck('appMaritalMarried', true);
@@ -89,40 +106,61 @@
             const homeAddress = `${app.correspondentAddress}, ${app.city}`.split(',');
             fillCharBoxGrid('appHomeAddress', homeAddress[0]);
             fillCharBoxGrid('appHomeAddress2', homeAddress.slice(1).join(', '));
-            fillCharBoxGrid('appHomePostcode', app.poskod);
 
             const mailAddr = part1.guestInfo.mailingSameAsCorrespondent ? homeAddress.join(', ') : `${part1.guestInfo.mailingAddress}, ${part1.guestInfo.mailingCity}`;
             const mailAddrParts = mailAddr.split(',');
             fillCharBoxGrid('appMailingAddress', mailAddrParts[0]);
             fillCharBoxGrid('appMailingAddress2', mailAddrParts.slice(1).join(', '));
 
-            fillCharBoxGrid('appHomePhone', ''); // No data for this
-            fillCharBoxGrid('appFax', part2.applicantOffice.fax);
-            fillCharBoxGrid('appHp', app.phone);
+            fillFixedCharBoxGrid('appHomePhonePrefix', '', 2);
+            fillFixedCharBoxGrid('appHomePhoneNum', '', 8);
+            const fax = (part2.applicantOffice.fax || '').replace(/\D/g, '');
+            fillFixedCharBoxGrid('appFaxPrefix', fax.substring(0, 2), 2);
+            fillFixedCharBoxGrid('appFaxNum', fax.substring(2), 8);
+
+            const hp = (app.phone || '').replace(/\D/g, '');
+            fillFixedCharBoxGrid('appHpPrefix', hp.substring(0, 3), 3);
+            fillFixedCharBoxGrid('appHpNum', hp.substring(3), 8);
             setText('appEmail', app.email);
-            setText('appOccupation', appBiz.occupation);
+
+            fillCharBoxGrid('appOccupation', appBiz.occupation);
 
             const income = parseFloat((appBiz.monthlyIncome || "0").replace(/[^0-9-]/g, '').split('-')[0]) * 12;
             if (income > 60000) setCheck('appIncome4', true); else if (income >= 36000) setCheck('appIncome3', true); else if (income >= 24000) setCheck('appIncome2', true); else if (income > 0) setCheck('appIncome1', true);
 
             fillCharBoxGrid('appEmployer', appBiz.industry);
-            setText('appIndustry', appBiz.industry);
+            fillCharBoxGrid('appIndustry', appBiz.industry);
             const officeAddr = `${part2.applicantOffice.address}, ${part2.applicantOffice.city}`.split(',');
             fillCharBoxGrid('appOfficeAddress', officeAddr[0]);
             fillCharBoxGrid('appOfficeAddress2', officeAddr.slice(1).join(', '));
-            fillCharBoxGrid('appOfficePostcode', part2.applicantOffice.poskod);
-            fillCharBoxGrid('appOfficePhone', part2.applicantOffice.tel);
-            fillCharBoxGrid('appOfficeExt', ''); // No data for this
-            fillCharBoxGrid('appOfficeFax', part2.applicantOffice.fax);
+            fillFixedCharBoxGrid('appOfficePostcode', part2.applicantOffice.poskod, 5);
+
+            const officeTel = (part2.applicantOffice.tel || '').replace(/\D/g, '');
+            fillFixedCharBoxGrid('appOfficePhonePrefix', officeTel.substring(0, 2), 2);
+            fillFixedCharBoxGrid('appOfficePhoneNum', officeTel.substring(2), 8);
+            fillFixedCharBoxGrid('appOfficeExt', '', 4);
+
+            const officeFax = (part2.applicantOffice.fax || '').replace(/\D/g, '');
+            fillFixedCharBoxGrid('appOfficeFaxPrefix', officeFax.substring(0, 2), 2);
+            fillFixedCharBoxGrid('appOfficeFaxNum', officeFax.substring(2), 8);
 
             // Page 2
             fillCharBoxGrid('nomineeName', nominee.fullName);
-            fillCharBoxGrid('nomineeNric', nominee.icPassport);
-            setText('nomineeEmail', ''); // No data for this
+            fillFixedCharBoxGrid('nomineeNric', nominee.icPassport, 12);
+            setText('nomineeEmail', part2.nominee.email || ''); // Assuming email is collected, though not in form
             if (nominee.nationality?.toLowerCase().includes('malaysian')) setCheck('nomineeNationalityMalaysian', true); else { setCheck('nomineeNationalityForeigner', true); setText('nomineeNationalityForeignerText', nominee.nationality); }
             fillCharBoxGrid('nomineeRelation', nominee.relationshipToGuest || nominee.relationship);
             fillCharBoxGrid('nomineeEmployer', nomineeBiz.occupation);
-            fillCharBoxGrid('nomineeHp', nominee.phone);
+            fillFixedCharBoxGrid('nomineeOfficePostcode', '', 5);
+            fillFixedCharBoxGrid('nomineeOfficePhonePrefix', '', 2);
+            fillFixedCharBoxGrid('nomineeOfficePhoneNum', '', 8);
+            fillFixedCharBoxGrid('nomineeOfficeExt', '', 4);
+            fillFixedCharBoxGrid('nomineeOfficeFaxPrefix', '', 2);
+            fillFixedCharBoxGrid('nomineeOfficeFaxNum', '', 8);
+
+            const nomineeHp = (nominee.phone || '').replace(/\D/g, '');
+            fillFixedCharBoxGrid('nomineeHpPrefix', nomineeHp.substring(0, 3), 3);
+            fillFixedCharBoxGrid('nomineeHpNum', nomineeHp.substring(3), 8);
 
             setText('declarationDate', formatDate(signatures.applicant.date));
             setSignature('applicantSignature', signatures.applicant.signatureData);
@@ -131,25 +169,35 @@
             setText('programsFee', part2.salesDetail.totalAmount);
             setText('balance', '0.00'); // No data for this
             if (part2.salesDetail.transactionMethod === 'Debit/Credit/Cash/Cheque') setCheck('paymentCash', true);
-            else if (part2.salesDetail.transactionMethod === 'In-House') setCheck('paymentInstalment', true); // Assuming
-            else if (part2.salesDetail.transactionMethod === 'Loan') setCheck('paymentLoan', true); // Assuming
+            else if (part2.salesDetail.transactionMethod.toLowerCase().includes('instal')) setCheck('paymentInstalment', true);
+            else if (part2.salesDetail.transactionMethod === 'Loan') setCheck('paymentLoan', true);
             setText('counsellor', part1.officeUse.consultant);
             setText('checkBy', signatures.witness.name);
             setText('checkByDate', formatDate(signatures.witness.date));
         }
 
         function populateBuyerDeclaration(data) {
-            const sigs = data.signatures;
+            const { consents, signatures: sigs } = data;
+
+            // Tick all declaration boxes if consent was given
+            const allConsented = consents && consents.rulesRegulationsConsent && consents.subscriptionTermsConsent && consents.investmentTermsConsent && consents.finalConsent1 && consents.finalConsent2;
+            if (allConsented) {
+                document.querySelectorAll('.declaration-checkbox').forEach(box => {
+                    box.textContent = '✓';
+                });
+            }
+
+            // Populate signatures
             const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
             const setSignature = (id, url) => { const c = document.getElementById(id); if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`; };
-            if (sigs.applicant) { setSignature('applicantSignatureLine', sigs.applicant.signatureData); setText('applicantName', sigs.applicant.name); setText('applicantId', sigs.applicant.ic); setText('applicantDate', sigs.applicant.date); }
-            if (sigs.nominee) { setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData); setText('jointApplicantName', sigs.nominee.name); setText('jointApplicantId', sigs.nominee.ic); setText('jointApplicantDate', sigs.nominee.date); }
-            if (sigs.witness) { setSignature('witnessSignatureLine', sigs.witness.signatureData); setText('witnessName', sigs.witness.name); setText('witnessId', sigs.witness.ic); setText('witnessDate', sigs.witness.date); }
+            if (sigs.applicant) { setSignature('applicantSignatureLine', sigs.applicant.signatureData); setText('applicantName', sigs.applicant.name); setText('applicantId', sigs.applicant.ic); setText('applicantDate', formatDate(sigs.applicant.date)); }
+            if (sigs.nominee) { setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData); setText('jointApplicantName', sigs.nominee.name); setText('jointApplicantId', sigs.nominee.ic); setText('jointApplicantDate', formatDate(sigs.nominee.date)); }
+            if (sigs.witness) { setSignature('witnessSignatureLine', sigs.witness.signatureData); setText('witnessName', sigs.witness.name); setText('witnessId', sigs.witness.ic); setText('witnessDate', formatDate(sigs.witness.date)); }
         }
 
         function populateAmlaForm(data) {
             const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
-            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
+            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
             const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
             const setSig = (id, url) => { const el = document.getElementById(id); if (el && url) el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`; };
             let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
@@ -159,30 +207,27 @@
             setVal('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
             setVal('amlaMailingAddress', mailAddr);
             setVal('amlaMobile', app.phone); setVal('amlaEmail', app.email); setVal('amlaOccupation', appBiz.occupation);
-            if (sigs.applicant) { setSig('amlaSig', sigs.applicant.signatureData); setVal('amlaSigName', sigs.applicant.name); setVal('amlaSigDate', sigs.applicant.date); }
-            const receiverNameEl = document.getElementById('receiver-name');
-            if (receiverNameEl) receiverNameEl.textContent = sigs.consultant.name;
+            if (sigs.applicant) { setSig('amlaSig', sigs.applicant.signatureData); setText('amlaSigName', sigs.applicant.name); setText('amlaSigDate', formatDate(sigs.applicant.date)); }
+
+            setText('receiver-name', sigs.consultant.name);
             setSig('receiver-sig', sigs.consultant.signatureData);
-            const receiverDateEl = document.getElementById('receiver-date');
-            if (receiverDateEl) receiverDateEl.textContent = sigs.consultant.date;
-            const witnessNameEl = document.getElementById('witness-name');
-            if (witnessNameEl) witnessNameEl.textContent = sigs.witness.name;
+            setText('receiver-date', formatDate(sigs.consultant.date));
+
+            setText('witness-name', sigs.witness.name);
             setSig('witness-sig', sigs.witness.signatureData);
-            const witnessDateEl = document.getElementById('witness-date');
-            if (witnessDateEl) witnessDateEl.textContent = sigs.witness.date;
+            setText('witness-date', formatDate(sigs.witness.date));
         }
 
         function populateProfitForm(data) {
             const p1 = data.part1, p2 = data.part2, sigs = data.signatures;
-            const setVal = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ''; };
             const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value || ''; };
             const setSig = (id, url) => { const el = document.getElementById(id); if (el && url) el.innerHTML = `<img src="${url}" style="max-height:50px; position:absolute; bottom:5px; left:10px;">`; };
             let app = (p2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
-            setVal('pdName', app.fullName); setVal('pdNric', app.icPassport);
-            setVal('pdAccountNo', p2.applicantBanking.accountNumber); setVal('pdBankName', p2.applicantBanking.bankName);
-            setVal('pdPhone', app.phone); setVal('pdEmail', app.email);
-            if (sigs.applicant) { setSig('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', sigs.applicant.date); }
-            if (sigs.consultant) { setSig('pdManagerSig', sigs.consultant.signatureData); setText('pdManagerDate', sigs.consultant.date); }
+            setText('pdName', app.fullName); setText('pdNric', app.icPassport);
+            setText('pdAccountNo', p2.applicantBanking.accountNumber); setText('pdBankName', p2.applicantBanking.bankName);
+            setText('pdPhone', app.phone); setText('pdEmail', app.email);
+            if (sigs.applicant) { setSig('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', formatDate(sigs.applicant.date)); }
+            if (sigs.investmentManager) { setSig('pdManagerSig', sigs.investmentManager.signatureData); setText('pdManagerDate', formatDate(sigs.investmentManager.date)); }
         }
     </script>
 </body>
