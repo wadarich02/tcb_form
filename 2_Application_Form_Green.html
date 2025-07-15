@@ -23,47 +23,28 @@
             gap: 1px;
         }
 
-        .char-box-grid {
-            display: grid;
-            grid-template-columns: repeat(29, minmax(20px, 1fr));
-            gap: 1px;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .char-box {
-            width: 20px;
-            height: 25px;
-            border: 1px solid #000;
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .phone-number {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .phone-box-group {
-            display: flex;
-            gap: 1px;
-        }
-
-        .double-row {
-            display: grid;
-            grid-template-rows: repeat(2, 1fr);
-            gap: 10px;
-        }
-
         .page-break {
             page-break-before: always;
-            margin-top: 20px;
+        }
+
+        .page-break-before {
+            page-break-before: always;
+            margin-top: 40px;
         }
 
         @media print {
-            .page-break {
+
+            body,
+            .form-page {
+                margin: 0;
+                padding: 10px;
+                box-shadow: none;
+                background-color: white;
+            }
+
+            .page-break-before {
                 page-break-before: always;
+                margin-top: 0;
             }
         }
     </style>
@@ -100,25 +81,33 @@
                 <div class="form-row">
                     <div class="form-label" style="align-self: flex-start; margin-top: 5px;">Name of
                         Applicant:<br>(Mr/Mrs/Ms/Mdm)</div>
-                    <div class="form-field char-box-grid" id="appName"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appName"></div>
+                    </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-label" style="align-self: flex-start; margin-top: 5px;"></div>
-                    <div class="form-field char-box-grid" id="appName2"></div>
+                <div class="form-row" style="margin-top: -5px;">
+                    <div class="form-label"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appName2"></div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Name on the Card<br>(Mr/Mrs/Ms/Mdm)</div>
-                    <div class="form-field char-box-grid" id="appNameOnCard"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appNameOnCard"></div>
+                    </div>
                 </div>
-                <div class="form-row">
+                <div class="form-row" style="margin-top: -5px;">
                     <div class="form-label"></div>
-                    <div class="form-field char-box-grid" id="appNameOnCard2"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appNameOnCard2"></div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">NRIC/Passport</div>
-                    <div class="form-field char-box-grid" id="appNric" style="flex-grow:0;"></div>
+                    <div class="form-field char-box-group" id="appNric" style="flex-grow:0;"></div>
                     <div class="form-label" style="width:auto;margin-left:20px;">Date</div>
-                    <div class="form-field char-box-grid" id="appDate" style="flex-grow:0;"></div>
+                    <div class="form-field char-box-group" id="appDate" style="flex-grow:0;"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Nationality</div>
@@ -142,98 +131,133 @@
                 </div>
                 <div class="form-row">
                     <div class="form-label">Home Address</div>
-                    <div class="form-field char-box-grid" id="appHomeAddress"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appHomeAddress"></div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top: -5px;">
+                    <div class="form-label"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appHomeAddress2"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label" style="margin-left: 145px;">Postcode</div>
+                    <div class="form-field char-box-group" id="appHomePostcode" style="flex-grow:0;"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Mailing Address</div>
-                    <div class="form-field char-box-grid" id="appMailingAddress"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appMailingAddress"></div>
+                    </div>
+                </div>
+                <div class="form-row" style="margin-top: -5px;">
+                    <div class="form-label"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appMailingAddress2"></div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Contact No.</div>
-                    <div class="phone-number">
-                        <span>Home</span>
-                        <div class="phone-box-group" id="appHomePhone"></div>
+                    <div style="width:auto;margin-right:5px;">Home</div>
+                    <div class="form-field split-field" style="flex-grow: 0;">
+                        <div id="appHomePhonePrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
+                        <div id="appHomePhoneNum" class="char-box-group"></div>
+                    </div>
+                    <div style="width:auto;margin:0 5px 0 20px;">Fax</div>
+                    <div class="form-field split-field">
+                        <div id="appFaxPrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
+                        <div id="appFaxNum" class="char-box-group"></div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-label"></div>
-                    <div class="phone-number">
-                        <span>H/P</span>
-                        <div class="phone-box-group" id="appHpPhone"></div>
-                        <span style="margin-left: 20px;">Fax</span>
-                        <div class="phone-box-group" id="appFaxPhone"></div>
+                    <div style="width:auto;margin-right:5px;">H/P</div>
+                    <div class="form-field split-field" style="flex-grow: 0;">
+                        <div id="appHpPrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
+                        <div id="appHpNum" class="char-box-group"></div>
                     </div>
+                    <div style="width:auto;margin:0 5px 0 20px;">Email</div>
+                    <div class="form-field"><span class="underline" id="appEmail" style="width:100%"></span></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Occupation</div>
-                    <div class="form-field char-box-grid" id="appOccupation"></div>
+                    <div class="form-field">
+                        <div class="char-box-grid" id="appOccupation"></div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Annual Income</div>
                     <div class="form-field d-flex" style="justify-content: space-between;">
                         <div class="checkbox-option">
-                            <div class="checkbox" id="appIncome1"></div>
-                            <RM24,000< /div>
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="appIncome2"></div>RM24,000-RM36,000
-                                </div>
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="appIncome3"></div>RM36,000-RM60,000
-                                </div>
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="appIncome4"></div>>RM60,000
-                                </div>
+                            <div class="checkbox" id="appIncome1"></div> &lt;RM24,000
+                        </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appIncome2"></div>RM24,000-RM36,000
+                        </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appIncome3"></div>RM36,000-RM60,000
+                        </div>
+                        <div class="checkbox-option">
+                            <div class="checkbox" id="appIncome4"></div>&gt;RM60,000
                         </div>
                     </div>
                 </div>
-                <!-- End of Section A -->
                 <div class="section">
                     <div class="section-title">(B) BUSINESS/EMPLOYMENT INFORMATION</div>
                     <div class="form-row">
                         <div class="form-label">Name of Business/<br>Employer</div>
-                        <div class="form-field char-box-grid" id="appEmployer"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="appEmployer"></div>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Nature of Business</div>
-                        <div class="form-field char-box-grid" id="appIndustry"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="appIndustry"></div>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Office Address</div>
-                        <div class="form-field char-box-grid" id="appOfficeAddress"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="appOfficeAddress"></div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-top: -5px;">
+                        <div class="form-label"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="appOfficeAddress2"></div>
+                        </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-label">Office Address 2</div>
-                        <div class="form-field char-box-grid" id="appOfficeAddress2"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-label" style="width:auto;margin-left:145px;">Postcode</div>
-                        <div class="form-field char-box-grid" id="appOfficePostcode" style="flex-grow:0;"></div>
+                        <div class="form-label" style="margin-left: 145px;">Postcode</div>
+                        <div class="form-field char-box-group" id="appOfficePostcode" style="flex-grow:0;"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Office No.</div>
-                        <div class="phone-number">
-                            <div class="phone-box-group" id="appOfficePhone"></div>
-                            <span style="margin-left: 20px;">Ext</span>
-                            <div class="phone-box-group" id="appOfficeExt" style="width: 60px;"></div>
+                        <div class="form-field split-field" style="flex-grow: 0;">
+                            <div id="appOfficePhonePrefix" class="char-box-group"></div><span
+                                class="split-field-sep">-</span>
+                            <div id="appOfficePhoneNum" class="char-box-group"></div>
                         </div>
+                        <div style="width:auto;margin:0 5px 0 20px;">Ext</div>
+                        <div class="form-field char-box-group" id="appOfficeExt" style="flex-grow:0;"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Fax</div>
                         <div class="form-field split-field">
-                            <div id="appOfficeFaxPrefix" class="char-box-group"></div>
-                            <span class="split-field-sep">-</span>
+                            <div id="appOfficeFaxPrefix" class="char-box-group"></div><span
+                                class="split-field-sep">-</span>
                             <div id="appOfficeFaxNum" class="char-box-group"></div>
                         </div>
                     </div>
                 </div>
-                <div class="page-break"></div>
+                <div class="page-break-before"></div>
             </div>
             <!-- PAGE 2 -->
             <div>
                 <div class="header">
-                    <div class="logo-container">
-                        <img src="logo.png" alt="TAMU Logo" class="logo">
-                    </div>
+                    <div class="logo-container"><img src="logo.png" alt="TAMU Logo" class="logo"></div>
                     <div class="address-container">
                         <strong>TAMU CAPITAL BERHAD</strong><br>
                         51C-L1Mezzanine Floor Bangunan Podium<br>
@@ -250,13 +274,16 @@
                     <div class="section-title">(C) FAMILY INFORMATION</div>
                     <div class="form-row">
                         <div class="form-label">Name of Nominee<br>(Mr/Mrs/Ms/Mdm)</div>
-                        <div class="form-field char-box-grid" id="nomineeName"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="nomineeName"></div>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">NRIC/Passport</div>
-                        <div class="form-field char-box-grid" id="nomineeNric" style="flex-grow:0;"></div>
+                        <div class="form-field char-box-group" id="nomineeNric" style="flex-grow:0;"></div>
                         <div class="form-label" style="width:auto;margin-left:20px;">Email:</div>
-                        <div class="form-field"><span class="underline" id="nomineeEmail"></span></div>
+                        <div class="form-field"><span class="underline" id="nomineeEmail" style="width:100%;"></span>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Nationality</div>
@@ -272,45 +299,53 @@
                     </div>
                     <div class="form-row">
                         <div class="form-label">Relation with Subscriber</div>
-                        <div class="form-field char-box-grid" id="nomineeRelation"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="nomineeRelation"></div>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Name of Business/<br>Employer</div>
-                        <div class="form-field char-box-grid" id="nomineeEmployer"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="nomineeEmployer"></div>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Office Address</div>
-                        <div class="form-field char-box-grid" id="nomineeOfficeAddress"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="nomineeOfficeAddress"></div>
+                        </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row" style="margin-top: -5px;">
                         <div class="form-label"></div>
-                        <div class="form-field char-box-grid" id="nomineeOfficeAddress2"></div>
+                        <div class="form-field">
+                            <div class="char-box-grid" id="nomineeOfficeAddress2"></div>
+                        </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-label" style="width:auto;margin-left:145px;">Postcode</div>
-                        <div class="form-field char-box-grid" id="nomineeOfficePostcode" style="flex-grow:0;"></div>
+                        <div class="form-label" style="margin-left: 145px;">Postcode</div>
+                        <div class="form-field char-box-group" id="nomineeOfficePostcode" style="flex-grow:0;"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Office Tel. No.</div>
                         <div class="form-field split-field" style="flex-grow: 0;">
-                            <div id="nomineeOfficePhonePrefix" class="char-box-group"></div>
-                            <span class="split-field-sep">-</span>
+                            <div id="nomineeOfficePhonePrefix" class="char-box-group"></div><span
+                                class="split-field-sep">-</span>
                             <div id="nomineeOfficePhoneNum" class="char-box-group"></div>
                         </div>
                         <div style="width:auto;margin:0 5px 0 20px;">Ext.</div>
-                        <div class="form-field char-box-grid" id="nomineeOfficeExt" style="flex-grow:0;"></div>
+                        <div class="form-field char-box-group" id="nomineeOfficeExt" style="flex-grow:0;"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-label">Fax No.</div>
                         <div class="form-field split-field" style="flex-grow: 0;">
-                            <div id="nomineeOfficeFaxPrefix" class="char-box-group"></div>
-                            <span class="split-field-sep">-</span>
+                            <div id="nomineeOfficeFaxPrefix" class="char-box-group"></div><span
+                                class="split-field-sep">-</span>
                             <div id="nomineeOfficeFaxNum" class="char-box-group"></div>
                         </div>
                         <div style="width:auto;margin:0 5px 0 20px;">H/P:</div>
                         <div class="form-field split-field">
-                            <div id="nomineeHpPrefix" class="char-box-group"></div>
-                            <span class="split-field-sep">-</span>
+                            <div id="nomineeHpPrefix" class="char-box-group"></div><span
+                                class="split-field-sep">-</span>
                             <div id="nomineeHpNum" class="char-box-group"></div>
                         </div>
                     </div>
@@ -318,17 +353,16 @@
                         <div class="form-label">Annual Income</div>
                         <div class="form-field d-flex" style="justify-content: space-between;">
                             <div class="checkbox-option">
-                                <div class="checkbox" id="nomineeIncome1"></div>
-                                <RM24,000< /div>
-                                    <div class="checkbox-option">
-                                        <div class="checkbox" id="nomineeIncome2"></div>RM24,000-RM36,000
-                                    </div>
-                                    <div class="checkbox-option">
-                                        <div class="checkbox" id="nomineeIncome3"></div>RM36,000-RM60,000
-                                    </div>
-                                    <div class="checkbox-option">
-                                        <div class="checkbox" id="nomineeIncome4"></div>>RM60,000
-                                    </div>
+                                <div class="checkbox" id="nomineeIncome1"></div> &lt;RM24,000
+                            </div>
+                            <div class="checkbox-option">
+                                <div class="checkbox" id="nomineeIncome2"></div>RM24,000-RM36,000
+                            </div>
+                            <div class="checkbox-option">
+                                <div class="checkbox" id="nomineeIncome3"></div>RM36,000-RM60,000
+                            </div>
+                            <div class="checkbox-option">
+                                <div class="checkbox" id="nomineeIncome4"></div>&gt;RM60,000
                             </div>
                         </div>
                     </div>
@@ -352,7 +386,9 @@
                             FOR OFFICE USE ONLY</div>
                         <div class="form-row">
                             <div class="form-label">Program ID No.</div>
-                            <div class="form-field char-box-grid" id="programId"></div>
+                            <div class="form-field">
+                                <div class="char-box-grid" id="programId"></div>
+                            </div>
                             <div class="form-label" style="width:auto;margin-left:20px;">Programs Fee (RM)</div>
                             <div class="form-field"><span class="underline" id="programsFee"></span></div>
                         </div>

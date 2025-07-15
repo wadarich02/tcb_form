@@ -6,36 +6,42 @@
     <title>Tamu Capital Berhad - Buyer Declarations</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .declaration-item {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .declaration-text {
-            flex-grow: 1;
-            padding-right: 20px;
-        }
-
-        .declaration-text h4 {
-            margin: 0 0 5px 0;
-        }
-
-        .declaration-text p {
-            margin: 0;
-            line-height: 1.4;
+        .declaration-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
             font-size: 0.9em;
+        }
+
+        .declaration-table td {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .declaration-table .col-num {
+            width: 40px;
+            text-align: center;
+            font-weight: bold;
+            background-color: #f8f8f8;
+        }
+
+        .declaration-table .col-text strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .declaration-table .col-check {
+            width: 50px;
+            text-align: center;
         }
 
         .declaration-checkbox {
             width: 25px;
             height: 25px;
             border: 1px solid #333;
-            flex-shrink: 0;
-            text-align: center;
+            margin: auto;
             line-height: 25px;
             font-weight: bold;
             font-size: 1.2em;
@@ -49,111 +55,119 @@
         <h2 style="text-decoration: underline; font-size: 1.5em; margin: 20px 0;">BUYER DECLARATIONS</h2>
     </div>
 
-    <div class="declaration-list">
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>1. PURCHASE OF PROGRAM</h4>
-                <p>I am aware that I have purchase (DIRHAM/ DINAR/ ALMAS) program for a total price of RM <span
-                        class="underline" style="min-width:150px;"> </span> And entitle for a period of fifteen (15)
-                    nights for five (5) years duration from the date of the purchase.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_1"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>2. COOLING OFF PERIOD</h4>
-                <p>I am aware that I am entitle to a 10 days cooling off period from the signing of the application of
-                    subscription.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_2"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>3. NO OBLIGATION TO RE-PURCHASE</h4>
-                <p>I am aware that the Developer/Marketer of the scheme is not under obligation to repurchase the
-                    program at the request of members.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_3"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>4. SUBSCRIPTION ACTIVATION</h4>
-                <p>I am aware that activations of the program will be automatic active after the cooling off period from
-                    the subscription dates.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_4"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>5. NO FINANCIAL RETURN</h4>
-                <p>I am aware that there is no financial return upon the expiry of the cooling off period.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_5"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>6. SALES PRESENTATION</h4>
-                <p>I have undergone the sales presentation and satisfied it has been done in a professional manner and I
-                    am purchasing the program on my own accord with any undue coercion.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_6"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>7. RESERVATIONS</h4>
-                <p>I am aware that all reservation request must be made through Tamu Capital Berhad and reservation must
-                    be made at least 14 days before the check in dates.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_7"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>8. BREAKFAST AND DISCOUNT</h4>
-                <p>I am aware that the breakfast and discount benefit is only applicable at Tamu Hotel & Suites, Kuala
-                    Lumpur.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_8"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>9. RIGHT TO USE</h4>
-                <p>This program confers upon a right to use the facilities on a first come first serve principle. As
-                    such, allbooking of a holiday accommodation is subject to an availability and advance booking is
-                    necessary.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_9"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>10. AFFILIATES RESORT</h4>
-                <p>I am aware that all affiliates resort is subject to change with notice and replacement are not
-                    compulsory.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_10"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>11. ROOM TYPE</h4>
-                <p>Room type are depending on the arrangement between (DIRHAM/ DINAR/ ALMAS) and the affiliates resort
-                    and not restricted to only 1-bedroom suites.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_11"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>12. MINIMUM STAY</h4>
-                <p>A minimum stay might be required in any affiliates resort.</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_12"></div>
-        </div>
-        <div class="declaration-item">
-            <div class="declaration-text">
-                <h4>13. CORRESPONDENCE</h4>
-                <p>All correspondence must be made through memberservices@tamucapital.com</p>
-            </div>
-            <div class="declaration-checkbox" id="dec_13"></div>
-        </div>
-    </div>
+    <table class="declaration-table">
+        <tbody>
+            <tr>
+                <td class="col-num">1.</td>
+                <td class="col-text"><strong>PURCHASE OF PROGRAM</strong>I am aware that I have purchase (DIRHAM/ DINAR/
+                    ALMAS) program for a total price of RM <span class="underline" style="min-width:150px;"> </span> And
+                    entitle for a period of fifteen (15) nights for five (5) years duration from the date of the
+                    purchase.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_1"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">2.</td>
+                <td class="col-text"><strong>COOLING OFF PERIOD</strong>I am aware that I am entitle to a 10 days
+                    cooling off period from the signing of the application of subscription.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_2"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">3.</td>
+                <td class="col-text"><strong>NO OBLIGATION TO RE-PURCHASE</strong>I am aware that the Developer/Marketer
+                    of the scheme is not under obligation to repurchase the program at the request of members.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_3"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">4.</td>
+                <td class="col-text"><strong>SUBSCRIPTION ACTIVATION</strong>I am aware that activations of the program
+                    will be automatic active after the cooling off period from the subscription dates.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_4"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">5.</td>
+                <td class="col-text"><strong>NO FINANCIAL RETURN</strong>I am aware that there is no financial return
+                    upon the expiry of the cooling off period.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_5"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">6.</td>
+                <td class="col-text"><strong>SALES PRESENTATION</strong>I have undergone the sales presentation and
+                    satisfied it has been done in a professional manner and I am purchasing the program on my own accord
+                    with any undue coercion.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_6"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">7.</td>
+                <td class="col-text"><strong>RESERVATIONS</strong>I am aware that all reservation request must be made
+                    through Tamu Capital Berhad and reservation must be made at least 14 days before the check in dates.
+                </td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_7"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">8.</td>
+                <td class="col-text"><strong>BREAKFAST AND DISCOUNT</strong>I am aware that the breakfast and discount
+                    benefit is only applicable at Tamu Hotel & Suites, Kuala Lumpur.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_8"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">9.</td>
+                <td class="col-text"><strong>RIGHT TO USE</strong>This program confers upon a right to use the
+                    facilities on a first come first serve principle. As such, allbooking of a holiday accommodation is
+                    subject to an availability and advance booking is necessary.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_9"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">10.</td>
+                <td class="col-text"><strong>AFFILIATES RESORT</strong>I am aware that all affiliates resort is subject
+                    to change with notice and replacement are not compulsory.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_10"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">11.</td>
+                <td class="col-text"><strong>ROOM TYPE</strong>Room type are depending on the arrangement between
+                    (DIRHAM/ DINAR/ ALMAS) and the affiliates resort and not restricted to only 1-bedroom suites.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_11"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">12.</td>
+                <td class="col-text"><strong>MINIMUM STAY</strong>A minimum stay might be required in any affiliates
+                    resort.</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_12"></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-num">13.</td>
+                <td class="col-text"><strong>CORRESPONDENCE</strong>All correspondence must be made through
+                    memberservices@tamucapital.com</td>
+                <td class="col-check">
+                    <div class="declaration-checkbox" id="dec_13"></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
     <p style="margin-top: 40px; margin-bottom: 40px;">I am hereby fully understood and agree with the buyer declarations
         and purchase this program without any prejudice.</p>
