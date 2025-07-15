@@ -3,240 +3,184 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buyer Declarations</title>
+    <title>Tamu Capital Berhad - Buyer Declarations</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .header {
+        .declaration-item {
             display: flex;
-            align-items: center;
-            margin-bottom: 30px;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
         }
 
-        .logo {
-            width: 200px;
-            margin-right: 20px;
+        .declaration-text {
+            flex-grow: 1;
+            padding-right: 20px;
         }
 
-        .company-info {
-            flex: 1;
+        .declaration-text h4 {
+            margin: 0 0 5px 0;
         }
 
-        .declaration-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0 40px 0;
-        }
-
-        .declaration-table th {
-            background-color: #006400;
-            color: white;
-            padding: 12px 15px;
-            text-align: left;
-        }
-
-        .declaration-table td {
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            vertical-align: top;
+        .declaration-text p {
+            margin: 0;
             line-height: 1.4;
+            font-size: 0.9em;
         }
 
-        .declaration-table tr:hover {
-            background-color: #f5f5f5;
-        }
-
-        .checkbox-cell {
-            width: 50px;
+        .declaration-checkbox {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #333;
+            flex-shrink: 0;
             text-align: center;
-        }
-
-        .declaration-number {
-            width: 40px;
+            line-height: 25px;
             font-weight: bold;
-        }
-
-        .signature-section {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .signature-block {
-            text-align: center;
-        }
-
-        .signature-line {
-            border-bottom: 1px solid black;
-            margin-bottom: 10px;
-            height: 40px;
+            font-size: 1.2em;
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <img src="TCB_LOGO.png" alt="TAMU Logo" class="logo">
-        <div class="company-info">
-            <h2>TAMU CAPITAL BERHAD</h2>
-            <p>51C-L1 Mezzanine Floor, Bangunan Podium 53 Jalan Raja Alang,<br>
-                Kampung Baru, 50300 Kuala Lumpur<br>
-                Hotline No: 019-222 0319<br>
-                Email: memberservices@tamucapital.com</p>
+    <div class="header" style="justify-content: center; text-align:center; flex-direction: column;">
+        <img src="logo.png" alt="TAMU Logo" class="logo" style="width: 200px; margin-bottom: 10px;">
+        <h2 style="text-decoration: underline; font-size: 1.5em; margin: 20px 0;">BUYER DECLARATIONS</h2>
+    </div>
+
+    <div class="declaration-list">
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>1. PURCHASE OF PROGRAM</h4>
+                <p>I am aware that I have purchase (DIRHAM/ DINAR/ ALMAS) program for a total price of RM <span
+                        class="underline" style="min-width:150px;"> </span> And entitle for a period of fifteen (15)
+                    nights for five (5) years duration from the date of the purchase.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_1"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>2. COOLING OFF PERIOD</h4>
+                <p>I am aware that I am entitle to a 10 days cooling off period from the signing of the application of
+                    subscription.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_2"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>3. NO OBLIGATION TO RE-PURCHASE</h4>
+                <p>I am aware that the Developer/Marketer of the scheme is not under obligation to repurchase the
+                    program at the request of members.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_3"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>4. SUBSCRIPTION ACTIVATION</h4>
+                <p>I am aware that activations of the program will be automatic active after the cooling off period from
+                    the subscription dates.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_4"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>5. NO FINANCIAL RETURN</h4>
+                <p>I am aware that there is no financial return upon the expiry of the cooling off period.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_5"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>6. SALES PRESENTATION</h4>
+                <p>I have undergone the sales presentation and satisfied it has been done in a professional manner and I
+                    am purchasing the program on my own accord with any undue coercion.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_6"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>7. RESERVATIONS</h4>
+                <p>I am aware that all reservation request must be made through Tamu Capital Berhad and reservation must
+                    be made at least 14 days before the check in dates.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_7"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>8. BREAKFAST AND DISCOUNT</h4>
+                <p>I am aware that the breakfast and discount benefit is only applicable at Tamu Hotel & Suites, Kuala
+                    Lumpur.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_8"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>9. RIGHT TO USE</h4>
+                <p>This program confers upon a right to use the facilities on a first come first serve principle. As
+                    such, allbooking of a holiday accommodation is subject to an availability and advance booking is
+                    necessary.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_9"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>10. AFFILIATES RESORT</h4>
+                <p>I am aware that all affiliates resort is subject to change with notice and replacement are not
+                    compulsory.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_10"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>11. ROOM TYPE</h4>
+                <p>Room type are depending on the arrangement between (DIRHAM/ DINAR/ ALMAS) and the affiliates resort
+                    and not restricted to only 1-bedroom suites.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_11"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>12. MINIMUM STAY</h4>
+                <p>A minimum stay might be required in any affiliates resort.</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_12"></div>
+        </div>
+        <div class="declaration-item">
+            <div class="declaration-text">
+                <h4>13. CORRESPONDENCE</h4>
+                <p>All correspondence must be made through memberservices@tamucapital.com</p>
+            </div>
+            <div class="declaration-checkbox" id="dec_13"></div>
         </div>
     </div>
 
-    <h1>BUYER DECLARATIONS</h1>
+    <p style="margin-top: 40px; margin-bottom: 40px;">I am hereby fully understood and agree with the buyer declarations
+        and purchase this program without any prejudice.</p>
 
-    <table class="declaration-table">
-        <tr>
-            <th class="declaration-number">No.</th>
-            <th>Declaration</th>
-            <th class="checkbox-cell">✓</th>
-        </tr>
-        <tr>
-            <td>1.</td>
-            <td><strong>PURCHASE OF PROGRAM</strong><br>
-                I am aware that I have purchase (DIRHAM/ DINAR/ ALMAS) program for a total price of RM_________________
-                And entitle for a period of fifteen (15) nights for five (5) years duration from the date of the
-                purchase.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration1"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>2.</td>
-            <td><strong>COOLING OFF PERIOD</strong><br>
-                I am aware that I am entitle to a 10 days cooling off period from the signing of the application of
-                subscription.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration2"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>3.</td>
-            <td><strong>NO OBLIGATION TO RE-PURCHASE</strong><br>
-                I am aware that the Developer/Marketer of the scheme is not under obligation to repurchase the program
-                at the request of members.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration3"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>4.</td>
-            <td><strong>SUBSCRIPTION ACTIVATION</strong><br>
-                I am aware that activations of the program will be automatic active after the cooling off period from
-                the subscription dates.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration4"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>5.</td>
-            <td><strong>NO FINANCIAL RETURN</strong><br>
-                I am aware that there is no financial return upon the expiry of the cooling off period.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration5"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>6.</td>
-            <td><strong>SALES PRESENTATION</strong><br>
-                I have undergone the sales presentation and satisfied it has been done in a professional manner and I am
-                purchasing the program on my own accord with any undue coercion.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration6"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>7.</td>
-            <td><strong>RESERVATIONS</strong><br>
-                I am aware that all reservation request must be made through Tamu Capital Berhad and reservation must be
-                made at least 14 days before the check in dates.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration7"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>8.</td>
-            <td><strong>BREAKFAST AND DISCOUNT</strong><br>
-                I am aware that the breakfast and discount benefit is only applicable at Tamu Hotel & Suites, Kuala
-                Lumpur.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration8"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>9.</td>
-            <td><strong>RIGHT TO USE</strong><br>
-                This program confers upon a right to use the facilities on a first come first serve principle. As such,
-                all booking of a holiday accommodation is subject to an availability and advance booking is necessary.
-            </td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration9"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>10.</td>
-            <td><strong>AFFILIATES RESORT</strong><br>
-                I am aware that all affiliates resort is subject to change with notice and replacement are not
-                compulsory.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration10"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>11.</td>
-            <td><strong>ROOM TYPE</strong><br>
-                Room type are depending on the arrangement between (DIRHAM/ DINAR/ ALMAS) and the affiliates resort and
-                not restricted to only 1-bedroom suites.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration11"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>12.</td>
-            <td><strong>MINIMUM STAY</strong><br>
-                A minimum stay might be required in any affiliates resort.</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration12"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>13.</td>
-            <td><strong>CORRESPONDENCE</strong><br>
-                All correspondence must be made through memberservices@tamucapital.com</td>
-            <td class="checkbox-cell">
-                <div class="checkbox" id="declaration13"></div>
-            </td>
-        </tr>
-    </table>
-
-    <p>I am hereby fully understood and agree with the buyer declarations and purchase this program without any
-        prejudice.</p>
-
-    <div class="signature-section">
-        <div class="signature-block">
-            <div class="signature-line"></div>
-            <p>Signature of Applicant<br>
-                Name:<br>
-                ID:<br>
-                Dates:</p>
+    <div class="signature-section" style="margin-top: 50px; justify-content: space-between;">
+        <div class="signature-field" style="width: 30%; text-align: center;">
+            <div class="signature-line" id="applicantSignatureLine"></div>
+            <p style="margin: 8px 0;">Signature of Applicant</p>
+            <p style="margin: 8px 0; text-align: left;">Name: <span class="info-data" id="applicantName"></span></p>
+            <p style="margin: 8px 0; text-align: left;">ID: <span class="info-data" id="applicantId"></span></p>
+            <p style="margin: 8px 0; text-align: left;">Date: <span class="info-data" id="applicantDate"></span></p>
         </div>
-        <div class="signature-block">
-            <div class="signature-line"></div>
-            <p>Signature of Joint Applicant<br>
-                Name:<br>
-                ID:<br>
-                Dates:</p>
+        <div class="signature-field" style="width: 30%; text-align: center;">
+            <div class="signature-line" id="jointApplicantSignatureLine"></div>
+            <p style="margin: 8px 0;">Signature of Joint Applicant</p>
+            <p style="margin: 8px 0; text-align: left;">Name: <span class="info-data" id="jointApplicantName"></span>
+            </p>
+            <p style="margin: 8px 0; text-align: left;">ID: <span class="info-data" id="jointApplicantId"></span></p>
+            <p style="margin: 8px 0; text-align: left;">Date: <span class="info-data" id="jointApplicantDate"></span>
+            </p>
         </div>
-        <div class="signature-block">
-            <div class="signature-line"></div>
-            <p>Signature of Witness<br>
-                Name:<br>
-                ID:<br>
-                Dates:</p>
+        <div class="signature-field" style="width: 30%; text-align: center;">
+            <div class="signature-line" id="witnessSignatureLine"></div>
+            <p style="margin: 8px 0;">Signature of Witness</p>
+            <p style="margin: 8px 0; text-align: left;">Name: <span class="info-data" id="witnessName"></span></p>
+            <p style="margin: 8px 0; text-align: left;">ID: <span class="info-data" id="witnessId"></span></p>
+            <p style="margin: 8px 0; text-align: left;">Date: <span class="info-data" id="witnessDate"></span></p>
         </div>
     </div>
 </body>

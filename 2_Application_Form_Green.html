@@ -57,41 +57,14 @@
         }
 
         .page-break {
-            page-break-after: always;
-            margin-bottom: 30px;
+            page-break-before: always;
+            margin-top: 20px;
         }
 
         @media print {
             .page-break {
-                page-break-after: always;
+                page-break-before: always;
             }
-        }
-
-        .declaration-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .declaration-table th {
-            background-color: #006400;
-            color: white;
-            padding: 10px;
-            text-align: left;
-        }
-
-        .declaration-table td {
-            padding: 15px 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .declaration-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .checkbox-cell {
-            width: 30px;
-            text-align: center;
         }
     </style>
 </head>
@@ -125,21 +98,22 @@
                 <div class="section-title">(A) INDIVIDUAL INFORMATION</div>
                 <div style="font-size:0.8em; padding: 5px 0 0 5px;">Full name as appeared in NRIC/Passport</div>
                 <div class="form-row">
-                    <div class="form-label">Name of Applicant:<br>(Mr/Mrs/Ms/Mdm)</div>
-                    <div class="form-field double-row">
-                        <div class="char-box-grid" id="appName"></div>
-                        <div class="char-box-grid" id="appName2"></div>
-                    </div>
+                    <div class="form-label" style="align-self: flex-start; margin-top: 5px;">Name of
+                        Applicant:<br>(Mr/Mrs/Ms/Mdm)</div>
+                    <div class="form-field char-box-grid" id="appName"></div>
                 </div>
-
+                <div class="form-row">
+                    <div class="form-label" style="align-self: flex-start; margin-top: 5px;"></div>
+                    <div class="form-field char-box-grid" id="appName2"></div>
+                </div>
                 <div class="form-row">
                     <div class="form-label">Name on the Card<br>(Mr/Mrs/Ms/Mdm)</div>
-                    <div class="form-field double-row">
-                        <div class="char-box-grid" id="appNameOnCard"></div>
-                        <div class="char-box-grid" id="appNameOnCard2"></div>
-                    </div>
+                    <div class="form-field char-box-grid" id="appNameOnCard"></div>
                 </div>
-
+                <div class="form-row">
+                    <div class="form-label"></div>
+                    <div class="form-field char-box-grid" id="appNameOnCard2"></div>
+                </div>
                 <div class="form-row">
                     <div class="form-label">NRIC/Passport</div>
                     <div class="form-field char-box-grid" id="appNric" style="flex-grow:0;"></div>
@@ -168,17 +142,11 @@
                 </div>
                 <div class="form-row">
                     <div class="form-label">Home Address</div>
-                    <div class="form-field double-row">
-                        <div class="char-box-grid" id="appHomeAddress"></div>
-                        <div class="char-box-grid" id="appHomeAddress2"></div>
-                    </div>
+                    <div class="form-field char-box-grid" id="appHomeAddress"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Mailing Address</div>
-                    <div class="form-field double-row">
-                        <div class="char-box-grid" id="appMailingAddress"></div>
-                        <div class="char-box-grid" id="appMailingAddress2"></div>
-                    </div>
+                    <div class="form-field char-box-grid" id="appMailingAddress"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Contact No.</div>
