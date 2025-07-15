@@ -77,19 +77,44 @@
                     <div class="form-grid">
                         <div class="form-group"><label for="guestOccupation">Occupation</label><input type="text"
                                 id="guestOccupation" required></div>
-                        <div class="form-group"><label for="guestIndustry">Industry</label><select id="guestIndustry"
-                                required>
+                        <div class="form-group">
+                            <label for="guestIndustry">Industry</label>
+                            <select id="guestIndustry" required>
                                 <option value="" disabled selected>Select Industry</option>
                                 <option value="Agriculture">Agriculture</option>
+                                <option value="Automotive">Automotive</option>
                                 <option value="Banking">Banking</option>
                                 <option value="Construction">Construction</option>
+                                <option value="Consulting">Consulting</option>
                                 <option value="Education">Education</option>
+                                <option value="Energy">Energy</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Entertainment">Entertainment</option>
                                 <option value="Finance">Finance</option>
+                                <option value="Food & Beverage">Food & Beverage</option>
+                                <option value="Government">Government</option>
                                 <option value="Healthcare">Healthcare</option>
-                                <option value="IT">Information Technology</option>
+                                <option value="Hospitality">Hospitality</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Legal">Legal</option>
+                                <option value="Logistics">Logistics</option>
                                 <option value="Manufacturing">Manufacturing</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Media">Media</option>
+                                <option value="Mining">Mining</option>
+                                <option value="Non-Profit">Non-Profit</option>
+                                <option value="Oil & Gas">Oil & Gas</option>
+                                <option value="Pharmaceutical">Pharmaceutical</option>
+                                <option value="Real Estate">Real Estate</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Science">Science</option>
+                                <option value="Telecommunications">Telecommunications</option>
+                                <option value="Tourism">Tourism</option>
+                                <option value="Transportation">Transportation</option>
                                 <option value="Other">Other</option>
-                            </select></div>
+                            </select>
+                        </div>
                         <div class="form-group full-width"><label for="guestMonthlyIncome">Monthly Income</label><select
                                 id="guestMonthlyIncome" required>
                                 <option value="" disabled selected>Select Income Range</option>
@@ -132,14 +157,6 @@
                                 <option value="Legal Guardian">Legal Guardian</option>
                                 <option value="Other">Other</option>
                             </select></div>
-                        <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
-                                    id="partnerSameAddress"> Correspondent address is the same as guest's</label></div>
-                        <div class="form-group full-width"><label for="partnerCorrespondentAddress">Correspondent
-                                Address</label><textarea id="partnerCorrespondentAddress"></textarea></div>
-                        <div class="form-group"><label for="partnerPoskod">Poskod</label><input type="text"
-                                id="partnerPoskod"></div>
-                        <div class="form-group"><label for="partnerCity">City/Country</label><input type="text"
-                                id="partnerCity"></div>
                     </div>
                 </div>
                 <div class="subsection">
@@ -147,8 +164,44 @@
                     <div class="form-grid">
                         <div class="form-group"><label for="partnerOccupation">Occupation</label><input type="text"
                                 id="partnerOccupation"></div>
-                        <div class="form-group"><label for="partnerIndustry">Industry</label><select
-                                id="partnerIndustry"></select></div>
+                        <div class="form-group">
+                            <label for="partnerIndustry">Industry</label>
+                            <select id="partnerIndustry">
+                                <option value="" disabled selected>Select Industry</option>
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Automotive">Automotive</option>
+                                <option value="Banking">Banking</option>
+                                <option value="Construction">Construction</option>
+                                <option value="Consulting">Consulting</option>
+                                <option value="Education">Education</option>
+                                <option value="Energy">Energy</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Food & Beverage">Food & Beverage</option>
+                                <option value="Government">Government</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Hospitality">Hospitality</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Legal">Legal</option>
+                                <option value="Logistics">Logistics</option>
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Media">Media</option>
+                                <option value="Mining">Mining</option>
+                                <option value="Non-Profit">Non-Profit</option>
+                                <option value="Oil & Gas">Oil & Gas</option>
+                                <option value="Pharmaceutical">Pharmaceutical</option>
+                                <option value="Real Estate">Real Estate</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Science">Science</option>
+                                <option value="Telecommunications">Telecommunications</option>
+                                <option value="Tourism">Tourism</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
                         <div class="form-group full-width"><label for="partnerMonthlyIncome">Monthly
                                 Income</label><select id="partnerMonthlyIncome">
                                 <option value="" disabled selected>Select Income Range</option>
@@ -161,14 +214,14 @@
                     </div>
                 </div>
 
-                <!-- NEW: Guest Signature Section -->
                 <div class="subsection">
                     <h3>Guest Signature</h3>
                     <div class="form-grid">
                         <div class="form-group full-width">
                             <div class="signature-container">
                                 <p>Please sign in the box below</p>
-                                <canvas id="guestCheckInSignature" class="signature-canvas" height="150"></canvas>
+                                <canvas id="guestCheckInSignature" class="signature-canvas" height="150"
+                                    required></canvas>
                                 <div class="signature-controls" style="text-align: right; margin-top: 5px;">
                                     <button type="button" class="btn btn-secondary"
                                         style="padding: 5px 15px; font-size: 0.8em; border-radius: 5px;"
@@ -191,7 +244,6 @@
                     </div>
                 </div>
 
-                <!-- NEW: Office Use Only Section -->
                 <div class="subsection">
                     <h3>FOR OFFICE USE ONLY</h3>
                     <div class="form-grid">
@@ -466,15 +518,18 @@
 
             <!-- SECTION 4: SIGNATURE PAGE -->
             <div class="form-section" id="section4">
+                <div class="button-group" style="justify-content: flex-start; margin-top: 0; margin-bottom: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="showSection(1)">Back to Check-In</button>
+                </div>
                 <h2 class="section-title">SIGNATURE PAGE</h2>
                 <div class="form-grid">
                     <div class="subsection">
                         <h3>Applicant</h3>
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="applicantSignature" class="signature-canvas"
-                                height="150"></canvas>
-                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em;"
+                                height="150" required></canvas>
+                            <div class="signature-controls" style="text-align: right;"><button type="button"
+                                    class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('applicantSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -490,8 +545,8 @@
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="nomineeSignature" class="signature-canvas"
                                 height="150"></canvas>
-                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em;"
+                            <div class="signature-controls" style="text-align: right;"><button type="button"
+                                    class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('nomineeSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -507,8 +562,8 @@
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="thirdPartyPayorSignature"
                                 class="signature-canvas" height="150"></canvas>
-                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em;"
+                            <div class="signature-controls" style="text-align: right;"><button type="button"
+                                    class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('thirdPartyPayorSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -525,8 +580,8 @@
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="consultantSignature" class="signature-canvas"
                                 height="150"></canvas>
-                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em;"
+                            <div class="signature-controls" style="text-align: right;"><button type="button"
+                                    class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('consultantSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -542,8 +597,8 @@
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="witnessSignature" class="signature-canvas"
                                 height="150"></canvas>
-                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em;"
+                            <div class="signature-controls" style="text-align: right;"><button type="button"
+                                    class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('witnessSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -559,8 +614,8 @@
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="investmentManagerSignature"
                                 class="signature-canvas" height="150"></canvas>
-                            <div class="signature-controls"><button type="button" class="btn btn-secondary"
-                                    style="padding: 5px 15px; font-size: 0.8em;"
+                            <div class="signature-controls" style="text-align: right;"><button type="button"
+                                    class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('investmentManagerSignature')">Clear</button></div>
                         </div>
                         <div class="form-group" style="margin-top:15px;"><label
@@ -595,22 +650,17 @@
                     adhere to the following rules and general regulations:</p>
                 <ol>
                     <li>All personal, financial, and contact information provided must be accurate, complete, and
-                        updated
-                        promptly in the event of any changes.</li>
+                        updated promptly in the event of any changes.</li>
                     <li>Subscribers must be individuals aged 18 and above, of sound mind, and not acting on behalf of
-                        any
-                        third party unless explicitly declared.</li>
+                        any third party unless explicitly declared.</li>
                     <li>Participation is subject to the laws of Malaysia, including compliance with the Anti-Money
                         Laundering, Anti-Terrorism Financing and Proceeds of Unlawful Activities Act 2001 (AMLA).</li>
                     <li>Third-party contributions or payments must be accompanied by full disclosure, including the
-                        payer's
-                        name, NRIC/passport number, and relationship to the subscriber.</li>
+                        payer's name, NRIC/passport number, and relationship to the subscriber.</li>
                     <li>All required supporting documents, including but not limited to copies of NRIC, proof of
-                        payment,
-                        and verification forms, must be submitted when requested.</li>
+                        payment, and verification forms, must be submitted when requested.</li>
                     <li>TAMU Capital Berhad reserves the right to reject or terminate any application or participation
-                        found
-                        to be in violation of these regulations or containing false declarations.</li>
+                        found to be in violation of these regulations or containing false declarations.</li>
                     <li>Subscriber data will be treated as confidential and handled in accordance with applicable data
                         protection laws, and will only be used for internal verification and regulatory purposes.</li>
                 </ol>
@@ -626,24 +676,20 @@
             <div class="modal-body">
                 <p>By submitting this application, you confirm that you have read and understood the terms governing the
                     subscription to TAMU Capital Berhad's programs (Dirham, Dinar, or Almas), and you hereby agree to
-                    the
-                    following:</p>
+                    the following:</p>
                 <ol>
                     <li>Program selection and participation are based on the available packages and are subject to TAMU
                         Capital's discretion and compliance checks.</li>
                     <li>Payments can be made via cash, in-house instalments, or approved financing options, as per the
                         chosen package and agreed schedule.</li>
                     <li>Subscription fees are final and non-refundable unless stated otherwise under specific
-                        circumstances.
-                    </li>
+                        circumstances.</li>
                     <li>Profit distributions, if applicable, are made annually and are based on actual fund performance.
-                        The
-                        maximum indicative return is up to 5% per annum.</li>
+                        The maximum indicative return is up to 5% per annum.</li>
                     <li>Early withdrawals or terminations may result in the forfeiture of profit entitlements and may be
                         subject to specific terms outlined in the final agreement.</li>
                     <li>TAMU Capital reserves the right to issue all communications, including program updates and
-                        notices,
-                        through the contact details provided by the subscriber.</li>
+                        notices, through the contact details provided by the subscriber.</li>
                 </ol>
             </div>
         </div>
@@ -677,14 +723,27 @@
             </div>
         </div>
     </div>
-
     <script>
         let currentSection = 1;
         const totalSections = 4;
         let signatures = {};
-        let signaturePadsInitialized = false;
+        let signaturePadsInitialized = { section1: false, section4: false };
 
-        function showSection(sectionNumber) { document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active')); document.getElementById(`section${sectionNumber}`).classList.add('active'); currentSection = sectionNumber; updateProgress(); window.scrollTo(0, 0); if (currentSection === 4 && !signaturePadsInitialized) { initializeAllSignaturePads(); signaturePadsInitialized = true; } }
+        function showSection(sectionNumber) {
+            document.querySelectorAll('.form-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(`section${sectionNumber}`).classList.add('active');
+            currentSection = sectionNumber;
+            updateProgress();
+            window.scrollTo(0, 0);
+            if (currentSection === 1 && !signaturePadsInitialized.section1) {
+                initializeSignatureCanvas('guestCheckInSignature');
+                signaturePadsInitialized.section1 = true;
+            }
+            if (currentSection === 4 && !signaturePadsInitialized.section4) {
+                initializeAllSignaturePads();
+                signaturePadsInitialized.section4 = true;
+            }
+        }
         function nextSection() { if (validateCurrentSection()) { currentSection < totalSections && showSection(currentSection + 1); } }
         function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
         function updateProgress() { const progress = ((currentSection - 1) / (totalSections - 1)) * 100; document.getElementById('progressFill').style.width = progress + '%'; }
@@ -694,15 +753,20 @@
             const requiredFields = section.querySelectorAll('[required]');
             let isValid = true;
             for (let field of requiredFields) {
-                if (field.closest('.form-section').style.display === 'none' || (field.closest('#nomineeDetailsSection') && field.closest('#nomineeDetailsSection').style.display === 'none') || (field.closest('#thirdPartyPayorSection') && field.closest('#thirdPartyPayorSection').style.display === 'none')) continue;
+                if (field.closest('#nomineeDetailsSection')?.style.display === 'none' || field.closest('#thirdPartyPayorSection')?.style.display === 'none') {
+                    continue;
+                }
                 if (field.type === 'radio' && field.name) {
                     const radioGroup = document.getElementsByName(field.name);
                     if (![...radioGroup].some(r => r.checked)) { alert(`Please make a selection for: ${field.closest('.form-group,.checkbox-group').parentElement.querySelector('label, .checkbox-group-title').textContent}`); field.focus(); isValid = false; break; }
                 } else if (field.type === 'checkbox' && !field.checked) {
                     alert(`Please agree to the required terms.`); field.focus(); isValid = false; break;
-                } else if (field.type !== 'checkbox' && field.type !== 'radio' && !field.value.trim()) { alert(`Please fill in the required field: ${field.closest('.form-group')?.querySelector('label')?.textContent || field.id}`); field.focus(); isValid = false; break; }
+                } else if (field.tagName === 'CANVAS' && !signatures[field.id]) {
+                    alert(`Signature is required for: ${field.closest('.subsection').querySelector('h3').textContent}`); isValid = false; break;
+                } else if (field.tagName !== 'CANVAS' && !field.value.trim()) { alert(`Please fill in the required field: ${field.closest('.form-group')?.querySelector('label')?.textContent || field.id}`); field.focus(); isValid = false; break; }
             }
             if (!isValid) return false;
+
             if (currentSection === 4 && !signatures['applicantSignature']) { alert('Applicant signature is required.'); return false; }
             return true;
         }
@@ -735,6 +799,9 @@
                     guestInfo: { fullName: document.getElementById('guestFullName').value, icPassport: document.getElementById('guestIcPassport').value, dob: document.getElementById('guestDob').value, gender: document.getElementById('guestGender').value, nationality: document.getElementById('guestNationality').value, maritalStatus: getCheckedValues('maritalStatus')[0] || '', numChildren: document.getElementById('guestNumChildren').value, correspondentAddress: document.getElementById('guestCorrespondentAddress').value, poskod: document.getElementById('guestPoskod').value, city: document.getElementById('guestCity').value, mailingSameAsCorrespondent: document.getElementById('mailingSameAsCorrespondent').checked, mailingAddress: document.getElementById('guestMailingAddress').value, mailingPoskod: document.getElementById('guestMailingPoskod').value, mailingCity: document.getElementById('guestMailingCity').value, email: document.getElementById('guestEmail').value, phone: document.getElementById('guestPhone').value },
                     guestBusiness: { occupation: document.getElementById('guestOccupation').value, industry: document.getElementById('guestIndustry').value, monthlyIncome: document.getElementById('guestMonthlyIncome').value },
                     partnerInfo: { fullName: document.getElementById('partnerFullName').value, icPassport: document.getElementById('partnerIcPassport').value, dob: document.getElementById('partnerDob').value, gender: document.getElementById('partnerGender').value, nationality: document.getElementById('partnerNationality').value, phone: document.getElementById('partnerPhone').value, relationshipToGuest: document.getElementById('relationshipToGuest').value },
+                    partnerBusiness: { occupation: document.getElementById('partnerOccupation').value, industry: document.getElementById('partnerIndustry').value, monthlyIncome: document.getElementById('partnerMonthlyIncome').value },
+                    guestCheckInSignature: { signatureData: signatures.guestCheckInSignature, name: document.getElementById('guestCheckInSignatureName').value, ic: document.getElementById('guestCheckInSignatureIC').value, date: document.getElementById('guestCheckInSignatureDate').value },
+                    officeUse: { day: document.getElementById('officeUseDay').value, date: document.getElementById('officeUseDate').value, timeIn: document.getElementById('officeUseTimeIn').value, timeOut: document.getElementById('officeUseTimeOut').value, tmCode: document.getElementById('officeUseTmCode').value, consultant: document.getElementById('officeUseConsultant').value, status: getCheckedValues('officeUseStatus')[0] || '' }
                 },
                 part2: {
                     membershipApplicant: { applicantType: getCheckedValues('applicantType')[0] || '', title: document.getElementById('applicantTitle').value, nameOnCard: document.getElementById('applicantNameOnCard').value },
@@ -770,21 +837,18 @@
         }
 
         function generateCheckInPdf() {
-            // Simplified this function as Part 1 is now stable and doesn't require validation checks here
+            if (!validateCurrentSection()) return;
             const formData = collectData();
             localStorage.setItem('tamuPrintData', JSON.stringify(formData));
             window.open('1_check_in.html', '_blank');
         }
 
         function exportPart1Data() {
-            // This function is for exporting ONLY the data from section 1 (Check-In Form)
+            if (!validateCurrentSection()) { return; }
             const fullData = collectData();
             const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Guest';
             const fileName = `${guestName}_CheckIn_Data.json`;
-
-            // We only want the 'part1' object for this export
             const dataStr = JSON.stringify({ part1: fullData.part1 }, null, 2);
-
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -802,33 +866,62 @@
             if (!file) { alert('Please select a file to import.'); return; }
             const reader = new FileReader();
             reader.onload = (e) => {
-                try { const data = JSON.parse(e.target.result); populateForm(data); alert('Data imported successfully!'); }
-                catch (error) { alert('Error importing data. Please check the file format.'); console.error('Import Error:', error); }
+                try {
+                    const data = JSON.parse(e.target.result);
+                    populateForm(data);
+                    alert('Data imported successfully!');
+                } catch (error) {
+                    alert('Error importing data. Please check the file format.');
+                    console.error('Import Error:', error);
+                }
             };
             reader.readAsText(file);
         }
 
         function populateForm(data) {
-            const setVal = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.value = value; };
-            const setCheck = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined) el.checked = value; };
+            const setVal = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined && value !== null) el.value = value; };
+            const setCheck = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined && value !== null) el.checked = value; };
             const setRadio = (name, value) => { if (value) { const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if (el) el.checked = true; } };
             const setMultiCheck = (name, values) => { if (values && Array.isArray(values)) { document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = values.includes(cb.value)); } };
-            if (data.part1) { const { guestInfo, guestBusiness, partnerInfo, partnerBusiness, officeUse } = data.part1; if (guestInfo) { Object.keys(guestInfo).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestInfo[key])); setRadio('maritalStatus', guestInfo.maritalStatus); setCheck('mailingSameAsCorrespondent', guestInfo.mailingSameAsCorrespondent); document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change')); } if (guestBusiness) { Object.keys(guestBusiness).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, guestBusiness[key])); } if (partnerInfo) { Object.keys(partnerInfo).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerInfo[key])); setVal('relationshipToGuest', partnerInfo.relationshipToGuest); setCheck('partnerSameAddress', partnerInfo.addressSameAsGuest); document.getElementById('partnerSameAddress').dispatchEvent(new Event('change')); } if (partnerBusiness) { Object.keys(partnerBusiness).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, partnerBusiness[key])); } if (officeUse) { Object.keys(officeUse).forEach(key => setVal(`officeUse${key.charAt(0).toUpperCase() + key.slice(1)}`, officeUse[key])); setRadio('officeUseStatus', officeUse.status); } }
-            if (data.part2) { const { membershipApplicant, applicantOffice, applicantBanking, nominee, thirdPartyPayor, salesDetail } = data.part2; if (membershipApplicant) { setRadio('applicantType', membershipApplicant.applicantType); setVal('applicantTitle', membershipApplicant.title); setVal('applicantNameOnCard', membershipApplicant.nameOnCard); } if (applicantOffice) { setVal('applicantOfficeAddress', applicantOffice.address); setVal('applicantOfficePoskod', applicantOffice.poskod); setVal('applicantOfficeCity', applicantOffice.city); setVal('applicantOfficeTel', applicantOffice.tel); setVal('applicantFax', applicantOffice.fax); } if (applicantBanking) { setVal('applicantBankName', applicantBanking.bankName); setVal('applicantAccountNumber', applicantBanking.accountNumber); } if (nominee) { setCheck('nomineeSameAsPartner', nominee.sameAsPartner); setVal('nomineeBankName', nominee.bankName); setVal('nomineeAccountNumber', nominee.accountNumber); } if (thirdPartyPayor) { setCheck('payorIsApplicant', thirdPartyPayor.isApplicant); document.getElementById('payorIsApplicant').dispatchEvent(new Event('change')); setVal('payorOfficeAddress', thirdPartyPayor.officeAddress); } if (salesDetail) { setMultiCheck('productType', salesDetail.productTypes); setRadio('transactionMethod', salesDetail.transactionMethod); setVal('worksheetCode', salesDetail.worksheetCode); setVal('orNumber', salesDetail.orNumber); setVal('aprCode', salesDetail.aprCode); setVal('consultantName', salesDetail.consultantName); setVal('consultantCode', salesDetail.consultantCode); } }
-            if (data.signatures) { Object.keys(data.signatures).forEach(key => { const sig = data.signatures[key]; if (sig) { setVal(`${key}SignatureName`, sig.name); setVal(`${key}SignatureIC`, sig.ic); setVal(`${key}SignatureDate`, sig.date); } }); }
-        }
 
-        // --- Button-triggered Functions ---
-
-        function generateCheckInPdf() {
-            if (!validateCurrentSection()) { return; }
-            const formData = collectData();
-            localStorage.setItem('tamuPrintData', JSON.stringify(formData));
-            window.open('1_check_in.html', '_blank');
-        }
-
-        function exportPart1Data() {
-            if (!validateCurrentSection()) { alert("Please complete all required fields in Part 1 before exporting."); return; } const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Guest'; const fileName = `${guestName}_CheckIn_Data.json`; const dataStr = JSON.stringify({ part1: fullData.part1 }, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Part 1 data exported successfully as ${fileName}`);
+            if (data.part1) {
+                if (data.part1.guestInfo) { Object.keys(data.part1.guestInfo).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.guestInfo[key])); setRadio('maritalStatus', data.part1.guestInfo.maritalStatus); setCheck('mailingSameAsCorrespondent', data.part1.guestInfo.mailingSameAsCorrespondent); document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change')); }
+                if (data.part1.guestBusiness) { Object.keys(data.part1.guestBusiness).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.guestBusiness[key])); }
+                if (data.part1.partnerInfo) { Object.keys(data.part1.partnerInfo).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.partnerInfo[key])); setVal('relationshipToGuest', data.part1.partnerInfo.relationshipToGuest); }
+                if (data.part1.partnerBusiness) { Object.keys(data.part1.partnerBusiness).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.partnerBusiness[key])); }
+                if (data.part1.officeUse) { Object.keys(data.part1.officeUse).forEach(key => setVal(`officeUse${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.officeUse[key])); setRadio('officeUseStatus', data.part1.officeUse.status); }
+            }
+            if (data.part2) {
+                if (data.part2.membershipApplicant) { setRadio('applicantType', data.part2.membershipApplicant.applicantType); setVal('applicantTitle', data.part2.membershipApplicant.title); setVal('applicantNameOnCard', data.part2.membershipApplicant.nameOnCard); }
+                if (data.part2.applicantOffice) { setVal('applicantOfficeAddress', data.part2.applicantOffice.address); setVal('applicantOfficePoskod', data.part2.applicantOffice.poskod); setVal('applicantOfficeCity', data.part2.applicantOffice.city); setVal('applicantOfficeTel', data.part2.applicantOffice.tel); setVal('applicantFax', data.part2.applicantOffice.fax); }
+                if (data.part2.applicantBanking) { setVal('applicantBankName', data.part2.applicantBanking.bankName); setVal('applicantAccountNumber', data.part2.applicantBanking.accountNumber); }
+                if (data.part2.sourceOfFunds) { setMultiCheck('sourceOfFunds', data.part2.sourceOfFunds); }
+                if (data.part2.nominee) {
+                    setCheck('nomineeIsPartner', data.part2.nominee.isPartner);
+                    document.getElementById('nomineeIsPartner').dispatchEvent(new Event('change'));
+                    Object.keys(data.part2.nominee).forEach(key => setVal(`nominee${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part2.nominee[key]));
+                }
+                if (data.part2.thirdPartyPayor) {
+                    setCheck('payorIsApplicant', data.part2.thirdPartyPayor.isApplicant);
+                    document.getElementById('payorIsApplicant').dispatchEvent(new Event('change'));
+                    Object.keys(data.part2.thirdPartyPayor).forEach(key => setVal(`payor${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part2.thirdPartyPayor[key]));
+                }
+                if (data.part2.salesDetail) {
+                    setMultiCheck('productType', data.part2.salesDetail.productTypes); setRadio('transactionMethod', data.part2.salesDetail.transactionMethod);
+                    Object.keys(data.part2.salesDetail).forEach(key => setVal(key, data.part2.salesDetail[key]));
+                    document.getElementById('subscriptionAmount').dispatchEvent(new Event('input')); // Recalculate total
+                }
+            }
+            if (data.signatures) {
+                Object.keys(data.signatures).forEach(key => {
+                    const sig = data.signatures[key];
+                    if (sig) {
+                        setVal(`${key}SignatureName`, sig.name);
+                        setVal(`${key}SignatureIC`, sig.ic);
+                        setVal(`${key}SignatureDate`, sig.date);
+                    }
+                });
+            }
         }
 
         function exportFullData() {
@@ -844,13 +937,33 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             showSection(1);
-            const industries = ['Agriculture', 'Automotive', 'Banking', 'Construction', 'Consulting', 'Education', 'Energy', 'Engineering', 'Entertainment', 'Finance', 'Food & Beverage', 'Government', 'Healthcare', 'Hospitality', 'Information Technology', 'Insurance', 'Legal', 'Logistics', 'Manufacturing', 'Marketing', 'Media', 'Mining', 'Non-Profit', 'Oil & Gas', 'Pharmaceutical', 'Real Estate', 'Retail', 'Science', 'Telecommunications', 'Tourism', 'Transportation', 'Other'];
-            const populateDropdown = (id) => { const select = document.getElementById(id); if (select) { select.innerHTML = '<option value="" disabled selected>Select Industry</option>' + industries.map(i => `<option value="${i}">${i}</option>`).join(''); } };
-            populateDropdown('guestIndustry');
+
+            document.getElementById('guestFullName').addEventListener('input', (e) => { document.getElementById('guestCheckInSignatureName').value = e.target.value; });
+            document.getElementById('guestIcPassport').addEventListener('input', (e) => { document.getElementById('guestCheckInSignatureIC').value = e.target.value; });
+            document.getElementById('guestCheckInSignatureDate').value = new Date().toLocaleDateString('en-CA');
 
             document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () { document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid'; });
-            document.getElementById('nomineeIsPartner').addEventListener('change', function () { document.getElementById('nomineeDetailsSection').style.display = this.checked ? 'none' : 'block'; });
-            document.getElementById('payorIsApplicant').addEventListener('change', function () { document.getElementById('thirdPartyPayorSection').style.display = this.checked ? 'none' : 'block'; });
+
+            const nomineeCheckbox = document.getElementById('nomineeIsPartner');
+            const nomineeSection = document.getElementById('nomineeDetailsSection');
+            const nomineeFields = nomineeSection.querySelectorAll('input, select, textarea');
+            nomineeCheckbox.addEventListener('change', function () {
+                const isHidden = this.checked;
+                nomineeSection.style.display = isHidden ? 'none' : 'block';
+                nomineeFields.forEach(el => { el.required = !isHidden; });
+            });
+            nomineeFields.forEach(el => { el.required = !nomineeCheckbox.checked; });
+
+
+            const payorCheckbox = document.getElementById('payorIsApplicant');
+            const payorSection = document.getElementById('thirdPartyPayorSection');
+            const payorFields = payorSection.querySelectorAll('input, select, textarea');
+            payorCheckbox.addEventListener('change', function () {
+                const isHidden = this.checked;
+                payorSection.style.display = isHidden ? 'none' : 'block';
+                payorFields.forEach(el => { el.required = !isHidden; });
+            });
+            payorFields.forEach(el => { el.required = !payorCheckbox.checked; });
 
             const subAmount = document.getElementById('subscriptionAmount');
             const invAmount = document.getElementById('investmentAmount');
