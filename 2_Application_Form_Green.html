@@ -22,6 +22,17 @@
             display: flex;
             gap: 1px;
         }
+
+        .page-break {
+            page-break-before: always;
+            margin-top: 20px;
+        }
+
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
     </style>
 </head>
 
@@ -101,17 +112,8 @@
                     <div class="form-field char-box-grid" id="appHomeAddress"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-label"></div>
-                    <div class="form-field char-box-grid" id="appHomeAddress2"></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-label" style="align-self: flex-start;">Mailing Address</div>
-                    <div class="form-field">
-                        <div class="form-group full-width">
-                            <div class="char-box-grid" id="appMailingAddress"></div>
-                            <div class="char-box-grid" id="appMailingAddress2" style="margin-top:10px;"></div>
-                        </div>
-                    </div>
+                    <div class="form-label">Mailing Address</div>
+                    <div class="form-field char-box-grid" id="appMailingAddress"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-label">Contact No.</div>
@@ -176,7 +178,7 @@
                         <div class="form-field char-box-grid" id="appOfficeAddress"></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-label"></div>
+                        <div class="form-label">Office Address 2</div>
                         <div class="form-field char-box-grid" id="appOfficeAddress2"></div>
                     </div>
                     <div class="form-row">
@@ -362,6 +364,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </body>
 
 </html>

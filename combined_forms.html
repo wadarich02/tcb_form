@@ -103,11 +103,10 @@
             if (app.nationality?.toLowerCase().includes('malaysian')) setCheck('appNationalityMalaysian', true); else setCheck('appNationalityForeigner', true);
             if (app.maritalStatus === 'Single') setCheck('appMaritalSingle', true); else if (app.maritalStatus === 'Married') setCheck('appMaritalMarried', true);
 
-            const homeAddress = `${app.correspondentAddress}, ${app.city}`.split(',');
-            fillCharBoxGrid('appHomeAddress', homeAddress[0]);
-            fillCharBoxGrid('appHomeAddress2', homeAddress.slice(1).join(', '));
+            const homeAddress = `${app.correspondentAddress}, ${app.city}`;
+            fillCharBoxGrid('appHomeAddress', homeAddress);
 
-            const mailAddr = part1.guestInfo.mailingSameAsCorrespondent ? homeAddress.join(', ') : `${part1.guestInfo.mailingAddress}, ${part1.guestInfo.mailingCity}`;
+            const mailAddr = part1.guestInfo.mailingSameAsCorrespondent ? homeAddress : `${part1.guestInfo.mailingAddress}, ${part1.guestInfo.mailingCity}`;
             const mailAddrParts = mailAddr.split(',');
             fillCharBoxGrid('appMailingAddress', mailAddrParts[0]);
             fillCharBoxGrid('appMailingAddress2', mailAddrParts.slice(1).join(', '));
