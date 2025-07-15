@@ -9,7 +9,6 @@
 </head>
 
 <body>
-
     <div id="content1" class="form-page green-form"></div>
     <div class="page-break-before"></div>
     <div id="content2" class="form-page buyer-declaration-page"></div>
@@ -21,7 +20,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const dataString = localStorage.getItem('tamuPrintData');
-            if (!dataString) { document.body.innerHTML = '<h1>Error: No data found. Please generate from the main form.</h1>'; return; }
+            if (!dataString) {
+                document.body.innerHTML = '<h1>Error: No data found. Please generate from the main form.</h1>';
+                return;
+            }
             const data = JSON.parse(dataString);
             const filesToLoad = [
                 { file: '2_Application_Form_Green.html', target: 'content1' },
@@ -35,29 +37,37 @@
 
             Promise.all(fetchPromises)
                 .then(() => {
-                    populateGreenForm(data);
-                    populateBuyerDeclaration(data);
-                    populateAmlaForm(data);
-                    populateProfitForm(data);
-                    setTimeout(() => window.print(), 1200);
+                    // Short delay to ensure DOM is fully ready after injection
+                    setTimeout(() => {
+                        populateGreenForm(data);
+                        populateBuyerDeclaration(data);
+                        populateAmlaForm(data);
+                        populateProfitForm(data);
+                        setTimeout(() => window.print(), 500); // Final delay before printing
+                    }, 200);
                 })
                 .catch(error => { console.error('Error loading forms:', error); });
         });
 
         const formatDate = (dateString) => dateString || '';
-        const setText = (id, value = '') => { const el = document.getElementById(id); if (el) el.textContent = value; };
+        const setText = (id, value = '') => { const el = document.getElementById(id); if (el) el.textContent = value; else console.warn(`Element ID not found: ${id}`); };
+
         const setCheck = (id, checked) => {
+            if (!checked) return;
             const el = document.getElementById(id);
-            if (el && checked) {
-                const box = el.querySelector('.checkbox, .program-box, .declaration-checkbox');
-                if (box) box.textContent = '✓';
+            if (!el) { console.warn(`Checkbox parent ID not found: ${id}`); return; }
+            const box = el.querySelector('.checkbox, .program-box, .declaration-checkbox');
+            if (box) { box.textContent = '✓'; }
+        };
+
+        const setSignature = (id, url) => {
+            const container = document.getElementById(id);
+            if (container && url) {
+                container.innerHTML = `<img src="${url}" class="signature-image">`;
             }
         };
-        const setSignature = (id, url) => {
-            const c = document.getElementById(id);
-            if (c && url) c.innerHTML = `<img src="${url}" class="signature-image">`;
-        };
-        const fillCharBoxGrid = (containerId, text = '', maxChars = 29) => {
+
+        const fillCharBoxGrid = (containerId, text = '', maxChars = 28) => {
             const container = document.getElementById(containerId);
             if (!container) return;
             let html = '';
@@ -67,16 +77,18 @@
             }
             container.innerHTML = html;
         };
-        const fillDoubleRowCharBoxGrid = (id1, id2, text, maxChars = 29) => {
+
+        const fillDoubleRowCharBoxGrid = (id1, id2, text, maxChars = 28) => {
             const textUpper = (text || '').toUpperCase();
-            fillCharBoxGrid(id1, textUpper.substring(0, maxChars));
-            fillCharBoxGrid(id2, textUpper.substring(maxChars));
+            fillCharBoxGrid(id1, textUpper.substring(0, maxChars), maxChars);
+            fillCharBoxGrid(id2, textUpper.substring(maxChars, maxChars * 2), maxChars);
         };
+
         const fillFixedCharBoxGroup = (containerId, text = '', count) => {
             const container = document.getElementById(containerId);
             if (!container) return;
             let html = '';
-            const upperText = (text || '').replace(/[^A-Z0-9]/ig, '').toUpperCase();
+            const upperText = (text || '').replace(/\D/g, ''); // Use only digits for these fields
             for (let i = 0; i < count; i++) {
                 html += `<div class="char-box">${upperText[i] || ''}</div>`;
             }
@@ -97,7 +109,7 @@
             fillDoubleRowCharBoxGrid('appName', 'appName2', `${part2.membershipApplicant.title} ${app.fullName}`);
             fillDoubleRowCharBoxGrid('appNameOnCard', 'appNameOnCard2', `${part2.membershipApplicant.title} ${part2.membershipApplicant.nameOnCard}`);
             fillFixedCharBoxGroup('appNric', app.icPassport, 12);
-            fillFixedCharBoxGroup('appDate', formatDate(signatures.applicant.date).replace(/\//g, ''), 8);
+            fillFixedCharBoxGroup('appDate', formatDate(signatures.applicant.date), 8);
             setCheck('appNationality' + (app.nationality?.toLowerCase().includes('malaysian') ? 'Malaysian' : 'Foreigner'), true);
             setCheck('appMarital' + (app.maritalStatus || 'Single'), true);
 
@@ -113,7 +125,6 @@
             fillFixedCharBoxGroup('appHpPrefix', hp.substring(0, 3), 3); fillFixedCharBoxGroup('appHpNum', hp.substring(3, 11), 8);
             setText('appEmail', app.email);
             fillCharBoxGrid('appOccupation', appBiz.occupation);
-
             if (appBiz.monthlyIncome) {
                 const incomeVal = parseFloat(appBiz.monthlyIncome.split('-')[0].replace(/,/g, '')) * 12;
                 if (incomeVal > 60000) setCheck('appIncome4', true);
@@ -124,8 +135,7 @@
 
             fillCharBoxGrid('appEmployer', appBiz.industry);
             fillCharBoxGrid('appIndustry', appBiz.industry);
-            const officeAddr = `${part2.applicantOffice.address}, ${part2.applicantOffice.city}`;
-            fillDoubleRowCharBoxGrid('appOfficeAddress', 'appOfficeAddress2', officeAddr);
+            fillDoubleRowCharBoxGrid('appOfficeAddress', 'appOfficeAddress2', part2.applicantOffice.address);
             fillFixedCharBoxGroup('appOfficePostcode', part2.applicantOffice.poskod, 5);
             const officeTel = (part2.applicantOffice.tel || '').replace(/\D/g, '');
             fillFixedCharBoxGroup('appOfficePhonePrefix', officeTel.substring(0, 2), 2); fillFixedCharBoxGroup('appOfficePhoneNum', officeTel.substring(2, 10), 8);
@@ -152,9 +162,9 @@
             fillFixedCharBoxGroup('programId', part1.officeUse.tmCode, 6);
             setText('programsFee', part2.salesDetail.totalAmount);
             setText('balance', '0.00');
-            if (part2.salesDetail.transactionMethod === 'Debit/Credit/Cash/Cheque') setCheck('paymentCash', true);
-            else if (part2.salesDetail.transactionMethod.toLowerCase().includes('instal')) setCheck('paymentInstalment', true);
-            else if (part2.salesDetail.transactionMethod === 'Loan') setCheck('paymentLoan', true);
+            if (part2.salesDetail.transactionMethod.toLowerCase().includes('cash')) setCheck('paymentCash', true);
+            if (part2.salesDetail.transactionMethod.toLowerCase().includes('instal')) setCheck('paymentInstalment', true);
+            if (part2.salesDetail.transactionMethod.toLowerCase().includes('loan')) setCheck('paymentLoan', true);
             setText('counsellor', part1.officeUse.consultant);
             setText('checkBy', signatures.witness.name);
             setText('checkByDate', formatDate(signatures.witness.date));
@@ -162,8 +172,11 @@
 
         function populateBuyerDeclaration(data) {
             const { consents, signatures: sigs, part2 } = data;
-            if (consents && consents.rulesRegulationsConsent) {
-                for (let i = 1; i <= 13; i++) setCheck(`dec_${i}`, true);
+            if (consents && consents.rulesRegulationsConsent && consents.subscriptionTermsConsent && consents.investmentTermsConsent) {
+                for (let i = 1; i <= 13; i++) {
+                    const box = document.querySelector(`#dec_${i}`);
+                    if (box) box.textContent = '✓';
+                }
             }
             const priceSpan = document.querySelector('.buyer-declaration-page .underline');
             if (priceSpan && part2.salesDetail.totalAmount) priceSpan.textContent = ` ${part2.salesDetail.totalAmount} `;
@@ -207,10 +220,10 @@
             if (sigs.applicant) { setSignature('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', formatDate(sigs.applicant.date)); }
             if (sigs.investmentManager) { setSignature('pdManagerSig', sigs.investmentManager.signatureData); setText('pdManagerDate', formatDate(sigs.investmentManager.date)); }
 
-            setText('salesDate', formatDate(sigs.witness.date));
-            setText('salesReceivedBy', sigs.consultant.name);
-            setText('salesMembershipNo', part1.officeUse.tmCode);
-            setText('salesName', sigs.witness.name);
+            setText('salesDate', ` ${formatDate(sigs.witness.date)} `);
+            setText('salesReceivedBy', ` ${sigs.consultant.name} `);
+            setText('salesMembershipNo', ` ${part1.officeUse.tmCode} `);
+            setText('salesName', ` ${sigs.witness.name} `);
         }
     </script>
 </body>

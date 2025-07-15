@@ -142,7 +142,6 @@ body {
   display: flex;
   flex-wrap: nowrap;
   gap: 1px;
-  width: 100%;
 }
 .green-form .char-box-group {
   display: flex;
