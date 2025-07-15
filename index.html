@@ -220,8 +220,7 @@
                         <div class="form-group full-width">
                             <div class="signature-container">
                                 <p>Please sign in the box below</p>
-                                <canvas id="guestCheckInSignature" class="signature-canvas" height="150"
-                                    required></canvas>
+                                <canvas id="guestCheckInSignature" class="signature-canvas" height="150"></canvas>
                                 <div class="signature-controls" style="text-align: right; margin-top: 5px;">
                                     <button type="button" class="btn btn-secondary"
                                         style="padding: 5px 15px; font-size: 0.8em; border-radius: 5px;"
@@ -249,7 +248,16 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="officeUseDay">Day</label>
-                            <input type="text" id="officeUseDay">
+                            <select id="officeUseDay">
+                                <option value="" disabled selected>Select Day</option>
+                                <option value="Sunday">Sunday</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="officeUseDate">Date</label>
@@ -368,13 +376,13 @@
                             <h3>4.a Nominee Information</h3>
                             <div class="form-grid">
                                 <div class="form-group full-width"><label for="nomineeFullName">Full Name</label><input
-                                        type="text" id="nomineeFullName"></div>
+                                        type="text" id="nomineeFullName" required></div>
                                 <div class="form-group"><label for="nomineeIcPassport">IC/Passport</label><input
-                                        type="text" id="nomineeIcPassport"></div>
+                                        type="text" id="nomineeIcPassport" required></div>
                                 <div class="form-group"><label for="nomineeDob">Date of Birth</label><input type="date"
-                                        id="nomineeDob"></div>
+                                        id="nomineeDob" required></div>
                                 <div class="form-group"><label for="nomineeRelationship">Relationship</label><input
-                                        type="text" id="nomineeRelationship"></div>
+                                        type="text" id="nomineeRelationship" required></div>
                             </div>
                         </div>
                         <div class="subsection">
@@ -412,11 +420,11 @@
                             <h3>Payor Personal Information</h3>
                             <div class="form-grid">
                                 <div class="form-group full-width"><label for="payorFullName">Full Name</label><input
-                                        type="text" id="payorFullName"></div>
+                                        type="text" id="payorFullName" required></div>
                                 <div class="form-group"><label for="payorIcPassport">IC/Passport</label><input
-                                        type="text" id="payorIcPassport"></div>
+                                        type="text" id="payorIcPassport" required></div>
                                 <div class="form-group"><label for="payorDob">Date of Birth</label><input type="date"
-                                        id="payorDob">
+                                        id="payorDob" required>
                                 </div>
                             </div>
                         </div>
@@ -527,7 +535,7 @@
                         <h3>Applicant</h3>
                         <div class="signature-container">
                             <p>Please sign in the box below</p><canvas id="applicantSignature" class="signature-canvas"
-                                height="150" required></canvas>
+                                height="150"></canvas>
                             <div class="signature-controls" style="text-align: right;"><button type="button"
                                     class="btn btn-secondary" style="padding: 5px 15px; font-size: 0.8em;"
                                     onclick="clearSignature('applicantSignature')">Clear</button></div>
@@ -744,38 +752,76 @@
                 signaturePadsInitialized.section4 = true;
             }
         }
-        function nextSection() { if (validateCurrentSection()) { currentSection < totalSections && showSection(currentSection + 1); } }
-        function previousSection() { if (currentSection > 1) { showSection(currentSection - 1); } }
-        function updateProgress() { const progress = ((currentSection - 1) / (totalSections - 1)) * 100; document.getElementById('progressFill').style.width = progress + '%'; }
+        function nextSection() {
+            if (validateCurrentSection()) {
+                currentSection < totalSections &&
+                    showSection(currentSection + 1);
+            }
+        } function previousSection() {
+            if (currentSection > 1) {
+                showSection(currentSection - 1);
+            }
+        }
+        function updateProgress() {
+            const progress = ((currentSection - 1) / (totalSections - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
 
         function validateCurrentSection() {
             const section = document.getElementById(`section${currentSection}`);
             const requiredFields = section.querySelectorAll('[required]');
             let isValid = true;
             for (let field of requiredFields) {
-                if (field.closest('#nomineeDetailsSection')?.style.display === 'none' || field.closest('#thirdPartyPayorSection')?.style.display === 'none') {
+                if (field.closest('#nomineeDetailsSection')?.style.display === 'none' ||
+                    field.closest('#thirdPartyPayorSection')?.style.display === 'none') {
                     continue;
                 }
                 if (field.type === 'radio' && field.name) {
                     const radioGroup = document.getElementsByName(field.name);
-                    if (![...radioGroup].some(r => r.checked)) { alert(`Please make a selection for: ${field.closest('.form-group,.checkbox-group').parentElement.querySelector('label, .checkbox-group-title').textContent}`); field.focus(); isValid = false; break; }
+                    if (![...radioGroup].some(r => r.checked)) {
+                        alert(`Please make a selection for: ${field.closest('.form-group,.checkbox-group').parentElement.querySelector('label, .checkbox-group-title').textContent}`);
+                        field.focus();
+                        isValid = false;
+                        break;
+                    }
                 } else if (field.type === 'checkbox' && !field.checked) {
-                    alert(`Please agree to the required terms.`); field.focus(); isValid = false; break;
+                    alert('Please agree to the required terms.');
+                    field.focus();
+                    isValid = false;
+                    break;
                 } else if (field.tagName === 'CANVAS' && !signatures[field.id]) {
-                    alert(`Signature is required for: ${field.closest('.subsection').querySelector('h3').textContent}`); isValid = false; break;
-                } else if (field.tagName !== 'CANVAS' && !field.value.trim()) { alert(`Please fill in the required field: ${field.closest('.form-group')?.querySelector('label')?.textContent || field.id}`); field.focus(); isValid = false; break; }
+                    alert(`Signature is required for: ${field.closest('.subsection').querySelector('h3').textContent}`);
+                    isValid = false;
+                    break;
+                } else if (field.tagName !== 'CANVAS' && !field.value.trim()) {
+                    alert(`Please fill in the required field: ${field.closest('.form-group')?.querySelector('label')?.textContent || field.id}`);
+                    field.focus();
+                    isValid = false;
+                    break;
+                }
             }
             if (!isValid) return false;
 
-            if (currentSection === 4 && !signatures['applicantSignature']) { alert('Applicant signature is required.'); return false; }
+            if (currentSection === 4 && !signatures['applicantSignature']) {
+                alert('Applicant signature is required.');
+                return false;
+            }
             return true;
         }
 
         function showModal(modalId) { document.getElementById(modalId).style.display = "block"; }
         function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; }
-        window.onclick = function (event) { document.querySelectorAll('.modal').forEach(modal => { if (event.target == modal) { modal.style.display = "none"; } }); }
+        window.onclick = function (event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (event.target ==
+                    modal) { modal.style.display = "none"; }
+            });
+        }
 
-        function initializeAllSignaturePads() { ['applicantSignature', 'nomineeSignature', 'thirdPartyPayorSignature', 'consultantSignature', 'witnessSignature', 'investmentManagerSignature'].forEach(initializeSignatureCanvas); }
+        function initializeAllSignaturePads() {
+            ['applicantSignature', 'nomineeSignature', 'thirdPartyPayorSignature',
+                'consultantSignature', 'witnessSignature', 'investmentManagerSignature'].forEach(initializeSignatureCanvas);
+        }
         function initializeSignatureCanvas(canvasId) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
@@ -784,54 +830,166 @@
             function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
-            const getPos = (e) => { const rect = canvas.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return { x: clientX - rect.left, y: clientY - rect.top }; };
-            const startDrawing = (e) => { e.preventDefault(); drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); };
-            const draw = (e) => { if (!drawing) return; e.preventDefault(); const pos = getPos(e); ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#2c3e50'; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); };
-            const stopDrawing = () => { if (!drawing) return; drawing = false; signatures[canvasId] = canvas.toDataURL('image/png'); };
-            canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing); canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove', draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing);
+            const getPos = (e) => {
+                const rect = canvas.getBoundingClientRect(); const clientX = e.touches ?
+                    e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY; return {
+                        x:
+                            clientX - rect.left, y: clientY - rect.top
+                    };
+            };
+            const startDrawing = (e) => {
+                e.preventDefault(); drawing = true; const pos = getPos(e); ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            };
+            const draw = (e) => {
+                if (!drawing) return; e.preventDefault(); const pos = getPos(e); ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round'; ctx.strokeStyle = '#2c3e50'; ctx.lineTo(pos.x, pos.y); ctx.stroke(); ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            };
+            const stopDrawing = () => {
+                if (!drawing) return; drawing = false; signatures[canvasId] =
+                    canvas.toDataURL('image/png');
+            };
+            canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing);
+            canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove',
+                draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing);
         }
-        function clearSignature(canvasId) { const canvas = document.getElementById(canvasId); const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); delete signatures[canvasId]; }
+        function clearSignature(canvasId) {
+            const canvas = document.getElementById(canvasId); const ctx =
+                canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height); delete signatures[canvasId];
+        }
 
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
             return {
                 part1: {
-                    guestInfo: { fullName: document.getElementById('guestFullName').value, icPassport: document.getElementById('guestIcPassport').value, dob: document.getElementById('guestDob').value, gender: document.getElementById('guestGender').value, nationality: document.getElementById('guestNationality').value, maritalStatus: getCheckedValues('maritalStatus')[0] || '', numChildren: document.getElementById('guestNumChildren').value, correspondentAddress: document.getElementById('guestCorrespondentAddress').value, poskod: document.getElementById('guestPoskod').value, city: document.getElementById('guestCity').value, mailingSameAsCorrespondent: document.getElementById('mailingSameAsCorrespondent').checked, mailingAddress: document.getElementById('guestMailingAddress').value, mailingPoskod: document.getElementById('guestMailingPoskod').value, mailingCity: document.getElementById('guestMailingCity').value, email: document.getElementById('guestEmail').value, phone: document.getElementById('guestPhone').value },
-                    guestBusiness: { occupation: document.getElementById('guestOccupation').value, industry: document.getElementById('guestIndustry').value, monthlyIncome: document.getElementById('guestMonthlyIncome').value },
-                    partnerInfo: { fullName: document.getElementById('partnerFullName').value, icPassport: document.getElementById('partnerIcPassport').value, dob: document.getElementById('partnerDob').value, gender: document.getElementById('partnerGender').value, nationality: document.getElementById('partnerNationality').value, phone: document.getElementById('partnerPhone').value, relationshipToGuest: document.getElementById('relationshipToGuest').value },
-                    partnerBusiness: { occupation: document.getElementById('partnerOccupation').value, industry: document.getElementById('partnerIndustry').value, monthlyIncome: document.getElementById('partnerMonthlyIncome').value },
-                    guestCheckInSignature: { signatureData: signatures.guestCheckInSignature, name: document.getElementById('guestCheckInSignatureName').value, ic: document.getElementById('guestCheckInSignatureIC').value, date: document.getElementById('guestCheckInSignatureDate').value },
-                    officeUse: { day: document.getElementById('officeUseDay').value, date: document.getElementById('officeUseDate').value, timeIn: document.getElementById('officeUseTimeIn').value, timeOut: document.getElementById('officeUseTimeOut').value, tmCode: document.getElementById('officeUseTmCode').value, consultant: document.getElementById('officeUseConsultant').value, status: getCheckedValues('officeUseStatus')[0] || '' }
+                    guestInfo: {
+                        fullName: document.getElementById('guestFullName').value, icPassport:
+                            document.getElementById('guestIcPassport').value, dob: document.getElementById('guestDob').value, gender:
+                            document.getElementById('guestGender').value, nationality: document.getElementById('guestNationality').value,
+                        maritalStatus: getCheckedValues('maritalStatus')[0] || '', numChildren:
+                            document.getElementById('guestNumChildren').value, correspondentAddress:
+                            document.getElementById('guestCorrespondentAddress').value, poskod:
+                            document.getElementById('guestPoskod').value, city: document.getElementById('guestCity').value,
+                        mailingSameAsCorrespondent: document.getElementById('mailingSameAsCorrespondent').checked, mailingAddress:
+                            document.getElementById('guestMailingAddress').value, mailingPoskod:
+                            document.getElementById('guestMailingPoskod').value, mailingCity:
+                            document.getElementById('guestMailingCity').value, email: document.getElementById('guestEmail').value, phone:
+                            document.getElementById('guestPhone').value
+                    },
+                    guestBusiness: {
+                        occupation: document.getElementById('guestOccupation').value, industry:
+                            document.getElementById('guestIndustry').value, monthlyIncome:
+                            document.getElementById('guestMonthlyIncome').value
+                    },
+                    partnerInfo: {
+                        fullName: document.getElementById('partnerFullName').value, icPassport:
+                            document.getElementById('partnerIcPassport').value, dob: document.getElementById('partnerDob').value, gender:
+                            document.getElementById('partnerGender').value, nationality:
+                            document.getElementById('partnerNationality').value, phone: document.getElementById('partnerPhone').value,
+                        relationshipToGuest: document.getElementById('relationshipToGuest').value
+                    },
+                    partnerBusiness: {
+                        occupation: document.getElementById('partnerOccupation').value, industry:
+                            document.getElementById('partnerIndustry').value, monthlyIncome:
+                            document.getElementById('partnerMonthlyIncome').value
+                    },
+                    guestCheckInSignature: {
+                        signatureData: signatures.guestCheckInSignature, name:
+                            document.getElementById('guestCheckInSignatureName').value, ic:
+                            document.getElementById('guestCheckInSignatureIC').value, date:
+                            document.getElementById('guestCheckInSignatureDate').value
+                    },
+                    officeUse: {
+                        day: document.getElementById('officeUseDay').value, date:
+                            document.getElementById('officeUseDate').value, timeIn: document.getElementById('officeUseTimeIn').value,
+                        timeOut: document.getElementById('officeUseTimeOut').value, tmCode:
+                            document.getElementById('officeUseTmCode').value, consultant:
+                            document.getElementById('officeUseConsultant').value, status: getCheckedValues('officeUseStatus')[0] || ''
+                    }
                 },
                 part2: {
-                    membershipApplicant: { applicantType: getCheckedValues('applicantType')[0] || '', title: document.getElementById('applicantTitle').value, nameOnCard: document.getElementById('applicantNameOnCard').value },
-                    applicantOffice: { address: document.getElementById('applicantOfficeAddress').value, poskod: document.getElementById('applicantOfficePoskod').value, city: document.getElementById('applicantOfficeCity').value, tel: document.getElementById('applicantOfficeTel').value, fax: document.getElementById('applicantFax').value },
-                    applicantBanking: { bankName: document.getElementById('applicantBankName').value, accountNumber: document.getElementById('applicantAccountNumber').value },
+                    membershipApplicant: {
+                        applicantType: getCheckedValues('applicantType')[0] || '', title:
+                            document.getElementById('applicantTitle').value, nameOnCard:
+                            document.getElementById('applicantNameOnCard').value
+                    },
+                    applicantOffice: {
+                        address: document.getElementById('applicantOfficeAddress').value, poskod:
+                            document.getElementById('applicantOfficePoskod').value, city:
+                            document.getElementById('applicantOfficeCity').value, tel: document.getElementById('applicantOfficeTel').value,
+                        fax: document.getElementById('applicantFax').value
+                    },
+                    applicantBanking: {
+                        bankName: document.getElementById('applicantBankName').value, accountNumber:
+                            document.getElementById('applicantAccountNumber').value
+                    },
                     sourceOfFunds: getCheckedValues('sourceOfFunds'),
                     nominee: {
                         isPartner: document.getElementById('nomineeIsPartner').checked,
-                        fullName: document.getElementById('nomineeFullName').value, icPassport: document.getElementById('nomineeIcPassport').value, dob: document.getElementById('nomineeDob').value, relationship: document.getElementById('nomineeRelationship').value,
-                        occupation: document.getElementById('nomineeOccupation').value, industry: document.getElementById('nomineeIndustry').value,
-                        bankName: document.getElementById('nomineeBankName').value, accountNumber: document.getElementById('nomineeAccountNumber').value
+                        fullName: document.getElementById('nomineeFullName').value, icPassport:
+                            document.getElementById('nomineeIcPassport').value, dob: document.getElementById('nomineeDob').value,
+                        relationship: document.getElementById('nomineeRelationship').value,
+                        occupation: document.getElementById('nomineeOccupation').value, industry:
+                            document.getElementById('nomineeIndustry').value,
+                        bankName: document.getElementById('nomineeBankName').value, accountNumber:
+                            document.getElementById('nomineeAccountNumber').value
                     },
                     thirdPartyPayor: {
                         isApplicant: document.getElementById('payorIsApplicant').checked,
-                        fullName: document.getElementById('payorFullName').value, icPassport: document.getElementById('payorIcPassport').value, dob: document.getElementById('payorDob').value,
-                        occupation: document.getElementById('payorOccupation').value, industry: document.getElementById('payorIndustry').value, officeAddress: document.getElementById('payorOfficeAddress').value
+                        fullName: document.getElementById('payorFullName').value, icPassport:
+                            document.getElementById('payorIcPassport').value, dob: document.getElementById('payorDob').value,
+                        occupation: document.getElementById('payorOccupation').value, industry:
+                            document.getElementById('payorIndustry').value, officeAddress:
+                            document.getElementById('payorOfficeAddress').value
                     },
                     salesDetail: {
-                        productTypes: getCheckedValues('productType'), worksheetCode: document.getElementById('worksheetCode').value, subscriptionAmount: document.getElementById('subscriptionAmount').value, investmentAmount: document.getElementById('investmentAmount').value, totalAmount: document.getElementById('totalAmount').value,
-                        profitReceiver: getCheckedValues('profitReceiver')[0] || '', transactionMethod: getCheckedValues('transactionMethod')[0] || '', orNumber: document.getElementById('orNumber').value, aprCode: document.getElementById('aprCode').value,
-                        consultantName: document.getElementById('consultantName').value, consultantCode: document.getElementById('consultantCode').value
+                        productTypes: getCheckedValues('productType'), worksheetCode: document.getElementById('worksheetCode').value,
+                        subscriptionAmount: document.getElementById('subscriptionAmount').value, investmentAmount:
+                            document.getElementById('investmentAmount').value, totalAmount: document.getElementById('totalAmount').value,
+                        profitReceiver: getCheckedValues('profitReceiver')[0] || '', transactionMethod:
+                            getCheckedValues('transactionMethod')[0] || '', orNumber: document.getElementById('orNumber').value, aprCode:
+                            document.getElementById('aprCode').value,
+                        consultantName: document.getElementById('consultantName').value, consultantCode:
+                            document.getElementById('consultantCode').value
                     }
                 },
                 signatures: {
-                    applicant: { signatureData: signatures.applicantSignature, name: document.getElementById('applicantSignatureName').value, ic: document.getElementById('applicantSignatureIC').value, date: document.getElementById('applicantSignatureDate').value, },
-                    nominee: { signatureData: signatures.nomineeSignature, name: document.getElementById('nomineeSignatureName').value, ic: document.getElementById('nomineeSignatureIC').value, date: document.getElementById('nomineeSignatureDate').value, },
-                    thirdPartyPayor: { signatureData: signatures.thirdPartyPayorSignature, name: document.getElementById('thirdPartyPayorSignatureName').value, ic: document.getElementById('thirdPartyPayorSignatureIC').value, date: document.getElementById('thirdPartyPayorSignatureDate').value, },
-                    consultant: { signatureData: signatures.consultantSignature, name: document.getElementById('consultantSignatureName').value, ic: document.getElementById('consultantSignatureIC').value, date: document.getElementById('consultantSignatureDate').value, },
-                    witness: { signatureData: signatures.witnessSignature, name: document.getElementById('witnessSignatureName').value, ic: document.getElementById('witnessSignatureIC').value, date: document.getElementById('witnessSignatureDate').value, },
-                    investmentManager: { signatureData: signatures.investmentManagerSignature, name: document.getElementById('investmentManagerSignatureName').value, ic: document.getElementById('investmentManagerSignatureIC').value, date: document.getElementById('investmentManagerSignatureDate').value, }
+                    applicant: {
+                        signatureData: signatures.applicantSignature, name:
+                            document.getElementById('applicantSignatureName').value, ic:
+                            document.getElementById('applicantSignatureIC').value, date:
+                            document.getElementById('applicantSignatureDate').value,
+                    },
+                    nominee: {
+                        signatureData: signatures.nomineeSignature, name:
+                            document.getElementById('nomineeSignatureName').value, ic: document.getElementById('nomineeSignatureIC').value,
+                        date: document.getElementById('nomineeSignatureDate').value,
+                    },
+                    thirdPartyPayor: {
+                        signatureData: signatures.thirdPartyPayorSignature, name:
+                            document.getElementById('thirdPartyPayorSignatureName').value, ic:
+                            document.getElementById('thirdPartyPayorSignatureIC').value, date:
+                            document.getElementById('thirdPartyPayorSignatureDate').value,
+                    },
+                    consultant: {
+                        signatureData: signatures.consultantSignature, name:
+                            document.getElementById('consultantSignatureName').value, ic:
+                            document.getElementById('consultantSignatureIC').value, date:
+                            document.getElementById('consultantSignatureDate').value,
+                    },
+                    witness: {
+                        signatureData: signatures.witnessSignature, name:
+                            document.getElementById('witnessSignatureName').value, ic: document.getElementById('witnessSignatureIC').value,
+                        date: document.getElementById('witnessSignatureDate').value,
+                    },
+                    investmentManager: {
+                        signatureData: signatures.investmentManagerSignature, name:
+                            document.getElementById('investmentManagerSignatureName').value, ic:
+                            document.getElementById('investmentManagerSignatureIC').value, date:
+                            document.getElementById('investmentManagerSignatureDate').value,
+                    }
                 }
             };
         }
@@ -879,35 +1037,91 @@
         }
 
         function populateForm(data) {
-            const setVal = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined && value !== null) el.value = value; };
-            const setCheck = (id, value) => { const el = document.getElementById(id); if (el && value !== undefined && value !== null) el.checked = value; };
-            const setRadio = (name, value) => { if (value) { const el = document.querySelector(`input[name="${name}"][value="${value}"]`); if (el) el.checked = true; } };
-            const setMultiCheck = (name, values) => { if (values && Array.isArray(values)) { document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = values.includes(cb.value)); } };
+            const setVal = (id, value) => {
+                const el = document.getElementById(id); if (el && value !== undefined && value
+                    !== null) el.value = value;
+            };
+            const setCheck = (id, value) => {
+                const el = document.getElementById(id); if (el && value !== undefined && value
+                    !== null) el.checked = value;
+            };
+            const setRadio = (name, value) => {
+                if (value) {
+                    const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                    if (el) el.checked = true;
+                }
+            };
+            const setMultiCheck = (name, values) => {
+                if (values && Array.isArray(values)) {
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = values.includes(cb.value));
+                }
+            };
 
             if (data.part1) {
-                if (data.part1.guestInfo) { Object.keys(data.part1.guestInfo).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.guestInfo[key])); setRadio('maritalStatus', data.part1.guestInfo.maritalStatus); setCheck('mailingSameAsCorrespondent', data.part1.guestInfo.mailingSameAsCorrespondent); document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change')); }
-                if (data.part1.guestBusiness) { Object.keys(data.part1.guestBusiness).forEach(key => setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.guestBusiness[key])); }
-                if (data.part1.partnerInfo) { Object.keys(data.part1.partnerInfo).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.partnerInfo[key])); setVal('relationshipToGuest', data.part1.partnerInfo.relationshipToGuest); }
-                if (data.part1.partnerBusiness) { Object.keys(data.part1.partnerBusiness).forEach(key => setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.partnerBusiness[key])); }
-                if (data.part1.officeUse) { Object.keys(data.part1.officeUse).forEach(key => setVal(`officeUse${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.officeUse[key])); setRadio('officeUseStatus', data.part1.officeUse.status); }
+                if (data.part1.guestInfo) {
+                    Object.keys(data.part1.guestInfo).forEach(key =>
+                        setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.guestInfo[key]));
+                    setRadio('maritalStatus', data.part1.guestInfo.maritalStatus);
+                    setCheck('mailingSameAsCorrespondent', data.part1.guestInfo.mailingSameAsCorrespondent);
+                    document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change'));
+                }
+                if (data.part1.guestBusiness) {
+                    Object.keys(data.part1.guestBusiness).forEach(key =>
+                        setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.guestBusiness[key]));
+                }
+                if (data.part1.partnerInfo) {
+                    Object.keys(data.part1.partnerInfo).forEach(key =>
+                        setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.partnerInfo[key]));
+                    setVal('relationshipToGuest', data.part1.partnerInfo.relationshipToGuest);
+                }
+                if (data.part1.partnerBusiness) {
+                    Object.keys(data.part1.partnerBusiness).forEach(key =>
+                        setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.partnerBusiness[key]));
+                }
+                if (data.part1.officeUse) {
+                    Object.keys(data.part1.officeUse).forEach(key =>
+                        setVal(`officeUse${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.officeUse[key]));
+                    setRadio('officeUseStatus', data.part1.officeUse.status);
+                }
+                if (data.part1.guestCheckInSignature) {
+                    setVal('guestCheckInSignatureName', data.part1.guestCheckInSignature.name);
+                    setVal('guestCheckInSignatureIC', data.part1.guestCheckInSignature.ic);
+                    setVal('guestCheckInSignatureDate', data.part1.guestCheckInSignature.date);
+                }
             }
             if (data.part2) {
-                if (data.part2.membershipApplicant) { setRadio('applicantType', data.part2.membershipApplicant.applicantType); setVal('applicantTitle', data.part2.membershipApplicant.title); setVal('applicantNameOnCard', data.part2.membershipApplicant.nameOnCard); }
-                if (data.part2.applicantOffice) { setVal('applicantOfficeAddress', data.part2.applicantOffice.address); setVal('applicantOfficePoskod', data.part2.applicantOffice.poskod); setVal('applicantOfficeCity', data.part2.applicantOffice.city); setVal('applicantOfficeTel', data.part2.applicantOffice.tel); setVal('applicantFax', data.part2.applicantOffice.fax); }
-                if (data.part2.applicantBanking) { setVal('applicantBankName', data.part2.applicantBanking.bankName); setVal('applicantAccountNumber', data.part2.applicantBanking.accountNumber); }
+                if (data.part2.membershipApplicant) {
+                    setRadio('applicantType', data.part2.membershipApplicant.applicantType);
+                    setVal('applicantTitle', data.part2.membershipApplicant.title); setVal('applicantNameOnCard',
+                        data.part2.membershipApplicant.nameOnCard);
+                }
+                if (data.part2.applicantOffice) {
+                    setVal('applicantOfficeAddress', data.part2.applicantOffice.address);
+                    setVal('applicantOfficePoskod', data.part2.applicantOffice.poskod); setVal('applicantOfficeCity',
+                        data.part2.applicantOffice.city); setVal('applicantOfficeTel', data.part2.applicantOffice.tel);
+                    setVal('applicantFax', data.part2.applicantOffice.fax);
+                }
+                if (data.part2.applicantBanking) {
+                    setVal('applicantBankName', data.part2.applicantBanking.bankName);
+                    setVal('applicantAccountNumber', data.part2.applicantBanking.accountNumber);
+                }
                 if (data.part2.sourceOfFunds) { setMultiCheck('sourceOfFunds', data.part2.sourceOfFunds); }
                 if (data.part2.nominee) {
                     setCheck('nomineeIsPartner', data.part2.nominee.isPartner);
                     document.getElementById('nomineeIsPartner').dispatchEvent(new Event('change'));
-                    Object.keys(data.part2.nominee).forEach(key => setVal(`nominee${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part2.nominee[key]));
+                    Object.keys(data.part2.nominee).forEach(key => setVal(`nominee${key.charAt(0).toUpperCase() + key.slice(1)} `,
+                        data.part2.nominee[key]));
                 }
                 if (data.part2.thirdPartyPayor) {
                     setCheck('payorIsApplicant', data.part2.thirdPartyPayor.isApplicant);
                     document.getElementById('payorIsApplicant').dispatchEvent(new Event('change'));
-                    Object.keys(data.part2.thirdPartyPayor).forEach(key => setVal(`payor${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part2.thirdPartyPayor[key]));
+                    Object.keys(data.part2.thirdPartyPayor).forEach(key => setVal(`payor${key.charAt(0).toUpperCase() +
+                        key.slice(1)
+                        } `, data.part2.thirdPartyPayor[key]));
                 }
                 if (data.part2.salesDetail) {
-                    setMultiCheck('productType', data.part2.salesDetail.productTypes); setRadio('transactionMethod', data.part2.salesDetail.transactionMethod);
+                    setMultiCheck('productType', data.part2.salesDetail.productTypes); setRadio('transactionMethod',
+                        data.part2.salesDetail.transactionMethod);
                     Object.keys(data.part2.salesDetail).forEach(key => setVal(key, data.part2.salesDetail[key]));
                     document.getElementById('subscriptionAmount').dispatchEvent(new Event('input')); // Recalculate total
                 }
@@ -925,7 +1139,24 @@
         }
 
         function exportFullData() {
-            if (!validateCurrentSection()) { alert("Please complete all required fields before exporting."); return; } const fullData = collectData(); const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant'; const fileName = `${guestName}_Full_Application.json`; const dataStr = JSON.stringify(fullData, null, 2); const blob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); alert(`Full application data exported successfully as ${fileName}`);
+            if (!validateCurrentSection()) {
+                alert("Please complete all required fields before exporting.");
+                return;
+            }
+            const fullData = collectData();
+            const guestName = fullData.part1.guestInfo.fullName.trim().replace(/\s+/g, '_') || 'Applicant';
+            const fileName = `${guestName}_Full_Application.json`;
+            const dataStr = JSON.stringify(fullData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert(`Full application data exported successfully as ${fileName}`);
         }
 
         function generateCombinedPdf() {
@@ -938,11 +1169,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             showSection(1);
 
-            document.getElementById('guestFullName').addEventListener('input', (e) => { document.getElementById('guestCheckInSignatureName').value = e.target.value; });
-            document.getElementById('guestIcPassport').addEventListener('input', (e) => { document.getElementById('guestCheckInSignatureIC').value = e.target.value; });
-            document.getElementById('guestCheckInSignatureDate').value = new Date().toLocaleDateString('en-CA');
+            document.getElementById('guestFullName').addEventListener('input', (e) => {
+                document.getElementById('guestCheckInSignatureName').value = e.target.value;
+            });
+            document.getElementById('guestIcPassport').addEventListener('input', (e) => {
+                document.getElementById('guestCheckInSignatureIC').value = e.target.value;
+            });
+            document.getElementById('guestCheckInSignatureDate').value = moment().format('YYYY-MM-DD');
 
-            document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () { document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid'; });
+            document.getElementById('mailingSameAsCorrespondent').addEventListener('change', function () {
+                document.getElementById('mailingAddressFields').style.display = this.checked ? 'none' : 'grid';
+            });
 
             const nomineeCheckbox = document.getElementById('nomineeIsPartner');
             const nomineeSection = document.getElementById('nomineeDetailsSection');
@@ -953,7 +1190,6 @@
                 nomineeFields.forEach(el => { el.required = !isHidden; });
             });
             nomineeFields.forEach(el => { el.required = !nomineeCheckbox.checked; });
-
 
             const payorCheckbox = document.getElementById('payorIsApplicant');
             const payorSection = document.getElementById('thirdPartyPayorSection');
@@ -968,7 +1204,10 @@
             const subAmount = document.getElementById('subscriptionAmount');
             const invAmount = document.getElementById('investmentAmount');
             const totalAmount = document.getElementById('totalAmount');
-            const updateTotal = () => { totalAmount.value = (parseFloat(subAmount.value) || 0) + (parseFloat(invAmount.value) || 0); };
+            const updateTotal = () => {
+                totalAmount.value = (parseFloat(subAmount.value) || 0) +
+                    (parseFloat(invAmount.value) || 0);
+            };
             subAmount.addEventListener('input', updateTotal);
             invAmount.addEventListener('input', updateTotal);
         });
