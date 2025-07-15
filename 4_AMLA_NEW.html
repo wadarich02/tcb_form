@@ -5,106 +5,225 @@
     <meta charset="UTF-8">
     <title>AML/CFT Declaration Form - Subscriber</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Format all date inputs
-            document.querySelectorAll('input[type="date"]').forEach(input => {
-                // Set the initial value if it exists
-                if (input.value) {
-                    const formattedDate = moment(input.value).format('DD/MM/YYYY');
-                    input.value = formattedDate;
-                }
+    <style>
+        .amla-container {
+            max-width: 800px;
+            margin: auto;
+        }
 
-                // Format new values on change
-                input.addEventListener('change', (e) => {
-                    const formattedDate = moment(e.target.value).format('DD/MM/YYYY');
-                    e.target.value = formattedDate;
-                });
-            });
+        .amla-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-            // Set current date where needed
-            document.getElementById('amlaSigDate').value = moment().format('DD/MM/YYYY');
-        });
-    </script>
+        .amla-header .logo {
+            width: 200px;
+        }
+
+        .amla-header h3 {
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+        }
+
+        .amla-instructions {
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .amla-section-title {
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+        }
+
+        .amla-field {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .amla-label {
+            width: 200px;
+            flex-shrink: 0;
+            font-size: 0.9em;
+        }
+
+        .amla-input {
+            border-bottom: 1px solid #000;
+            flex-grow: 1;
+            min-height: 1.5em;
+            font-weight: bold;
+            padding: 0 5px;
+        }
+
+        .amla-checkbox-group {
+            display: flex;
+            gap: 30px;
+        }
+
+        .amla-declaration {
+            font-size: 0.9em;
+            text-align: justify;
+            margin: 20px 0;
+        }
+
+        .amla-signature-block {
+            margin-top: 40px;
+        }
+
+        .amla-page-break {
+            page-break-before: always;
+        }
+
+        .amla-flex {
+            display: flex;
+            gap: 40px;
+        }
+
+        .amla-flex-item {
+            flex: 1;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="form-container">
-        <div class="header">
-            <div class="logo-container"><img src="TCB_LOGO.png" alt="TAMU Logo" class="logo"></div>
-            <h1>Anti-Money Laundering and Countering Financing of Terrorism (AML/CFT) Declaration Form - Subscriber</h1>
+    <div class="amla-container">
+        <!-- PAGE 1 -->
+        <div>
+            <div class="amla-header">
+                <img src="logo.png" alt="TAMU Logo" class="logo">
+                <h3>ANTI-MONEY LAUNDERING AND COUNTERING FINANCING OF TERRORISM (AML/CFT) DECLARATION FORM - SUBSCRIBER
+                </h3>
+            </div>
+            <p class="amla-instructions">Instructions to the declarer: Please provide the information and documents
+                requested in this form in compliance with the Anti-Money Laundering and Anti-Terrorism Financing Act
+                2001 ("AMLA”) in Malaysia. Please ensure that the form is completed and signed. Kindly also attach all
+                relevant documents referred to in the Document Checklist prior to returning the form.</p>
+
+            <div class="amla-section-title">INFORMATION AND DOCUMENTS TO BE PROVIDED BY TAMU WAKALAH BI AL-ISTITHMAR
+                INVESTMENT SCHEME SUBSCRIBER</div>
+
+            <div class="amla-field">
+                <div class="amla-label">SOURCE OF FUND/ WEALTH<br>(FINANCIAL PORTFOLIO)</div>
+                <div class="amla-input amla-checkbox-group">
+                    <div class="checkbox-option" id="fundCash">
+                        <div class="checkbox"></div>CASH SAVINGS
+                    </div>
+                    <div class="checkbox-option" id="fundCredit">
+                        <div class="checkbox"></div>CREDIT CARD
+                    </div>
+                    <div class="checkbox-option" id="fundInheritance">
+                        <div class="checkbox"></div>INHERITANCE
+                    </div>
+                    <div class="checkbox-option" id="fundOthers">
+                        <div class="checkbox"></div>OTHERS
+                    </div>
+                </div>
+            </div>
+
+            <div class="amla-field">
+                <div class="amla-label">1. SUBSCRIBER NAME</div>
+                <div class="amla-input" id="amlaName"></div>
+            </div>
+            <div class="amla-field">
+                <div class="amla-label">2. NRIC NO.</div>
+                <div class="amla-input" id="amlaNric"></div>
+            </div>
+            <div class="amla-field">
+                <div class="amla-label">3. HOME ADDRESS</div>
+                <div class="amla-input" id="amlaHomeAddress"></div>
+            </div>
+            <div class="amla-field">
+                <div class="amla-label">4. MAILING ADDRESS (IF DIFFERENT)</div>
+                <div class="amla-input" id="amlaMailingAddress"></div>
+            </div>
+            <div class="amla-field">
+                <div class="amla-label">5. CONTACT DETAILS</div>
+                <div class="amla-input amla-flex">
+                    <div class="amla-flex-item">MOBILE NO.: <span id="amlaMobile"></span></div>
+                    <div class="amla-flex-item">OFFICE NO.: <span id="amlaOfficePhone"></span></div>
+                </div>
+            </div>
+            <div class="amla-field">
+                <div class="amla-label"></div>
+                <div class="amla-input">EMAIL ADDRESS: <span id="amlaEmail"></span></div>
+            </div>
+            <div class="amla-field">
+                <div class="amla-label">6. OCCUPATION</div>
+                <div class="amla-input" id="amlaOccupation"></div>
+            </div>
+            <div class="amla-field">
+                <div class="amla-label">7. PURPOSE OF TRANSACTION</div>
+                <div class="amla-input" id="amlaPurpose"></div>
+            </div>
+
+            <div class="amla-flex" style="margin-top: 20px;">
+                <div class="amla-flex-item">
+                    <div class="amla-section-title">8. DOCUMENT CHECKLIST</div>
+                    <div>
+                        <div class="checkbox" style="display:inline-block"></div> a) NRIC (FRONT&BACK)
+                    </div>
+                    <div>
+                        <div class="checkbox" style="display:inline-block"></div> b) PROOF OF PAYMENT
+                    </div>
+                    <div>
+                        <div class="checkbox" style="display:inline-block"></div> c) Others
+                    </div>
+                </div>
+                <div class="amla-flex-item">
+                    <div class="amla-section-title">9. THIRD-PARTY PAYMENT VERIFICATION</div>
+                    <div>NAME.: <span class="underline"></span></div>
+                    <div style="margin-top:5px;">RELATION WITH SUBSCRIBER.: <span class="underline"></span></div>
+                    <div style="margin-top:5px;">NRIC NO.: <span class="underline"></span></div>
+                </div>
+            </div>
+
+            <p class="amla-declaration"><strong>DECLARATION</strong><br>We are fully aware of the provisions of the AMLA
+                and hereby declare that all information give hereunder is true and accurate to my best knowledge and
+                further assure that all source of funds/wealth are legitimate. It is further agreed that we shall, upon
+                request by Tamu Capital Bhd. ("TCB"), to provide all relevant documents to verify, including but not
+                limited to our identity, domicile, legal capacity, occupation and other required information. We further
+                agree and hereby undertake that we shall on demand pay and make good to TCB the amount of all loss,
+                damage and expense which may be sustained or incurred by the same in respect of any contravention of any
+                provisions of AMLA caused by us.</p>
+
+            <div class="amla-signature-block">
+                <div class="signature-line" style="width: 250px;" id="amlaSig"></div>
+                <div>SIGNATURE:</div>
+                <div style="margin-top: 15px;">NAME: <span class="underline" id="amlaSigName"
+                        style="min-width: 250px;"></span></div>
+                <div style="margin-top: 15px;">DATE: <span class="underline" id="amlaSigDate"
+                        style="min-width: 250px;"></span></div>
+            </div>
+            <p style="text-align: center; margin-top: 30px; font-weight: bold;">Page 1 of 2</p>
         </div>
-        <form>
-            <div class="form-section">
-                <table class="form-table">
-                    <tr>
-                        <td>1 &nbsp; SUBSCRIBER NAME</td>
-                        <td><input type="text" id="amlaName"></td>
-                    </tr>
-                    <tr>
-                        <td>2 &nbsp; NRIC NO.</td>
-                        <td><input type="text" id="amlaNric"></td>
-                    </tr>
-                    <tr>
-                        <td>3 &nbsp; HOME ADDRESS</td>
-                        <td><input type="text" id="amlaHomeAddress"></td>
-                    </tr>
-                    <tr>
-                        <td>4 &nbsp; MAILING ADDRESS</td>
-                        <td><input type="text" id="amlaMailingAddress"></td>
-                    </tr>
-                    <tr>
-                        <td>5 &nbsp; CONTACT DETAILS</td>
-                        <td>
-                            <div><label>MOBILE NO.:</label><input type="text" id="amlaMobile"></div>
-                            <div style="margin-top: 8px;"><label>EMAIL ADDRESS:</label><input type="email"
-                                    id="amlaEmail"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>6 &nbsp; OCCUPATION</td>
-                        <td><input type="text" id="amlaOccupation"></td>
-                    </tr>
-                </table>
+
+        <div class="amla-page-break"></div>
+
+        <!-- PAGE 2 -->
+        <div>
+            <div class="amla-header">
+                <h3>FOR OFFICE USE/ WITNESS INFORMATION</h3>
             </div>
-            <fieldset style="border:none; padding:0; margin-top:30px;">
-                <legend style="font-weight:bold;font-size:1.1em;">DECLARATION</legend>
-                <p style="font-size:0.9em; text-align:justify;">We are fully aware of the provisions of the AMLA and
-                    hereby declare that all information give hereunder is true and accurate...</p>
-            </fieldset>
-            <div class="signature-section">
-                <div class="signature-field"><label>SIGNATURE:</label>
-                    <div class="signature-line" id="amlaSig"></div><label style="margin-top:10px;">NAME:</label><input
-                        type="text" id="amlaSigName">
+            <div class="amla-flex" style="margin-top: 50px;">
+                <div class="amla-flex-item">
+                    <div>RECEIVER NAME: <span class="amla-input" id="receiver-name"></span></div>
+                    <div style="margin-top: 60px;">SIGNATURE: <div class="signature-line" id="receiver-sig"
+                            style="width: 80%;"></div>
+                    </div>
+                    <div style="margin-top: 30px;">DATE: <span class="amla-input" id="receiver-date"></span></div>
                 </div>
-                <div class="signature-field" style="width: 30%;"><label>DATE:</label><input type="text"
-                        id="amlaSigDate"></div>
+                <div class="amla-flex-item">
+                    <div>WITNESS NAME: <span class="amla-input" id="witness-name"></span></div>
+                    <div style="margin-top: 60px;">SIGNATURE: <div class="signature-line" id="witness-sig"
+                            style="width: 80%;"></div>
+                    </div>
+                    <div style="margin-top: 30px;">DATE: <span class="amla-input" id="witness-date"></span></div>
+                </div>
             </div>
-            <fieldset class="office-use-section">
-                <legend>FOR OFFICE USE/ WITNESS INFORMATION</legend>
-                <div class="office-use-grid">
-                    <div class="input-group"><label>RECEIVER NAME:</label>
-                        <div id="receiver-name" class="line-input"></div>
-                    </div>
-                    <div class="input-group"><label>WITNESS NAME:</label>
-                        <div id="witness-name" class="line-input"></div>
-                    </div>
-                    <div class="input-group"><label>SIGNATURE:</label>
-                        <div id="receiver-sig" class="sig-line"></div>
-                    </div>
-                    <div class="input-group"><label>SIGNATURE:</label>
-                        <div id="witness-sig" class="sig-line"></div>
-                    </div>
-                    <div class="input-group"><label>DATE:</label>
-                        <div id="receiver-date" class="line-input"></div>
-                    </div>
-                    <div class="input-group"><label>DATE:</label>
-                        <div id="witness-date" class="line-input"></div>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
+            <p style="margin-top: 100px; text-align: center; font-size: 0.9em;">For any inquiries, please call 019 222
+                0319 or email to memberservices@tamucapital.com</p>
+            <p style="text-align: center; margin-top: 50px; font-weight: bold;">Page 2 of 2</p>
+        </div>
     </div>
 </body>
 

@@ -23,10 +23,6 @@
             gap: 1px;
         }
 
-        .page-break {
-            page-break-before: always;
-        }
-
         .page-break-before {
             page-break-before: always;
             margin-top: 40px;
@@ -66,11 +62,11 @@
                 </div>
                 <div class="program-container">
                     <strong>Type of Program</strong><br>
-                    <div class="checkbox-option">Dirham<div id="prodDirham" class="program-box"></div>
+                    <div class="checkbox-option" id="prodDirham">Dirham<div class="program-box"></div>
                     </div><br>
-                    <div class="checkbox-option">Dinar<div id="prodDinar" class="program-box"></div>
+                    <div class="checkbox-option" id="prodDinar">Dinar<div class="program-box"></div>
                     </div><br>
-                    <div class="checkbox-option">Almas<div id="prodAlmas" class="program-box"></div>
+                    <div class="checkbox-option" id="prodAlmas">Almas<div class="program-box"></div>
                     </div>
                 </div>
             </div>
@@ -112,20 +108,20 @@
                 <div class="form-row">
                     <div class="form-label">Nationality</div>
                     <div class="form-field" style="flex-grow:0; flex-basis: 250px;">
-                        <div class="checkbox-option">
-                            <div class="checkbox" id="appNationalityMalaysian"></div> Malaysian
+                        <div class="checkbox-option" id="appNationalityMalaysian">
+                            <div class="checkbox"></div> Malaysian
                         </div>
-                        <div class="checkbox-option">
-                            <div class="checkbox" id="appNationalityForeigner"></div> Foreigner
+                        <div class="checkbox-option" id="appNationalityForeigner">
+                            <div class="checkbox"></div> Foreigner
                         </div>
                     </div>
                     <div class="form-label" style="width:auto;margin-left:20px;">Marital Status</div>
                     <div class="form-field">
-                        <div class="checkbox-option">
-                            <div class="checkbox" id="appMaritalSingle"></div> Single
+                        <div class="checkbox-option" id="appMaritalSingle">
+                            <div class="checkbox"></div> Single
                         </div>
-                        <div class="checkbox-option">
-                            <div class="checkbox" id="appMaritalMarried"></div> Married
+                        <div class="checkbox-option" id="appMaritalMarried">
+                            <div class="checkbox"></div> Married
                         </div>
                     </div>
                 </div>
@@ -189,17 +185,18 @@
                 <div class="form-row">
                     <div class="form-label">Annual Income</div>
                     <div class="form-field d-flex" style="justify-content: space-between;">
-                        <div class="checkbox-option">
-                            <div class="checkbox" id="appIncome1"></div> &lt;RM24,000
-                        </div>
-                        <div class="checkbox-option">
-                            <div class="checkbox" id="appIncome2"></div>RM24,000-RM36,000
-                        </div>
-                        <div class="checkbox-option">
-                            <div class="checkbox" id="appIncome3"></div>RM36,000-RM60,000
-                        </div>
-                        <div class="checkbox-option">
-                            <div class="checkbox" id="appIncome4"></div>&gt;RM60,000
+                        <div class="checkbox-option" id="appIncome1">
+                            <div class="checkbox"></div>
+                            <RM24,000< /div>
+                                <div class="checkbox-option" id="appIncome2">
+                                    <div class="checkbox"></div>RM24,000-RM36,000
+                                </div>
+                                <div class="checkbox-option" id="appIncome3">
+                                    <div class="checkbox"></div>RM36,000-RM60,000
+                                </div>
+                                <div class="checkbox-option" id="appIncome4">
+                                    <div class="checkbox"></div>>RM60,000
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -288,12 +285,12 @@
                     <div class="form-row">
                         <div class="form-label">Nationality</div>
                         <div class="form-field">
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="nomineeNationalityMalaysian"></div> Malaysian
+                            <div class="checkbox-option" id="nomineeNationalityMalaysian">
+                                <div class="checkbox"></div> Malaysian
                             </div>
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="nomineeNationalityForeigner"></div> Foreigner (Please
-                                Specify): <span class="underline" id="nomineeNationalityForeignerText"></span>
+                            <div class="checkbox-option" id="nomineeNationalityForeigner">
+                                <div class="checkbox"></div> Foreigner (Please Specify): <span class="underline"
+                                    id="nomineeNationalityForeignerText"></span>
                             </div>
                         </div>
                     </div>
@@ -352,17 +349,18 @@
                     <div class="form-row">
                         <div class="form-label">Annual Income</div>
                         <div class="form-field d-flex" style="justify-content: space-between;">
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="nomineeIncome1"></div> &lt;RM24,000
-                            </div>
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="nomineeIncome2"></div>RM24,000-RM36,000
-                            </div>
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="nomineeIncome3"></div>RM36,000-RM60,000
-                            </div>
-                            <div class="checkbox-option">
-                                <div class="checkbox" id="nomineeIncome4"></div>&gt;RM60,000
+                            <div class="checkbox-option" id="nomineeIncome1">
+                                <div class="checkbox"></div>
+                                <RM24,000< /div>
+                                    <div class="checkbox-option" id="nomineeIncome2">
+                                        <div class="checkbox"></div>RM24,000-RM36,000
+                                    </div>
+                                    <div class="checkbox-option" id="nomineeIncome3">
+                                        <div class="checkbox"></div>RM36,000-RM60,000
+                                    </div>
+                                    <div class="checkbox-option" id="nomineeIncome4">
+                                        <div class="checkbox"></div>>RM60,000
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -386,9 +384,7 @@
                             FOR OFFICE USE ONLY</div>
                         <div class="form-row">
                             <div class="form-label">Program ID No.</div>
-                            <div class="form-field">
-                                <div class="char-box-grid" id="programId"></div>
-                            </div>
+                            <div class="form-field char-box-group" id="programId" style="flex-grow:0"></div>
                             <div class="form-label" style="width:auto;margin-left:20px;">Programs Fee (RM)</div>
                             <div class="form-field"><span class="underline" id="programsFee"></span></div>
                         </div>
@@ -398,14 +394,14 @@
                             <div class="form-field"><span class="underline" id="balance"></span></div>
                             <div class="form-label" style="width:auto;margin-left:20px;">Mode of Payment</div>
                             <div class="form-field d-flex">
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="paymentCash"></div> Cash
+                                <div class="checkbox-option" id="paymentCash">
+                                    <div class="checkbox"></div> Cash
                                 </div>
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="paymentInstalment"></div> In-House Instalment
+                                <div class="checkbox-option" id="paymentInstalment">
+                                    <div class="checkbox"></div> In-House Instalment
                                 </div>
-                                <div class="checkbox-option">
-                                    <div class="checkbox" id="paymentLoan"></div> Loan
+                                <div class="checkbox-option" id="paymentLoan">
+                                    <div class="checkbox"></div> Loan
                                 </div>
                             </div>
                         </div>
@@ -422,8 +418,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </body>
 
 </html>

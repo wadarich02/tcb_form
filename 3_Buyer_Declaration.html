@@ -11,11 +11,14 @@
             border-collapse: collapse;
             margin-top: 20px;
             font-size: 0.9em;
+            border: 1px solid #ddd;
+            /* Outer border */
         }
 
         .declaration-table td {
             padding: 10px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #ddd;
+            /* Inner borders */
             vertical-align: top;
         }
 
@@ -83,6 +86,7 @@
                     <div class="declaration-checkbox" id="dec_3"></div>
                 </td>
             </tr>
+            <!-- ... All 13 items rendered similarly ... -->
             <tr>
                 <td class="col-num">4.</td>
                 <td class="col-text"><strong>SUBSCRIPTION ACTIVATION</strong>I am aware that activations of the program
@@ -169,32 +173,30 @@
         </tbody>
     </table>
 
-    <p style="margin-top: 40px; margin-bottom: 40px;">I am hereby fully understood and agree with the buyer declarations
+    <p style="margin-top: 20px; margin-bottom: 20px;">I am hereby fully understood and agree with the buyer declarations
         and purchase this program without any prejudice.</p>
 
-    <div class="signature-section" style="margin-top: 50px; justify-content: space-between;">
-        <div class="signature-field" style="width: 30%; text-align: center;">
-            <div class="signature-line" id="applicantSignatureLine"></div>
-            <p style="margin: 8px 0;">Signature of Applicant</p>
-            <p style="margin: 8px 0; text-align: left;">Name: <span class="info-data" id="applicantName"></span></p>
-            <p style="margin: 8px 0; text-align: left;">ID: <span class="info-data" id="applicantId"></span></p>
-            <p style="margin: 8px 0; text-align: left;">Date: <span class="info-data" id="applicantDate"></span></p>
+    <div class="signature-section" style="margin-top: 30px; justify-content: space-between; align-items: flex-start;">
+        <div class="signature-field" style="width: 32%; text-align: left;">
+            <div class="signature-line" id="applicantSignatureLine" style="width: 100%; height: 50px;"></div>
+            <p style="margin: 0;"><strong>Signature of Applicant</strong></p>
+            <p style="margin: 8px 0 0 0;">Name: <span class="info-data" id="applicantName"></span></p>
+            <p style="margin: 4px 0 0 0;">ID: <span class="info-data" id="applicantId"></span></p>
+            <p style="margin: 4px 0 0 0;">Date: <span class="info-data" id="applicantDate"></span></p>
         </div>
-        <div class="signature-field" style="width: 30%; text-align: center;">
-            <div class="signature-line" id="jointApplicantSignatureLine"></div>
-            <p style="margin: 8px 0;">Signature of Joint Applicant</p>
-            <p style="margin: 8px 0; text-align: left;">Name: <span class="info-data" id="jointApplicantName"></span>
-            </p>
-            <p style="margin: 8px 0; text-align: left;">ID: <span class="info-data" id="jointApplicantId"></span></p>
-            <p style="margin: 8px 0; text-align: left;">Date: <span class="info-data" id="jointApplicantDate"></span>
-            </p>
+        <div class="signature-field" style="width: 32%; text-align: left;">
+            <div class="signature-line" id="jointApplicantSignatureLine" style="width: 100%; height: 50px;"></div>
+            <p style="margin: 0;"><strong>Signature of Joint Applicant</strong></p>
+            <p style="margin: 8px 0 0 0;">Name: <span class="info-data" id="jointApplicantName"></span></p>
+            <p style="margin: 4px 0 0 0;">ID: <span class="info-data" id="jointApplicantId"></span></p>
+            <p style="margin: 4px 0 0 0;">Date: <span class="info-data" id="jointApplicantDate"></span></p>
         </div>
-        <div class="signature-field" style="width: 30%; text-align: center;">
-            <div class="signature-line" id="witnessSignatureLine"></div>
-            <p style="margin: 8px 0;">Signature of Witness</p>
-            <p style="margin: 8px 0; text-align: left;">Name: <span class="info-data" id="witnessName"></span></p>
-            <p style="margin: 8px 0; text-align: left;">ID: <span class="info-data" id="witnessId"></span></p>
-            <p style="margin: 8px 0; text-align: left;">Date: <span class="info-data" id="witnessDate"></span></p>
+        <div class="signature-field" style="width: 32%; text-align: left;">
+            <div class="signature-line" id="witnessSignatureLine" style="width: 100%; height: 50px;"></div>
+            <p style="margin: 0;"><strong>Signature of Witness</strong></p>
+            <p style="margin: 8px 0 0 0;">Name: <span class="info-data" id="witnessName"></span></p>
+            <p style="margin: 4px 0 0 0;">ID: <span class="info-data" id="witnessId"></span></p>
+            <p style="margin: 4px 0 0 0;">Date: <span class="info-data" id="witnessDate"></span></p>
         </div>
     </div>
 </body>
