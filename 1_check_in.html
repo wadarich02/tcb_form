@@ -52,6 +52,7 @@
             align-items: center;
             margin: 0 10px 0 0;
             padding: 2px 0;
+            white-space: nowrap;
         }
 
         .box {
@@ -182,7 +183,7 @@
 
         .sig-line {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             gap: 10px;
         }
 
@@ -217,6 +218,16 @@
             min-width: 120px;
             max-width: 150px;
             text-align: center;
+            position: relative;
+            height: 30px;
+
+        }
+
+        #printSignatureDate {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
         }
 
         .office-use-box {
@@ -225,6 +236,11 @@
             margin-top: 10px;
             background: white;
             border-radius: 3px;
+        }
+
+        .office-use-box .office-use-table {
+            margin-bottom: 0;
+            /* Remove bottom margin for the table inside this box */
         }
 
         @media print {
@@ -240,6 +256,10 @@
                 height: 297mm;
                 page-break-after: always;
             }
+        }
+
+        .title-cell {
+            width: 100px;
         }
 
         .header-container {
@@ -274,10 +294,6 @@
             font-size: 10px;
             line-height: 1.2;
         }
-
-        .title-cell {
-            width: 100px;
-        }
     </style>
 </head>
 
@@ -289,7 +305,7 @@
             </div>
             <div class="contact-info">
                 <div>Aras 8, No. 53, Jalan Raja Alang Kampung Baru, 53000 Kuala Lumpur</div>
-                <div><strong>T:</strong> +603 2698 8789  |  <strong>F:</strong> +603 2692 4789</div>
+                <div><strong>T:</strong> +603 2698 8789 | <strong>F:</strong> +603 2692 4789</div>
                 <div style="color: #2563eb;"><strong>E:</strong> memberservices@tamucapital.com</div>
                 <div>Voucher No: <span id="printVoucherNo"></span></div>
             </div>
@@ -389,7 +405,6 @@
             </div>
         </div>
 
-        <!-- This section seems to be missing from the main form, but I'll leave placeholders -->
         <div class="flex-container" style="margin-top: 15px;">
             <div>ARE YOU A CREDIT CARD HOLDER:-</div>
             <div class="checkbox-item"><span class="box" id="printCCYes"></span> YES</div>
@@ -458,12 +473,28 @@
                     <td style="width: 10%;">CONSULTANT:</td>
                     <td class="line" id="printOfficeConsultant" style="width: 40%;"></td>
                 </tr>
+                <tr>
+                    <td colspan="2" style="vertical-align: middle;">
+                        <div class="flex-container" style="gap: 5px;">
+                            <span class="checkbox-item"><span class="box" id="printOfficeStatusQT"></span> QT</span>
+                            <span class="checkbox-item"><span class="box" id="printOfficeStatusNQ"></span> NQ</span>
+                            <span class="checkbox-item"><span class="box" id="printOfficeStatusRescheduled"></span>
+                                RESCHEDULED</span>
+                        </div>
+                    </td>
+                    <td colspan="2" style="vertical-align: middle;">
+                        <div class="flex-container" style="gap: 4px;">
+                            <span style="width: 26%;">Voucher No:</span>
+                            <span class="line" id="printOfficeVoucherNo"
+                                style="display: inline-block; min-width: 80px; text-align: center;"></span>
+                            <span class="checkbox-item" style="margin-left: 10px;"><span class="box"
+                                    id="printVoucherHiTea"></span> HI-TEA</span>
+                            <span class="checkbox-item"><span class="box" id="printVoucherStaycation"></span>
+                                STAYCATION</span>
+                        </div>
+                    </td>
+                </tr>
             </table>
-            <div class="flex-container" style="margin-top: 10px; justify-content: space-around;">
-                <div class="checkbox-item"><span class="box" id="printOfficeStatusQT"></span> QT</div>
-                <div class="checkbox-item"><span class="box" id="printOfficeStatusNQ"></span> NQ</div>
-                <div class="checkbox-item"><span class="box" id="printOfficeStatusRescheduled"></span> RESCHEDULED</div>
-            </div>
         </div>
     </div>
 
@@ -568,6 +599,12 @@
                 if (p1.officeUse.status === 'QT') setCheck('printOfficeStatusQT');
                 if (p1.officeUse.status === 'NQ') setCheck('printOfficeStatusNQ');
                 if (p1.officeUse.status === 'RESCHEDULED') setCheck('printOfficeStatusRescheduled');
+
+                // Populate new voucher fields
+                setText('printVoucherNo', p1.officeUse.voucherNo); // For header
+                setText('printOfficeVoucherNo', p1.officeUse.voucherNo); // For office use section
+                if (p1.officeUse.voucherType === 'Hi-Tea') setCheck('printVoucherHiTea');
+                if (p1.officeUse.voucherType === 'Staycation') setCheck('printVoucherStaycation');
             }
 
             setTimeout(() => { window.print(); }, 500);
