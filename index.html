@@ -1218,15 +1218,22 @@
             };
             reader.readAsText(file);
         }
-
         function populateForm(data) {
             const setVal = (id, value) => {
-                const el = document.getElementById(id); if (el && value !== undefined && value
-                    !== null) el.value = value;
+                const el = document.getElementById(id);
+                if (el && value !== undefined && value !== null) {
+                    if ($(el).is('.hasDatepicker')) {
+                        if (value) $(el).datepicker('setDate', value);
+                    } else {
+                        el.value = value;
+                    }
+                }
             };
             const setCheck = (id, value) => {
-                const el = document.getElementById(id); if (el && value !== undefined && value
-                    !== null) el.checked = value;
+                const el = document.getElementById(id);
+                if (el && value !== undefined && value !== null) {
+                    el.checked = value;
+                }
             };
             const setRadio = (name, value) => {
                 if (value) {
@@ -1240,68 +1247,86 @@
                 }
             };
 
-            if (data.part1) {
-                if (data.part1.guestInfo) {
-                    Object.keys(data.part1.guestInfo).forEach(key =>
-                        setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.guestInfo[key]));
-                    setRadio('maritalStatus', data.part1.guestInfo.maritalStatus);
-                    setCheck('mailingSameAsCorrespondent', data.part1.guestInfo.mailingSameAsCorrespondent);
+            // Handle Part 1 data if it exists
+            if (data && (data.part1 || data)) { // Allow both full data and part1-only data
+                const part1Data = data.part1 || data; // Use part1 if available, otherwise use entire data object
+
+                if (part1Data.guestInfo) {
+                    Object.keys(part1Data.guestInfo).forEach(key =>
+                        setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, part1Data.guestInfo[key]));
+                    setRadio('maritalStatus', part1Data.guestInfo.maritalStatus);
+                    setCheck('mailingSameAsCorrespondent', part1Data.guestInfo.mailingSameAsCorrespondent);
                     document.getElementById('mailingSameAsCorrespondent').dispatchEvent(new Event('change'));
                 }
-                if (data.part1.guestBusiness) {
-                    Object.keys(data.part1.guestBusiness).forEach(key =>
-                        setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.guestBusiness[key]));
+                if (part1Data.guestBusiness) {
+                    Object.keys(part1Data.guestBusiness).forEach(key =>
+                        setVal(`guest${key.charAt(0).toUpperCase() + key.slice(1)}`, part1Data.guestBusiness[key]));
                 }
-                if (data.part1.guestBankInfo) {
-                    setRadio('isCreditCardHolder', data.part1.guestBankInfo.isCreditCardHolder);
-                    setRadio('creditCardType', data.part1.guestBankInfo.creditCardType);
-                    setVal('cardIssuingBank', data.part1.guestBankInfo.cardIssuingBank);
-                    // Update credit card fields state
-                    const isCardHolder = data.part1.guestBankInfo.isCreditCardHolder === 'Yes';
-                    updateCreditCardFields(isCardHolder);
+
+                if (part1Data.guestBankInfo) {
+                    const isCardHolder = part1Data.guestBankInfo.isCreditCardHolder === 'Yes';
+                    setRadio('isCreditCardHolder', part1Data.guestBankInfo.isCreditCardHolder);
+
+                    // Update UI state after setting the radio button
+                    const creditCardFields = document.querySelectorAll('input[name="creditCardType"], #cardIssuingBank');
+                    creditCardFields.forEach(field => field.disabled = !isCardHolder);
+
+                    if (isCardHolder) {
+                        setRadio('creditCardType', part1Data.guestBankInfo.creditCardType);
+                        setVal('cardIssuingBank', part1Data.guestBankInfo.cardIssuingBank);
+                    }
                 }
-                if (data.part1.partnerInfo) {
-                    Object.keys(data.part1.partnerInfo).forEach(key =>
-                        setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.partnerInfo[key]));
-                    setVal('relationshipToGuest', data.part1.partnerInfo.relationshipToGuest);
+
+                if (part1Data.partnerInfo) {
+                    Object.keys(part1Data.partnerInfo).forEach(key =>
+                        setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, part1Data.partnerInfo[key]));
+                    setVal('relationshipToGuest', part1Data.partnerInfo.relationshipToGuest);
                 }
-                if (data.part1.partnerBusiness) {
-                    Object.keys(data.part1.partnerBusiness).forEach(key =>
-                        setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.partnerBusiness[key]));
+                if (part1Data.partnerBusiness) {
+                    Object.keys(part1Data.partnerBusiness).forEach(key =>
+                        setVal(`partner${key.charAt(0).toUpperCase() + key.slice(1)}`, part1Data.partnerBusiness[key]));
                 }
-                if (data.part1.officeUse) {
-                    Object.keys(data.part1.officeUse).forEach(key =>
-                        setVal(`officeUse${key.charAt(0).toUpperCase() + key.slice(1)}`, data.part1.officeUse[key]));
-                    setRadio('officeUseStatus', data.part1.officeUse.status);
-                    setVal('officeUseVoucherNo', data.part1.officeUse.voucherNo);
-                    setVal('officeUseVoucherType', data.part1.officeUse.voucherType);
+
+                if (part1Data.officeUse) {
+                    // Explicitly set each office use field
+                    setVal('officeUseDay', part1Data.officeUse.day);
+                    setVal('officeUseDate', part1Data.officeUse.date);
+                    setVal('officeUseTimeIn', part1Data.officeUse.timeIn);
+                    setVal('officeUseTimeOut', part1Data.officeUse.timeOut);
+                    setVal('officeUseTmCode', part1Data.officeUse.tmCode);
+                    setVal('officeUseConsultant', part1Data.officeUse.consultant);
+                    setVal('officeUseVoucherNo', part1Data.officeUse.voucherNo);
+                    setVal('officeUseVoucherType', part1Data.officeUse.voucherType);
+                    setRadio('officeUseStatus', part1Data.officeUse.status);
                 }
-                if (data.part1.privacyConsent !== undefined) {
-                    setCheck('privacyConsentCheck', data.part1.privacyConsent);
+
+                if (part1Data.privacyConsent !== undefined) {
+                    setCheck('privacyConsentCheck', part1Data.privacyConsent);
                 }
-                if (data.part1.guestCheckInSignature) {
-                    setVal('guestCheckInSignatureName', data.part1.guestCheckInSignature.name);
-                    setVal('guestCheckInSignatureIC', data.part1.guestCheckInSignature.ic);
-                    setVal('guestCheckInSignatureDate', data.part1.guestCheckInSignature.date);
-                    if (data.part1.guestCheckInSignature.signatureData) {
-                        signatures.guestCheckInSignature = data.part1.guestCheckInSignature.signatureData;
-                        const canvas = document.getElementById('guestCheckInSignature');
-                        if (canvas) {
-                            const ctx = canvas.getContext('2d');
-                            const img = new Image();
-                            img.onload = function () {
-                                ctx.drawImage(img, 0, 0);
-                            };
-                            img.src = data.part1.guestCheckInSignature.signatureData;
-                        }
+                if (part1Data.guestCheckInSignature && part1Data.guestCheckInSignature.signatureData) {
+                    setVal('guestCheckInSignatureName', part1Data.guestCheckInSignature.name);
+                    setVal('guestCheckInSignatureIC', part1Data.guestCheckInSignature.ic);
+                    setVal('guestCheckInSignatureDate', part1Data.guestCheckInSignature.date);
+
+                    signatures.guestCheckInSignature = part1Data.guestCheckInSignature.signatureData;
+                    const canvas = document.getElementById('guestCheckInSignature');
+                    if (canvas) {
+                        const ctx = canvas.getContext('2d');
+                        const img = new Image();
+                        img.onload = function () {
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        };
+                        img.src = part1Data.guestCheckInSignature.signatureData;
                     }
                 }
             }
-            if (data.part2) {
+            // Handle Part 2 data only if it exists (for full imports)
+            if (data && data.part2) {
                 if (data.part2.membershipApplicant) {
                     setRadio('applicantType', data.part2.membershipApplicant.applicantType);
-                    setVal('applicantTitle', data.part2.membershipApplicant.title); setVal('applicantNameOnCard',
-                        data.part2.membershipApplicant.nameOnCard);
+                    setVal('applicantTitle', data.part2.membershipApplicant.title);
+                    setVal('applicantNameOnCard', data.part2.membershipApplicant.nameOnCard);
                 }
                 if (data.part2.applicantOffice) {
                     setVal('applicantOfficeAddress', data.part2.applicantOffice.address);
@@ -1334,7 +1359,8 @@
                     document.getElementById('subscriptionAmount').dispatchEvent(new Event('input')); // Recalculate total
                 }
             }
-            if (data.signatures) {
+            // Handle signatures data only if it exists (for full imports)
+            if (data && data.signatures) {
                 Object.keys(data.signatures).forEach(key => {
                     const sig = data.signatures[key];
                     if (sig) {
