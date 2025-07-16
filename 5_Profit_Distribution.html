@@ -72,13 +72,31 @@
             border-bottom: 1px dotted #000;
             min-height: 1.5em;
         }
+
+
+        .logo-container {
+            flex: 0 0 30%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            max-height: 1.6cm;
+            object-fit: contain;
+        }
     </style>
 </head>
 
 <body>
     <div class="form-container" style="max-width: 800px;">
         <div class="header" style="flex-direction: column; align-items: center;">
-            <img src="TCB_LOGO.png" alt="TAMU Logo" class="logo" style="width: 200px;">
+            <div class="logo-container"><img src="TCB_LOGO.png" alt="TAMU Logo" class="logo"></div>
+            <div class="address-container"><strong>TAMU CAPITAL BERHAD</strong><br>Aras 8, No.53 Jalan Raja Alang,
+                Kampung
+                Bharu<br>50300 Kuala Lumpur</div>
             <h3 style="font-weight: bold; margin: 15px 0;">PROFIT DISTRIBUTION FORM</h3>
         </div>
 
