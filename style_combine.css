@@ -39,9 +39,7 @@ body {
   align-items: flex-start;
   margin-bottom: 20px;
 }
-.logo {
-  width: 150px;
-}
+
 .address-container {
   text-align: center;
   width: 40%;
@@ -71,9 +69,6 @@ body {
 }
 
 /* === GREEN APPLICATION FORM STYLES (.green-form) === */
-.green-form .logo-container {
-  width: 30%;
-}
 .green-form .program-container {
   width: 30%;
   text-align: right;
@@ -364,4 +359,37 @@ body {
   display: inline-block;
   width: 60%;
   border-bottom: 1px dotted #000;
+}
+/* === COMBINED FORM STYLES (.combined-form) === */
+.header-container {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+  gap: 15px;
+}
+
+.logo-container {
+  flex: 0 0 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  max-height: 1.6cm;
+  object-fit: contain;
+}
+
+.contact-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  font-size: 10px;
+  line-height: 1.2;
 }
