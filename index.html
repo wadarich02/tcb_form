@@ -67,20 +67,8 @@
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select></div>
-                        <div class="form-group"><label for="guestNationality">Nationality</label>
-                            <select id="guestNationality" required>
-                                <option value="Malaysian" selected>Malaysian</option>
-                                <option value="Indonesian">Indonesian</option>
-                                <option value="Chinese">Chinese</option>
-                                <option value="Indian">Indian</option>
-                                <option value="Singaporean">Singaporean</option>
-                                <option value="Filipino">Filipino</option>
-                                <option value="Thai">Thai</option>
-                                <option value="Vietnamese">Vietnamese</option>
-                                <option value="Bangladeshi">Bangladeshi</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
+                        <div class="form-group"><label for="guestNationality">Nationality</label><input type="text"
+                                id="guestNationality" required></div>
                         <div class="form-group"><label>Marital Status</label>
                             <div class="checkbox-group"><label><input type="radio" name="maritalStatus" value="Married">
                                     Married</label><label><input type="radio" name="maritalStatus" value="Single">
@@ -233,20 +221,8 @@
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select></div>
-                        <div class="form-group"><label for="partnerNationality">Nationality</label>
-                            <select id="partnerNationality">
-                                <option value="Malaysian" selected>Malaysian</option>
-                                <option value="Indonesian">Indonesian</option>
-                                <option value="Chinese">Chinese</option>
-                                <option value="Indian">Indian</option>
-                                <option value="Singaporean">Singaporean</option>
-                                <option value="Filipino">Filipino</option>
-                                <option value="Thai">Thai</option>
-                                <option value="Vietnamese">Vietnamese</option>
-                                <option value="Bangladeshi">Bangladeshi</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
+                        <div class="form-group"><label for="partnerNationality">Nationality</label><input type="text"
+                                id="partnerNationality"></div>
                         <div class="form-group"><label for="partnerPhone">Phone Number</label><input type="tel"
                                 id="partnerPhone"></div>
                         <div class="form-group"><label for="relationshipToGuest">Relationship to guest</label><select
@@ -979,7 +955,6 @@
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
 
-            // SIMPLIFIED: Get date value directly from the input field
             const getDateValue = (elementId) => {
                 const el = document.getElementById(elementId);
                 return el ? el.value : '';
@@ -1003,12 +978,12 @@
                         mailingPoskod: document.getElementById('guestMailingPoskod').value,
                         mailingCity: document.getElementById('guestMailingCity').value,
                         email: document.getElementById('guestEmail').value,
-                        phone: document.getElementById('guestPhone').value,
-                        guestBankInfo: {
-                            isCreditCardHolder: getCheckedValues('isCreditCardHolder')[0] || '',
-                            creditCardType: getCheckedValues('creditCardType')[0] || '',
-                            cardIssuingBank: document.getElementById('cardIssuingBank').value || ''
-                        }
+                        phone: document.getElementById('guestPhone').value
+                    },
+                    guestBankInfo: {
+                        isCreditCardHolder: getCheckedValues('isCreditCardHolder')[0] || '',
+                        creditCardType: getCheckedValues('creditCardType')[0] || '',
+                        cardIssuingBank: document.getElementById('cardIssuingBank').value || ''
                     },
                     guestBusiness: {
                         occupation: document.getElementById('guestOccupation').value,
