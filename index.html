@@ -47,6 +47,10 @@
             <!-- SECTION 1: CHECK-IN FORM -->
             <div class="form-section active" id="section1">
                 <h2 class="section-title">SECTION 1: CHECK IN FORM</h2>
+                <div class="file-input-container">
+                    <input type="file" id="importFile" accept=".json" onchange="importData()">
+                    <label for="importFile" class="btn file-input-label">Import Data</label>
+                </div>
                 <div class="subsection">
                     <h3>1.a Guest Information</h3>
                     <div class="form-grid">
@@ -68,19 +72,22 @@
                         <div class="form-group"><label>Marital Status</label>
                             <div class="checkbox-group"><label><input type="radio" name="maritalStatus" value="Married">
                                     Married</label><label><input type="radio" name="maritalStatus" value="Single">
-                                    Single</label><label><input type="radio" name="maritalStatus" value="Others">
-                                    Others</label></div>
+                                    Single</label></div>
                         </div>
                         <div class="form-group"><label for="guestNumChildren">Number of Children</label><input
                                 type="number" id="guestNumChildren" min="0"></div>
+                        <div class="form-group full-width">
+                            <hr>
+                        </div>
                         <div class="form-group full-width"><label for="guestCorrespondentAddress">Correspondent
                                 Address</label><textarea id="guestCorrespondentAddress" required></textarea></div>
                         <div class="form-group"><label for="guestPoskod">Poskod</label><input type="text"
                                 id="guestPoskod" required></div>
                         <div class="form-group"><label for="guestCity">City/Country</label><input type="text"
                                 id="guestCity" required></div>
-                        <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
-                                    id="mailingSameAsCorrespondent"> Mailing address is the same as correspondent
+                        <div class="checkbox-inline-container full-width"><input type="checkbox"
+                                id="mailingSameAsCorrespondent"><label for="mailingSameAsCorrespondent">Mailing address
+                                is the same as correspondent
                                 address</label></div>
                         <div id="mailingAddressFields" class="form-grid full-width" style="display: none;">
                             <div class="form-group full-width"><label for="guestMailingAddress">Mailing
@@ -89,6 +96,9 @@
                                     type="text" id="guestMailingPoskod"></div>
                             <div class="form-group"><label for="guestMailingCity">Mailing City/Country</label><input
                                     type="text" id="guestMailingCity"></div>
+                        </div>
+                        <div class="form-group full-width">
+                            <hr>
                         </div>
                         <div class="form-group"><label for="guestEmail">Email</label><input type="email" id="guestEmail"
                                 required></div>
@@ -142,7 +152,9 @@
                         <div class="form-group full-width"><label for="guestMonthlyIncome">Monthly Income</label><select
                                 id="guestMonthlyIncome" required>
                                 <option value="" disabled selected>Select Income Range</option>
-                                <option value="4,000-6,000">4,000 - 6,000</option>
+                                <option value="1,000-2,000">1,000 - 2,000</option>
+                                <option value="2,001-4,000">2,001 - 4,000</option>
+                                <option value="4,001-6,000">4,001 - 6,000</option>
                                 <option value="6,001-10,000">6,001 - 10,000</option>
                                 <option value="10,001-15,000">10,001 - 15,000</option>
                                 <option value="15,001-20,000">15,001 - 20,000</option>
@@ -230,7 +242,9 @@
                         <div class="form-group full-width"><label for="partnerMonthlyIncome">Monthly
                                 Income</label><select id="partnerMonthlyIncome">
                                 <option value="" disabled selected>Select Income Range</option>
-                                <option value="4,000-6,000">4,000 - 6,000</option>
+                                <option value="1,000-2,000">1,000 - 2,000</option>
+                                <option value="2,001-4,000">2,001 - 4,000</option>
+                                <option value="4,001-6,000">4,001 - 6,000</option>
                                 <option value="6,001-10,000">6,001 - 10,000</option>
                                 <option value="10,001-15,000">10,001 - 15,000</option>
                                 <option value="15,001-20,000">15,001 - 20,000</option>
@@ -322,10 +336,7 @@
                         PDF</button>
                     <button type="button" class="btn btn-success" onclick="exportPart1Data()">Export Part 1
                         JSON</button>
-                    <div class="file-input-container">
-                        <input type="file" id="importFile" accept=".json" onchange="importData()">
-                        <label for="importFile" class="btn file-input-label">Import Data</label>
-                    </div>
+
                     <button type="button" class="btn btn-primary" onclick="nextSection()">Continue to Part 2</button>
                 </div>
             </div>
@@ -388,16 +399,15 @@
                 </div>
                 <div class="subsection">
                     <h3>4. Nominee</h3>
-                    <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
-                                id="nomineeIsPartner" checked> Nominee is the same as Guest's Partner (filled in Part
-                            1)</label>
+                    <div class="checkbox-group full-width"><label class="checkbox-group-title"><input type="checkbox"
+                                id="nomineeIsPartner" checked>
+                            <strong>Nominee is the same as Guest's Partner (filled in Part 1)</strong></label>
                     </div>
 
                     <div id="nomineeDetailsSection" style="display:none;">
                         <p class="btn-warning"
                             style="padding: 10px; border-radius: 5px; text-align: center; color: #333; margin-bottom: 15px;">
-                            Please
-                            fill in the details for the nominee below.</p>
+                            Please fill in the details for the nominee below.</p>
                         <div class="subsection">
                             <h3>4.a Nominee Information</h3>
                             <div class="form-grid">
@@ -434,14 +444,14 @@
 
                 <div class="subsection">
                     <h3>5. Third Party Payor</h3>
-                    <div class="form-group full-width"><label class="checkbox-group-title"><input type="checkbox"
-                                id="payorIsApplicant" checked> Payor is the Applicant</label></div>
+                    <div class="checkbox-group full-width"><label class="checkbox-group-title"><input type="checkbox"
+                                id="payorIsApplicant" checked> <strong>Payor is the Applicant</strong></label>
+                    </div>
 
                     <div id="thirdPartyPayorSection" style="display:none;">
                         <p class="btn-warning"
                             style="padding: 10px; border-radius: 5px; text-align: center; color: #333; margin-bottom: 15px;">
-                            Please
-                            fill in the details for the Third Party Payor below.</p>
+                            Please fill in the details for the Third Party Payor below.</p>
                         <div class="subsection">
                             <h3>Payor Personal Information</h3>
                             <div class="form-grid">
@@ -492,10 +502,13 @@
                         </div>
                         <div class="form-group full-width"><label class="checkbox-group-title">Method of
                                 Transaction</label>
-                            <div class="checkbox-group"><label><input type="radio" name="transactionMethod"
-                                        value="Debit/Credit/Cash/Cheque" checked>
-                                    Debit/Credit/Cash/Cheque</label><label><input type="radio" name="transactionMethod"
-                                        value="Others"> Others</label></div>
+                            <div class="checkbox-group">
+                                <label><input type="radio" name="transactionMethod" value="Debit" checked> Debit</label>
+                                <label><input type="radio" name="transactionMethod" value="Credit"> Credit</label>
+                                <label><input type="radio" name="transactionMethod" value="Cash"> Cash</label>
+                                <label><input type="radio" name="transactionMethod" value="Cheque"> Cheque</label>
+                                <label><input type="radio" name="transactionMethod" value="Others"> Others</label>
+                            </div>
                         </div>
                         <div class="form-group"><label for="orNumber">OR Number</label><input type="text" id="orNumber">
                         </div>

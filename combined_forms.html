@@ -105,6 +105,9 @@
             if (part2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
             if (part2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
             if (part2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
+            if (part2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham2', true);
+            if (part2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar2', true);
+            if (part2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas2', true);
 
             fillDoubleRowCharBoxGrid('appName', 'appName2', `${part2.membershipApplicant.title} ${app.fullName}`);
             fillDoubleRowCharBoxGrid('appNameOnCard', 'appNameOnCard2', `${part2.membershipApplicant.title} ${part2.membershipApplicant.nameOnCard}`);
@@ -162,9 +165,13 @@
             fillFixedCharBoxGroup('programId', part1.officeUse.tmCode, 6);
             setText('programsFee', part2.salesDetail.totalAmount);
             setText('balance', '0.00');
-            if (part2.salesDetail.transactionMethod.toLowerCase().includes('cash')) setCheck('paymentCash', true);
-            if (part2.salesDetail.transactionMethod.toLowerCase().includes('instal')) setCheck('paymentInstalment', true);
-            if (part2.salesDetail.transactionMethod.toLowerCase().includes('loan')) setCheck('paymentLoan', true);
+            // Update payment method checks
+            const method = part2.salesDetail.transactionMethod.toLowerCase();
+            setCheck('paymentDebit', method === 'debit');
+            setCheck('paymentCredit', method === 'credit');
+            setCheck('paymentCash', method === 'cash');
+            setCheck('paymentCheque', method === 'cheque');
+            setCheck('paymentOthers', method === 'others');
             setText('counsellor', part1.officeUse.consultant);
             setText('checkBy', signatures.witness.name);
             setText('checkByDate', formatDate(signatures.witness.date));
