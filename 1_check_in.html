@@ -361,30 +361,30 @@
             <div class="line" id="printPartnerCompany"></div>
         </div>
 
-        <div class="section-title">GROSS MONTHLY INCOME:</div>
+        <div class="section-title">GROSS MONTHLY INCOME (RM):</div>
         <div class="income-section">
             <div class="income-row">
                 <div class="company-label">HUSBAND:</div>
                 <div class="income-options">
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome1"></span> RM1k-RM2k</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome2"></span> RM2,001-RM4k</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome3"></span> RM4,001-RM6k</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome4"></span> RM6,001-RM10k</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome5"></span> RM10,001-RM15k</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome6"></span> RM15,001-RM20k</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome7"></span> RM20,001 ></div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome1"></span> 1K-2K</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome2"></span> 2,001-4K</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome3"></span> 4,001-6K</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome4"></span> 6,001-10K</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome5"></span> 10,001-15K</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome6"></span> 15,001-20K</div>
+                    <div class="checkbox-item"><span class="box" id="printGuestIncome7"></span> 20,001 ></div>
                 </div>
             </div>
             <div class="income-row">
                 <div class="company-label">WIFE:</div>
                 <div class="income-options">
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome1"></span> RM1k-RM2k</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome2"></span> RM2,001-RM4k</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome3"></span> RM4,001-RM6k</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome4"></span> RM6,001-RM10k</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome5"></span> RM10,001-RM15k</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome6"></span> RM15,001-RM20k</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome7"></span> RM20,001 ></div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome1"></span> 1K-2K</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome2"></span> 2,001-4K</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome3"></span> 4,001-6K</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome4"></span> 6,001-10K</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome5"></span> 10,001-15K</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome6"></span> 15,001-20K</div>
+                    <div class="checkbox-item"><span class="box" id="printPartnerIncome7"></span> 20,001 ></div>
                 </div>
             </div>
         </div>
@@ -531,15 +531,27 @@
 
             // Populate credit card information
             if (p1.guestBankInfo) {
-                if (p1.guestBankInfo.isCreditCardHolder === 'Yes') setCheck('printCCYes');
-                if (p1.guestBankInfo.isCreditCardHolder === 'No') setCheck('printCCNo');
-                if (p1.guestBankInfo.creditCardType === 'Platinum') setCheck('printCCPlatinum');
-                if (p1.guestBankInfo.creditCardType === 'Gold') setCheck('printCCGold');
-                if (p1.guestBankInfo.creditCardType === 'Classic') setCheck('printCCClassic');
-                setText('printCCBank', p1.guestBankInfo.cardIssuingBank);
+                // Set credit card holder status
+                if (p1.guestBankInfo.isCreditCardHolder === 'Yes') {
+                    document.getElementById('printCCYes').textContent = '✓';
+                } else if (p1.guestBankInfo.isCreditCardHolder === 'No') {
+                    document.getElementById('printCCNo').textContent = '✓';
+                }
+
+                // Set card type
+                if (p1.guestBankInfo.creditCardType === 'Platinum') {
+                    document.getElementById('printCCPlatinum').textContent = '✓';
+                } else if (p1.guestBankInfo.creditCardType === 'Gold') {
+                    document.getElementById('printCCGold').textContent = '✓';
+                } else if (p1.guestBankInfo.creditCardType === 'Classic') {
+                    document.getElementById('printCCClassic').textContent = '✓';
+                }
+
+                // Set bank name
+                document.getElementById('printCCBank').textContent = p1.guestBankInfo.cardIssuingBank || '';
             }
 
-            // Populate signature
+            // Populate signature and date
             if (p1.guestCheckInSignature) {
                 setSignature('printGuestSignature', p1.guestCheckInSignature.signatureData);
                 setText('printSignatureDate', p1.guestCheckInSignature.date);

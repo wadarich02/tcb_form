@@ -983,7 +983,7 @@
                         guestBankInfo: {
                             isCreditCardHolder: getCheckedValues('isCreditCardHolder')[0] || '',
                             creditCardType: getCheckedValues('creditCardType')[0] || '',
-                            cardIssuingBank: document.getElementById('cardIssuingBank').value
+                            cardIssuingBank: document.getElementById('cardIssuingBank').value || ''
                         }
                     },
                     guestBusiness: {
@@ -1013,6 +1013,12 @@
                         tmCode: document.getElementById('officeUseTmCode').value,
                         consultant: document.getElementById('officeUseConsultant').value,
                         status: getCheckedValues('officeUseStatus')[0] || ''
+                    },
+                    guestCheckInSignature: {
+                        signatureData: signatures.guestCheckInSignature,
+                        name: document.getElementById('guestCheckInSignatureName').value,
+                        ic: document.getElementById('guestCheckInSignatureIC').value,
+                        date: getDateValue('guestCheckInSignatureDate')
                     }
                 },
                 part2: {
@@ -1194,6 +1200,9 @@
                     setRadio('isCreditCardHolder', data.part1.guestBankInfo.isCreditCardHolder);
                     setRadio('creditCardType', data.part1.guestBankInfo.creditCardType);
                     setVal('cardIssuingBank', data.part1.guestBankInfo.cardIssuingBank);
+                    // Update credit card fields state
+                    const isCardHolder = data.part1.guestBankInfo.isCreditCardHolder === 'Yes';
+                    updateCreditCardFields(isCardHolder);
                 }
                 if (data.part1.partnerInfo) {
                     Object.keys(data.part1.partnerInfo).forEach(key =>
@@ -1213,6 +1222,18 @@
                     setVal('guestCheckInSignatureName', data.part1.guestCheckInSignature.name);
                     setVal('guestCheckInSignatureIC', data.part1.guestCheckInSignature.ic);
                     setVal('guestCheckInSignatureDate', data.part1.guestCheckInSignature.date);
+                    if (data.part1.guestCheckInSignature.signatureData) {
+                        signatures.guestCheckInSignature = data.part1.guestCheckInSignature.signatureData;
+                        const canvas = document.getElementById('guestCheckInSignature');
+                        if (canvas) {
+                            const ctx = canvas.getContext('2d');
+                            const img = new Image();
+                            img.onload = function () {
+                                ctx.drawImage(img, 0, 0);
+                            };
+                            img.src = data.part1.guestCheckInSignature.signatureData;
+                        }
+                    }
                 }
             }
             if (data.part2) {
@@ -1335,6 +1356,32 @@
 
             dateInputs.forEach(input => {
                 initDatepicker(input.id, input.defaultToday);
+            });
+
+            // Handle credit card holder selection
+            const creditCardRadios = document.querySelectorAll('input[name="isCreditCardHolder"]');
+            const cardTypeRadios = document.querySelectorAll('input[name="creditCardType"]');
+            const cardIssuingBank = document.getElementById('cardIssuingBank');
+
+            function updateCreditCardFields(isCardHolder) {
+                cardTypeRadios.forEach(radio => {
+                    radio.disabled = !isCardHolder;
+                    if (!isCardHolder) radio.checked = false;
+                });
+                cardIssuingBank.disabled = !isCardHolder;
+                if (!isCardHolder) {
+                    cardIssuingBank.value = '';
+                    cardIssuingBank.style.backgroundColor = '#e9ecef';
+                } else {
+                    cardIssuingBank.style.backgroundColor = '';
+                }
+            }
+
+            creditCardRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const isCardHolder = e.target.value === 'Yes';
+                    updateCreditCardFields(isCardHolder);
+                });
             });
 
             // Set up other event listeners
