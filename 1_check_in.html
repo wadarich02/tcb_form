@@ -529,6 +529,16 @@
             setIncomeCheck(mrBiz.monthlyIncome, 'printGuestIncome');
             setIncomeCheck(mrsBiz.monthlyIncome, 'printPartnerIncome');
 
+            // Populate credit card information
+            if (p1.guestBankInfo) {
+                if (p1.guestBankInfo.isCreditCardHolder === 'Yes') setCheck('printCCYes');
+                if (p1.guestBankInfo.isCreditCardHolder === 'No') setCheck('printCCNo');
+                if (p1.guestBankInfo.creditCardType === 'Platinum') setCheck('printCCPlatinum');
+                if (p1.guestBankInfo.creditCardType === 'Gold') setCheck('printCCGold');
+                if (p1.guestBankInfo.creditCardType === 'Classic') setCheck('printCCClassic');
+                setText('printCCBank', p1.guestBankInfo.cardIssuingBank);
+            }
+
             // Populate signature
             if (p1.guestCheckInSignature) {
                 setSignature('printGuestSignature', p1.guestCheckInSignature.signatureData);
