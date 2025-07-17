@@ -1008,10 +1008,16 @@
         function collectData() {
             const getCheckedValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
 
-            // SIMPLIFIED: Get date value directly from the input field
+            // Get formatted date value from datepicker
             const getDateValue = (elementId) => {
                 const el = document.getElementById(elementId);
-                return el ? el.value : '';
+                if (!el) return '';
+                // For datepicker fields, get the selected date and format it
+                if ($(el).hasClass('hasDatepicker')) {
+                    const date = $(el).datepicker('getDate');
+                    return date ? moment(date).format('DD/MM/YYYY') : '';
+                }
+                return el.value;
             };
 
             return {
@@ -1407,7 +1413,7 @@
                 changeMonth: true,
                 changeYear: true,
                 yearRange: '-100:+0',
-                maxDate: inputId === 'guestDob' ? '-18Y' : '+0D', // For DOB, limit to 18 years ago
+                maxDate: (inputId === 'guestDob' || inputId === 'partnerDob') ? '-18Y' : '+0D', // For DOB fields, limit to 18 years ago
                 onSelect: function (dateText) {
                     // Store the formatted date for form submission
                     $(this).attr('data-date', moment(dateText, 'DD/MM/YYYY').format('YYYY-MM-DD'));
@@ -1419,7 +1425,7 @@
             }
 
             // Remove the type="date" attribute to prevent browser's default datepicker
-            $(`#${inputId}`).attr('type', 'text');
+            $(`#${inputId}`).attr('type', 'text').addClass('hasDatepicker');
         }
 
         document.addEventListener('DOMContentLoaded', () => {

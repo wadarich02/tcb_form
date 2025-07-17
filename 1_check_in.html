@@ -140,22 +140,41 @@
             padding: 8px;
         }
 
+        .income-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .income-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .income-column-title {
+            font-weight: bold;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
         .income-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            font-size: 7.5pt;
+        }
+
+        .income-checkbox {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin: 4px 0;
+            gap: 4px;
+            white-space: nowrap;
         }
 
-        .income-row>div:first-child {
-            width: 80px;
+        .income-checkbox .box {
             flex-shrink: 0;
-        }
-
-        .income-options {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 15px;
         }
 
         .consent-section {
@@ -358,7 +377,7 @@
             <div>MARITAL STATUS:</div>
             <div class="checkbox-item"><span class="box" id="printMaritalSingle"></span> SINGLE</div>
             <div class="checkbox-item"><span class="box" id="printMaritalMarried"></span> MARRIED</div>
-            <div class="checkbox-item"><span class="box" id="printMaritalOthers"></span> OTHERS</div>
+
             <div>| NUMBER OF CHILDREN:</div>
             <div class="line" id="printNumChildren" style="flex-grow: 1;"></div>
         </div>
@@ -379,28 +398,68 @@
 
         <div class="section-title">GROSS MONTHLY INCOME (RM):</div>
         <div class="income-section">
-            <div class="income-row">
-                <div class="company-label">HUSBAND:</div>
-                <div class="income-options">
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome1"></span> 1K-2K</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome2"></span> 2,001-4K</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome3"></span> 4,001-6K</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome4"></span> 6,001-10K</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome5"></span> 10,001-15K</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome6"></span> 15,001-20K</div>
-                    <div class="checkbox-item"><span class="box" id="printGuestIncome7"></span> 20,001 ></div>
+            <div class="income-grid">
+                <div class="income-column">
+                    <div class="income-column-title">HUSBAND</div>
+                    <div class="income-row">
+                        <div class="income-checkbox">
+                            <span class="box" id="printGuestIncome1"></span>
+                            <span>RM1,000-RM2,000</span>
+                        </div>
+                        <div class="income-checkbox">
+                            <span class="box" id="printGuestIncome2"></span>
+                            <span>RM2,001-RM4,000</span>
+                        </div>
+                        <div class="income-checkbox">
+                            <span class="box" id="printGuestIncome3"></span>
+                            <span>RM4,001-RM6,000</span>
+                        </div>
+                    </div>
+                    <div class="income-row">
+                        <div class="income-checkbox">
+                            <span class="box" id="printGuestIncome5"></span>
+                            <span>RM10,001-RM15,000</span>
+                        </div>
+                        <div class="income-checkbox">
+                            <span class="box" id="printGuestIncome6"></span>
+                            <span>RM15,001-RM20,000</span>
+                        </div>
+                        <div class="income-checkbox">
+                            <span class="box" id="printGuestIncome7"></span>
+                            <span>RM20,001 ></span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="income-row">
-                <div class="company-label">WIFE:</div>
-                <div class="income-options">
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome1"></span> 1K-2K</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome2"></span> 2,001-4K</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome3"></span> 4,001-6K</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome4"></span> 6,001-10K</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome5"></span> 10,001-15K</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome6"></span> 15,001-20K</div>
-                    <div class="checkbox-item"><span class="box" id="printPartnerIncome7"></span> 20,001 ></div>
+                <div class="income-column">
+                    <div class="income-column-title">WIFE</div>
+                    <div class="income-row">
+                        <div class="income-checkbox">
+                            <span class="box" id="printPartnerIncome1"></span>
+                            <span>RM1,000-RM2,000</span>
+                        </div>
+                        <div class="income-checkbox">
+                            <span class="box" id="printPartnerIncome2"></span>
+                            <span>RM2,001-RM4,000</span>
+                        </div>
+                        <div class="income-checkbox">
+                            <span class="box" id="printPartnerIncome3"></span>
+                            <span>RM4,001-RM6,000</span>
+                        </div>
+                    </div>
+                    <div class="income-row">
+                        <div class="income-checkbox">
+                            <span class="box" id="printPartnerIncome5"></span>
+                            <span>RM10,001-RM15,000</span>
+                        </div>
+                        <div class="income-checkbox">
+                            <span class="box" id="printPartnerIncome6"></span>
+                            <span>RM15,001-RM20,000</span>
+                        </div>
+                        <div class="income-checkbox">
+                            <span class="box" id="printPartnerIncome7"></span>
+                            <span>RM20,001 ></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
