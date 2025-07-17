@@ -567,79 +567,92 @@
             const data = JSON.parse(dataString);
             const p1 = data.part1;
 
-            const setText = (id, value) => { const el = document.getElementById(id); if (el && value) el.textContent = value; };
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el && value !== undefined && value !== null) {
+                    // Keep email addresses in their original case, make everything else uppercase
+                    el.textContent = id === 'printEmail' ? value : String(value).toUpperCase();
+                }
+            };
             const setCheck = (id) => { const el = document.getElementById(id); if (el) el.textContent = '✓'; };
             const setSignature = (id, url) => { const container = document.getElementById(id); if (container && url) { const img = document.createElement('img'); img.src = url; img.style = "max-height: 50px; max-width: 180px;"; container.appendChild(img); } };
-            const calculateAge = (dob) => { if (!dob) return ''; const birthDate = new Date(dob); const today = new Date(); let age = today.getFullYear() - birthDate.getFullYear(); const m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; } return age; };
+            const calculateAge = (dob) => {
+                if (!dob) return '';
+                const birthDate = new Date(dob);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age--; }
+                return age;
+            };
 
-            let guestIsMr = p1.guestInfo.gender === 'Male';
-            let partnerIsMrs = p1.partnerInfo.fullName && p1.partnerInfo.gender === 'Female';
-            const mrInfo = guestIsMr ? p1.guestInfo : (p1.partnerInfo.gender === 'Male' ? p1.partnerInfo : {});
-            const mrsInfo = partnerIsMrs ? p1.partnerInfo : (p1.guestInfo.gender === 'Female' ? p1.guestInfo : {});
-            const mrBiz = guestIsMr ? p1.guestBusiness : (p1.partnerInfo.gender === 'Male' ? p1.partnerBusiness : {});
-            const mrsBiz = partnerIsMrs ? p1.partnerBusiness : (p1.guestInfo.gender === 'Female' ? p1.guestBusiness : {});
+            // Determine guest and partner info based on gender
+            const guestInfo = p1.guestInfo || {};
+            const partnerInfo = p1.partnerInfo || {};
+            const guestBusiness = p1.guestBusiness || {};
+            const partnerBusiness = p1.partnerBusiness || {};
 
             // Populate guest and partner info
-            setText('printGuestName', mrInfo.fullName);
-            setText('printGuestNric', mrInfo.icPassport);
-            setText('printGuestAge', calculateAge(mrInfo.dob));
-            setText('printGuestPhone', mrInfo.phone);
-            setText('printPartnerName', mrsInfo.fullName);
-            setText('printPartnerNric', mrsInfo.icPassport);
-            setText('printPartnerAge', calculateAge(mrsInfo.dob));
-            setText('printPartnerPhone', mrsInfo.phone);
+            setText('printGuestName', guestInfo.fullName);
+            setText('printGuestNric', guestInfo.icPassport);
+            setText('printGuestAge', calculateAge(guestInfo.dob));
+            setText('printGuestPhone', guestInfo.phone);
+            setText('printPartnerName', partnerInfo.fullName);
+            setText('printPartnerNric', partnerInfo.icPassport);
+            setText('printPartnerAge', calculateAge(partnerInfo.dob));
+            setText('printPartnerPhone', partnerInfo.phone);
 
-            // Populate address and contact
-            setText('printAddress', `${p1.guestInfo.correspondentAddress}, ${p1.guestInfo.poskod} ${p1.guestInfo.city}`);
-            setText('printEmail', p1.guestInfo.email);
-            setText('printNumChildren', p1.guestInfo.numChildren);
+            // Construct and populate address
+            const address = [
+                guestInfo.correspondentAddress,
+                guestInfo.poskod,
+                guestInfo.city,
+                guestInfo.state
+            ].filter(Boolean).join(', ');
+            setText('printAddress', address);
+            setText('printEmail', guestInfo.email);
+            setText('printNumChildren', guestInfo.numChildren);
 
-            // Populate checkboxes
-            if (p1.guestInfo.maritalStatus === 'Single') setCheck('printMaritalSingle');
-            if (p1.guestInfo.maritalStatus === 'Married') setCheck('printMaritalMarried');
-            if (p1.guestInfo.maritalStatus === 'Others') setCheck('printMaritalOthers');
+            // Populate marital status
+            if (guestInfo.maritalStatus) {
+                if (guestInfo.maritalStatus.toUpperCase() === 'SINGLE') setCheck('printMaritalSingle');
+                if (guestInfo.maritalStatus.toUpperCase() === 'MARRIED') setCheck('printMaritalMarried');
+            }
 
-            // Populate occupation
-            setText('printGuestOccupation', mrBiz.occupation);
-            setText('printGuestCompany', mrBiz.industry);
-            setText('printPartnerOccupation', mrsBiz.occupation);
-            setText('printPartnerCompany', mrsBiz.industry);
+            // Populate occupation and business info
+            setText('printGuestOccupation', guestBusiness.occupation);
+            setText('printGuestCompany', guestBusiness.industry);
+            setText('printPartnerOccupation', partnerBusiness.occupation);
+            setText('printPartnerCompany', partnerBusiness.industry);
 
-            // Populate income
+            // Populate income checkboxes
             const setIncomeCheck = (income, prefix) => {
                 if (!income) return;
-                if (income === '1,000-2,000') setCheck(prefix + '1');
-                if (income === '2,001-4,000') setCheck(prefix + '2');
-                if (income === '4,001-6,000') setCheck(prefix + '3');
-                if (income === '6,001-10,000') setCheck(prefix + '4');
-                if (income === '10,001-15,000') setCheck(prefix + '5');
-                if (income === '15,001-20,000') setCheck(prefix + '6');
-                if (income === '20,001 and above') setCheck(prefix + '7');
+                const incomeMap = {
+                    '1,000-2,000': '1',
+                    '2,001-4,000': '2',
+                    '4,001-6,000': '3',
+                    '6,001-10,000': '4',
+                    '10,001-15,000': '5',
+                    '15,001-20,000': '6',
+                    '20,001 and above': '7'
+                };
+                const boxId = prefix + incomeMap[income];
+                if (boxId) setCheck(boxId);
             };
-            setIncomeCheck(mrBiz.monthlyIncome, 'printGuestIncome');
-            setIncomeCheck(mrsBiz.monthlyIncome, 'printPartnerIncome');
+            setIncomeCheck(guestBusiness.monthlyIncome, 'printGuestIncome');
+            setIncomeCheck(partnerBusiness.monthlyIncome, 'printPartnerIncome');
 
             // Populate credit card information
-            if (p1.guestBankInfo) {
-                // Set credit card holder status
-                if (p1.guestBankInfo.isCreditCardHolder === 'Yes') {
-                    document.getElementById('printCCYes').textContent = '✓';
-                } else if (p1.guestBankInfo.isCreditCardHolder === 'No') {
-                    document.getElementById('printCCNo').textContent = '✓';
-                }
-
-                // Set card type
-                if (p1.guestBankInfo.creditCardType === 'Platinum') {
-                    document.getElementById('printCCPlatinum').textContent = '✓';
-                } else if (p1.guestBankInfo.creditCardType === 'Gold') {
-                    document.getElementById('printCCGold').textContent = '✓';
-                } else if (p1.guestBankInfo.creditCardType === 'Classic') {
-                    document.getElementById('printCCClassic').textContent = '✓';
-                }
-
-                // Set bank name
-                document.getElementById('printCCBank').textContent = p1.guestBankInfo.cardIssuingBank || '';
+            const bankInfo = p1.guestBankInfo || {};
+            if (bankInfo.isCreditCardHolder === 'Yes') setCheck('printCCYes');
+            if (bankInfo.isCreditCardHolder === 'No') setCheck('printCCNo');
+            if (bankInfo.creditCardType) {
+                if (bankInfo.creditCardType.toUpperCase() === 'PLATINUM') setCheck('printCCPlatinum');
+                if (bankInfo.creditCardType.toUpperCase() === 'GOLD') setCheck('printCCGold');
+                if (bankInfo.creditCardType.toUpperCase() === 'CLASSIC') setCheck('printCCClassic');
             }
+            setText('printCCBank', bankInfo.cardIssuingBank);
 
             // Populate signature and date
             if (p1.guestCheckInSignature) {
@@ -647,23 +660,27 @@
                 setText('printSignatureDate', p1.guestCheckInSignature.date);
             }
 
-            // Populate Office Use Only
-            if (p1.officeUse) {
-                setText('printOfficeDay', p1.officeUse.day);
-                setText('printOfficeDate', p1.officeUse.date);
-                setText('printOfficeTimeIn', p1.officeUse.timeIn);
-                setText('printOfficeTimeOut', p1.officeUse.timeOut);
-                setText('printOfficeTmCode', p1.officeUse.tmCode);
-                setText('printOfficeConsultant', p1.officeUse.consultant);
-                if (p1.officeUse.status === 'QT') setCheck('printOfficeStatusQT');
-                if (p1.officeUse.status === 'NQ') setCheck('printOfficeStatusNQ');
-                if (p1.officeUse.status === 'RESCHEDULED') setCheck('printOfficeStatusRescheduled');
+            // Populate Office Use Only section
+            const officeUse = p1.officeUse || {};
+            setText('printOfficeDay', officeUse.day);
+            setText('printOfficeDate', officeUse.date);
+            setText('printOfficeTimeIn', officeUse.timeIn);
+            setText('printOfficeTimeOut', officeUse.timeOut);
+            setText('printOfficeTmCode', officeUse.tmCode);
+            setText('printOfficeConsultant', officeUse.consultant);
 
-                // Populate new voucher fields
-                setText('printVoucherNo', p1.officeUse.voucherNo); // For header
-                setText('printOfficeVoucherNo', p1.officeUse.voucherNo); // For office use section
-                if (p1.officeUse.voucherType === 'Hi-Tea') setCheck('printVoucherHiTea');
-                if (p1.officeUse.voucherType === 'Staycation') setCheck('printVoucherStaycation');
+            if (officeUse.status) {
+                if (officeUse.status.toUpperCase() === 'QT') setCheck('printOfficeStatusQT');
+                if (officeUse.status.toUpperCase() === 'NQ') setCheck('printOfficeStatusNQ');
+                if (officeUse.status.toUpperCase() === 'RESCHEDULED') setCheck('printOfficeStatusRescheduled');
+            }
+
+            // Populate voucher information
+            setText('printVoucherNo', officeUse.voucherNo);
+            setText('printOfficeVoucherNo', officeUse.voucherNo);
+            if (officeUse.voucherType) {
+                if (officeUse.voucherType.toUpperCase() === 'HI-TEA') setCheck('printVoucherHiTea');
+                if (officeUse.voucherType.toUpperCase() === 'STAYCATION') setCheck('printVoucherStaycation');
             }
 
             setTimeout(() => { window.print(); }, 500);
