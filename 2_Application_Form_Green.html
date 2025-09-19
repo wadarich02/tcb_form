@@ -46,40 +46,15 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="form-label">Name on the Card<br>(Mr/Mrs/Ms/Mdm)</div>
-            <div class="form-field">
-                <div class="char-box-grid" id="appNameOnCard"></div>
-            </div>
-        </div>
-        <div class="form-row" style="margin-top: -5px;">
-            <div class="form-label"></div>
-            <div class="form-field">
-                <div class="char-box-grid" id="appNameOnCard2"></div>
-            </div>
-        </div>
-        <div class="form-row">
             <div class="form-label">NRIC/Passport</div>
             <div class="form-field char-box-group" id="appNric" style="flex-grow:0;"></div>
-            <div class="form-label" style="width:auto;margin-left:20px;">Date</div>
-            <div class="form-field char-box-group" id="appDate" style="flex-grow:0;"></div>
-        </div>
-        <div class="form-row">
-            <div class="form-label">Nationality</div>
+            <div class="form-label" style="width:auto;margin-left:20px;">Nationality</div>
             <div class="form-field" style="flex-grow:0; flex-basis: 250px;">
                 <div class="checkbox-option" id="appNationalityMalaysian">
                     <div class="checkbox"></div> Malaysian
                 </div>
                 <div class="checkbox-option" id="appNationalityForeigner">
                     <div class="checkbox"></div> Foreigner
-                </div>
-            </div>
-            <div class="form-label" style="width:auto;margin-left:20px;">Marital Status</div>
-            <div class="form-field">
-                <div class="checkbox-option" id="appMaritalSingle">
-                    <div class="checkbox"></div> Single
-                </div>
-                <div class="checkbox-option" id="appMaritalMarried">
-                    <div class="checkbox"></div> Married
                 </div>
             </div>
         </div>
@@ -98,6 +73,15 @@
         <div class="form-row">
             <div class="form-label" style="margin-left: 145px;">Postcode</div>
             <div class="form-field char-box-group" id="appHomePostcode" style="flex-grow:0;"></div>
+            <div class="form-label" style="width:auto;margin-left:20px;">Marital Status</div>
+            <div class="form-field">
+                <div class="checkbox-option" id="appMaritalSingle">
+                    <div class="checkbox"></div> Single
+                </div>
+                <div class="checkbox-option" id="appMaritalMarried">
+                    <div class="checkbox"></div> Married
+                </div>
+            </div>
         </div>
         <div class="form-row">
             <div class="form-label">Mailing Address</div>
@@ -112,21 +96,11 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="form-label">Contact No.</div>
-            <div style="width:auto;margin-right:5px;">Home</div>
-            <div class="form-field split-field" style="flex-grow: 0;">
-                <div id="appHomePhonePrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
-                <div id="appHomePhoneNum" class="char-box-group"></div>
-            </div>
-            <div style="width:auto;margin:0 5px 0 20px;">Fax</div>
-            <div class="form-field split-field">
-                <div id="appFaxPrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
-                <div id="appFaxNum" class="char-box-group"></div>
-            </div>
+            <div class="form-label" style="margin-left: 145px;">Postcode</div>
+            <div class="form-field char-box-group" id="appMailingPostcode" style="flex-grow:0;"></div>
         </div>
         <div class="form-row">
-            <div class="form-label"></div>
-            <div style="width:auto;margin-right:5px;">H/P</div>
+            <div class="form-label">Contact No.</div>
             <div class="form-field split-field" style="flex-grow: 0;">
                 <div id="appHpPrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
                 <div id="appHpNum" class="char-box-group"></div>
@@ -157,80 +131,49 @@
                 </div>
             </div>
         </div>
-        <div class="section">
-            <div class="section-title">(B) BUSINESS/EMPLOYMENT INFORMATION</div>
+        <!-- START: ADDED SECTION for Profit Distribution -->
+        <div class="section" style="margin-top: 15px; border-top: 1px solid #ccc; padding-top: 10px;">
+            <div style="text-align: center; font-weight: bold; margin-bottom: 10px;">Profit Distribution (Bank Details)
+            </div>
             <div class="form-row">
-                <div class="form-label">Name of Business/<br>Employer</div>
+                <div class="form-label">* Bank Name</div>
                 <div class="form-field">
-                    <div class="char-box-grid" id="appEmployer"></div>
+                    <div class="char-box-grid" id="appBankName"></div>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-label">Nature of Business</div>
+                <div class="form-label">* Bank Account No.</div>
                 <div class="form-field">
-                    <div class="char-box-grid" id="appIndustry"></div>
+                    <div class="char-box-group" id="appAccountNo"></div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-label">Office Address</div>
-                <div class="form-field">
-                    <div class="char-box-grid" id="appOfficeAddress"></div>
-                </div>
+        </div>
+        <!-- END: ADDED SECTION -->
+    </div>
+    <div class="section">
+        <div class="section-title">(B) BUSINESS/EMPLOYMENT INFORMATION</div>
+        <div class="form-row">
+            <div class="form-label">Name of Employer</div>
+            <div class="form-field">
+                <div class="char-box-grid" id="appEmployer"></div>
             </div>
-            <div class="form-row" style="margin-top: -5px;">
-                <div class="form-label"></div>
-                <div class="form-field">
-                    <div class="char-box-grid" id="appOfficeAddress2"></div>
-                </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Nature of Business</div>
+            <div class="form-field">
+                <div class="char-box-grid" id="appIndustry"></div>
             </div>
-            <div class="form-row">
-                <div class="form-label" style="margin-left: 145px;">Postcode</div>
-                <div class="form-field char-box-group" id="appOfficePostcode" style="flex-grow:0;"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">Office No.</div>
-                <div class="form-field split-field" style="flex-grow: 0;">
-                    <div id="appOfficePhonePrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
-                    <div id="appOfficePhoneNum" class="char-box-group"></div>
-                </div>
-                <div style="width:auto;margin:0 5px 0 20px;">Ext</div>
-                <div class="form-field char-box-group" id="appOfficeExt" style="flex-grow:0;"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-label">Fax</div>
-                <div class="form-field split-field">
-                    <div id="appOfficeFaxPrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
-                    <div id="appOfficeFaxNum" class="char-box-group"></div>
-                </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Office Address</div>
+            <div class="form-field">
+                <div class="char-box-grid" id="appOfficeAddress"></div>
             </div>
         </div>
     </div>
-
-    <div class="page-break-before"></div>
-    <!-- PAGE 2 -->
-    <div class="header-container">
-        <div class="logo-container">
-            <img src="TCB_LOGO.png" alt="TAMU Logo" class="logo">
-        </div>
-        <div class="contact-info">
-            <div>Aras 8, No. 53, Jalan Raja Alang Kampung Baru, 53000 Kuala Lumpur</div>
-            <div><strong>T:</strong> +603 2698 8789 | <strong>F:</strong> +603 2692 4789</div>
-            <div style="color: #2563eb;"><strong>E:</strong> memberservices@tamucapital.com</div>
-        </div>
-        <div class="program-container">
-            <strong>Type of Program</strong><br>
-            <div class="checkbox-option" id="prodDirham2">Dirham<div class="program-box"></div>
-            </div><br>
-            <div class="checkbox-option" id="prodDinar2">Dinar<div class="program-box"></div>
-            </div><br>
-            <div class="checkbox-option" id="prodAlmas2">Almas<div class="program-box"></div>
-            </div>
-        </div>
-    </div>
-
-
     <div class="section">
         <div class="section-title">(C) FAMILY INFORMATION</div>
+        <div style="font-size:0.8em; padding: 5px 0 0 5px;">Full name as appeared in NRIC/Passport</div>
         <div class="form-row">
             <div class="form-label">Name of Nominee<br>(Mr/Mrs/Ms/Mdm)</div>
             <div class="form-field">
@@ -240,8 +183,8 @@
         <div class="form-row">
             <div class="form-label">NRIC/Passport</div>
             <div class="form-field char-box-group" id="nomineeNric" style="flex-grow:0;"></div>
-            <div class="form-label" style="width:auto;margin-left:20px;">Email:</div>
-            <div class="form-field"><span class="underline" id="nomineeEmail" style="width:100%;"></span></div>
+            <div class="form-label" style="width:auto;margin-left:20px;">Relation with Applicant</div>
+            <div class="form-field"><span class="underline" id="nomineeRelation" style="width:100%;"></span></div>
         </div>
         <div class="form-row">
             <div class="form-label">Nationality</div>
@@ -250,58 +193,23 @@
                     <div class="checkbox"></div> Malaysian
                 </div>
                 <div class="checkbox-option" id="nomineeNationalityForeigner">
-                    <div class="checkbox"></div> Foreigner (Please Specify): <span class="underline"
-                        id="nomineeNationalityForeignerText"></span>
+                    <div class="checkbox"></div> Foreigner
                 </div>
             </div>
         </div>
         <div class="form-row">
-            <div class="form-label">Relation with Subscriber</div>
-            <div class="form-field">
-                <div class="char-box-grid" id="nomineeRelation"></div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-label">Name of Business/<br>Employer</div>
-            <div class="form-field">
-                <div class="char-box-grid" id="nomineeEmployer"></div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-label">Office Address</div>
-            <div class="form-field">
-                <div class="char-box-grid" id="nomineeOfficeAddress"></div>
-            </div>
-        </div>
-        <div class="form-row" style="margin-top: -5px;">
-            <div class="form-label"></div>
-            <div class="form-field">
-                <div class="char-box-grid" id="nomineeOfficeAddress2"></div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-label" style="margin-left: 145px;">Postcode</div>
-            <div class="form-field char-box-group" id="nomineeOfficePostcode" style="flex-grow:0;"></div>
-        </div>
-        <div class="form-row">
-            <div class="form-label">Office Tel. No.</div>
+            <div class="form-label">Contact No.</div>
             <div class="form-field split-field" style="flex-grow: 0;">
-                <div id="nomineeOfficePhonePrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
-                <div id="nomineeOfficePhoneNum" class="char-box-group"></div>
-            </div>
-            <div style="width:auto;margin:0 5px 0 20px;">Ext.</div>
-            <div class="form-field char-box-group" id="nomineeOfficeExt" style="flex-grow:0;"></div>
-        </div>
-        <div class="form-row">
-            <div class="form-label">Fax No.</div>
-            <div class="form-field split-field" style="flex-grow: 0;">
-                <div id="nomineeOfficeFaxPrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
-                <div id="nomineeOfficeFaxNum" class="char-box-group"></div>
-            </div>
-            <div style="width:auto;margin:0 5px 0 20px;">H/P:</div>
-            <div class="form-field split-field">
                 <div id="nomineeHpPrefix" class="char-box-group"></div><span class="split-field-sep">-</span>
                 <div id="nomineeHpNum" class="char-box-group"></div>
+            </div>
+            <div style="width:auto;margin:0 5px 0 20px;">Email</div>
+            <div class="form-field"><span class="underline" id="nomineeEmail" style="width:100%;"></span></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Occupation</div>
+            <div class="form-field">
+                <div class="char-box-grid" id="nomineeOccupation"></div>
             </div>
         </div>
         <div class="form-row">
@@ -323,64 +231,159 @@
         </div>
     </div>
 
-    <div class="section">
-        <div class="section-title">(D) DECLARATION</div>
-        <p style="padding:10px;">I/We hereby the undersigned declare that all the particulars given are true to
-            my/our knowledge and belief.</p>
-        <div class="form-row" style="justify-content:space-between; padding: 10px; align-items: flex-end;">
-            <div>Date: <span class="underline" id="declarationDate" style="min-width: 200px;"></span></div>
-            <div style="text-align:center;">
-                <div class="signature-line" id="applicantSignature" style="width:300px;"></div>Signature of
-                Applicant
-            </div>
-        </div>
-    </div>
+    <div class="page-break-before"></div>
+    <!-- PAGE 2 -->
 
-    <div class="section" style="border: 2px solid black; margin-top:20px; padding: 10px;">
-        <div
-            style="text-align:center;font-weight:bold;font-size:1.1em;padding:5px; border-bottom: 1px solid black; margin-bottom: 10px;">
-            FOR OFFICE USE ONLY
+    <!-- START: ADDED SECTION for Payment -->
+    <div class="section">
+        <div class="section-title">(D) PAYMENT</div>
+        <div style="font-size: 0.8em; padding: 5px;">
+            Instructions to the declarer: Please provide the information and documents requested in this form in
+            compliance with the Anti-Money Laundering and Anti-Terrorism Financing Act 2001 (“AMLA”) in Malaysia...
         </div>
         <div class="form-row">
-            <div class="form-label">Program ID No.</div>
-            <div class="form-field char-box-group" id="programId" style="flex-grow:0"></div>
-            <div class="form-label" style="width:auto;margin-left:20px;">Programs Fee (RM)</div>
-            <div class="form-field"><span class="underline" id="programsFee"></span></div>
-        </div>
-        <div class="form-row">
-            <div class="form-label">Balance</div>
-            <div style="margin-right: 5px;">RM</div>
-            <div class="form-field"><span class="underline" id="balance"></span></div>
-            <div class="form-label" style="width:auto;margin-left:20px;">Mode of Payment</div>
+            <div class="form-label">Payment made by</div>
             <div class="form-field">
-                <div class="checkbox-option" id="paymentDebit">
-                    <div class="checkbox"></div> Debit
+                <div class="checkbox-option" id="payByApplicant">
+                    <div class="checkbox"></div> Applicant
                 </div>
-                <div class="checkbox-option" id="paymentCredit">
-                    <div class="checkbox"></div> Credit
+                <div class="checkbox-option" id="payBy3rdParty">
+                    <div class="checkbox"></div> 3rd party
                 </div>
-                <div class="checkbox-option" id="paymentCash">
-                    <div class="checkbox"></div> Cash
+            </div>
+            <div style="width:auto;margin-left:20px;">Relation with Applicant:</div>
+            <div class="form-field"><span class="underline" id="payorRelation"></span></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Payment method</div>
+            <div class="form-field">
+                <div class="checkbox-option" id="methodCredit">
+                    <div class="checkbox"></div> Credit Card
                 </div>
-                <div class="checkbox-option" id="paymentCheque">
-                    <div class="checkbox"></div> Cheque
+                <div class="checkbox-option" id="methodDebit">
+                    <div class="checkbox"></div> Debit Card
                 </div>
-                <div class="checkbox-option" id="paymentOthers">
+                <div class="checkbox-option" id="methodOnline">
+                    <div class="checkbox"></div> Online Transfer
+                </div>
+                <div class="checkbox-option" id="methodOthers">
                     <div class="checkbox"></div> Others
                 </div>
             </div>
         </div>
         <div class="form-row">
-            <div class="form-label">Counsellor</div>
-            <div class="form-field"><span class="underline" id="counsellor"></span></div>
+            <div class="form-label">Source of Fund/Wealth</div>
+            <div class="form-field">
+                <div class="checkbox-option" id="fundCash">
+                    <div class="checkbox"></div> Cash Savings
+                </div>
+                <div class="checkbox-option" id="fundCreditCard">
+                    <div class="checkbox"></div> Credit Card
+                </div>
+                <div class="checkbox-option" id="fundInheritance">
+                    <div class="checkbox"></div> Inheritance
+                </div>
+                <div class="checkbox-option" id="fundOthers">
+                    <div class="checkbox"></div> Others
+                </div>
+            </div>
         </div>
         <div class="form-row">
-            <div class="form-label">Check By</div>
-            <div class="form-field"><span class="underline" id="checkBy"></span></div>
-            <div class="form-label" style="width:auto;margin-left:20px;">Date:</div>
-            <div class="form-field"><span class="underline" id="checkByDate"></span></div>
+            <div class="form-label">Name of payor</div>
+            <div class="form-field"><span class="underline" id="payorName"></span></div>
+        </div>
+        <div class="form-row">
+            <div class="form-label">Bank Name</div>
+            <div class="form-field"><span class="underline" id="payorBankName"></span></div>
+        </div>
+        <div class="form-row" style="align-items: flex-start;">
+            <div class="form-label" style="padding-top: 8px;">Payor Acknowledgement</div>
+            <div style="flex: 2;">
+                <p style="margin: 4px 0;">NAME: <span class="underline" id="payorAckName"
+                        style="min-width: 250px;"></span></p>
+                <p style="margin: 4px 0;">NRIC NO: <span class="underline" id="payorAckNric"
+                        style="min-width: 250px;"></span></p>
+            </div>
+            <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 10px;">
+                <strong>Document Checklist</strong>
+                <div class="checkbox-option" id="docNricApp">
+                    <div class="checkbox"></div> a) NRIC Applicant (Front & Back)
+                </div>
+                <div class="checkbox-option" id="docNricFamily">
+                    <div class="checkbox"></div> b) NRIC Family Member (Front&Back)
+                </div>
+                <div class="checkbox-option" id="docProofPayment">
+                    <div class="checkbox"></div> c) Proof of Payment
+                </div>
+                <div class="checkbox-option" id="docOthers">
+                    <div class="checkbox"></div> d) Others
+                </div>
+            </div>
         </div>
     </div>
+    <!-- END: ADDED SECTION -->
+
+    <!-- START: ADDED SECTION for Declaration -->
+    <div class="section">
+        <div class="section-title">(E) DECLARATION</div>
+        <div class="form-row" style="align-items: flex-start;">
+            <div class="checkbox-option" id="dec1" style="padding-top: 5px;">
+                <div class="checkbox"></div>
+            </div>
+            <div class="form-field" style="font-size: 0.9em;">I/We hereby the undersigned declare that all the
+                particulars given are true to my/our knowledge and belief.</div>
+        </div>
+        <div class="form-row" style="align-items: flex-start;">
+            <div class="checkbox-option" id="dec2" style="padding-top: 5px;">
+                <div class="checkbox"></div>
+            </div>
+            <div class="form-field" style="font-size: 0.9em;">I / We are fully aware of the provisions of the AMLA and
+                hereby declare that all information give hereunder is true and accurate to my best knowledge and further
+                assure that all source of funds/wealth are legitimate...</div>
+        </div>
+        <div class="form-row" style="align-items: flex-start;">
+            <div class="checkbox-option" id="dec3" style="padding-top: 5px;">
+                <div class="checkbox"></div>
+            </div>
+            <div class="form-field" style="font-size: 0.9em;">I / We further agree and hereby undertake that we shall on
+                demand pay and make good to TCB the amount of all loss, damage and expense which may be sustained or
+                incurred by the same in respect of any contravention of any provisions of AMLA caused by us.</div>
+        </div>
+    </div>
+    <div class="signature-section" style="margin-top: 30px; justify-content: space-between; align-items: flex-start;">
+        <div class="signature-field" style="width: 45%; text-align: left;">
+            <div class="signature-line" id="applicantSignatureLine" style="width: 100%; height: 50px;"></div>
+            <p style="margin: 0;"><strong>Signature Applicant</strong></p>
+        </div>
+        <div class="signature-field" style="width: 45%; text-align: left;">
+            <p style="margin: 0;"><strong>Date:</strong> <span class="underline" id="applicantSignatureDate"
+                    style="min-width: 200px;"></span></p>
+        </div>
+    </div>
+    <!-- END: ADDED SECTION -->
+
+    <!-- START: MODIFIED SECTION for Office Use -->
+    <div class="section" style="border: 2px solid black; margin-top:20px; padding: 10px;">
+        <div
+            style="text-align:center;font-weight:bold;font-size:1.1em;padding:5px; border-bottom: 1px solid black; margin-bottom: 10px;">
+            FOR OFFICE USE/ WITNESS INFORMATION
+        </div>
+        <div class="form-row" style="justify-content: space-around; align-items: flex-start;">
+            <div class="signature-field" style="width: 45%; text-align: center;">
+                <p>RECEIVER</p>
+                <div class="signature-line" id="receiverSignatureLine" style="height: 60px;"></div>
+                <p style="margin: 8px 0 0 0;">Name: <span class="info-data" id="receiverName"></span></p>
+                <p style="margin: 4px 0 0 0;">Date: <span class="info-data" id="receiverDate"></span></p>
+            </div>
+            <div class="signature-field" style="width: 45%; text-align: center;">
+                <p>WITNESS</p>
+                <div class="signature-line" id="witnessSignatureLine" style="height: 60px;"></div>
+                <p style="margin: 8px 0 0 0;">Name: <span class="info-data" id="witnessName"></span></p>
+                <p style="margin: 4px 0 0 0;">Date: <span class="info-data" id="witnessDate"></span></p>
+            </div>
+        </div>
+    </div>
+    <!-- END: MODIFIED SECTION -->
 </body>
 
 </html>

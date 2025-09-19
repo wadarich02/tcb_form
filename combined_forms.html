@@ -12,10 +12,10 @@
     <div id="content1" class="form-page green-form"></div>
     <div class="page-break-before"></div>
     <div id="content2" class="form-page buyer-declaration-page"></div>
-    <div class="page-break-before"></div>
+    <!--  <div class="page-break-before"></div> 
     <div id="content3" class="form-page amla-page"></div>
     <div class="page-break-before"></div>
-    <div id="content4" class="form-page profit-page"></div>
+    <div id="content4" class="form-page profit-page"></div> -->
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -27,9 +27,9 @@
             const data = JSON.parse(dataString);
             const filesToLoad = [
                 { file: '2_Application_Form_Green.html', target: 'content1' },
-                { file: '3_Buyer_Declaration.html', target: 'content2' },
-                { file: '4_AMLA_NEW.html', target: 'content3' },
-                { file: '5_Profit_Distribution.html', target: 'content4' }
+                { file: '3_Buyer_Declaration.html', target: 'content2' }
+                //   { file: '4_AMLA_NEW.html', target: 'content3' },
+                //   { file: '5_Profit_Distribution.html', target: 'content4' }
             ];
             const fetchPromises = filesToLoad.map(item => fetch(item.file).then(res => res.text()).then(html => {
                 document.getElementById(item.target).innerHTML = html.substring(html.indexOf('<body>') + 6, html.lastIndexOf('</body>'));
@@ -41,8 +41,8 @@
                     setTimeout(() => {
                         populateGreenForm(data);
                         populateBuyerDeclaration(data);
-                        populateAmlaForm(data);
-                        populateProfitForm(data);
+                        //   populateAmlaForm(data);
+                        //   populateProfitForm(data);
                         setTimeout(() => window.print(), 500); // Final delay before printing
                     }, 200);
                 })
@@ -101,29 +101,25 @@
             const appBiz = (part2.membershipApplicant.applicantType === "Guest's Partner") ? part1.partnerBusiness : part1.guestBusiness;
             const nominee = part2.nominee.isPartner ? part1.partnerInfo : part2.nominee;
             const nomineeBiz = part2.nominee.isPartner ? part1.partnerBusiness : part2.nominee;
+            const payor = part2.thirdPartyPayor.isApplicant ? app : part2.thirdPartyPayor;
 
+            // Header Product Selection
             if (part2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham', true);
             if (part2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar', true);
             if (part2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas', true);
-            if (part2.salesDetail.productTypes.includes('Dirham')) setCheck('prodDirham2', true);
-            if (part2.salesDetail.productTypes.includes('Dinar')) setCheck('prodDinar2', true);
-            if (part2.salesDetail.productTypes.includes('Almas')) setCheck('prodAlmas2', true);
 
+            // (A) Individual Information
             fillDoubleRowCharBoxGrid('appName', 'appName2', `${part2.membershipApplicant.title} ${app.fullName}`);
-            fillDoubleRowCharBoxGrid('appNameOnCard', 'appNameOnCard2', `${part2.membershipApplicant.title} ${part2.membershipApplicant.nameOnCard}`);
             fillFixedCharBoxGroup('appNric', app.icPassport, 12);
-            fillFixedCharBoxGroup('appDate', formatDate(signatures.applicant.date), 8);
             setCheck('appNationality' + (app.nationality?.toLowerCase().includes('malaysian') ? 'Malaysian' : 'Foreigner'), true);
-            setCheck('appMarital' + (app.maritalStatus || 'Single'), true);
-
             const homeAddress = `${app.correspondentAddress}, ${app.city}`;
             fillDoubleRowCharBoxGrid('appHomeAddress', 'appHomeAddress2', homeAddress);
             fillFixedCharBoxGroup('appHomePostcode', app.poskod, 5);
-            const mailAddr = part1.guestInfo.mailingSameAsCorrespondent ? homeAddress : `${part1.guestInfo.mailingAddress}, ${part1.guestInfo.mailingCity}, ${part1.guestInfo.mailingPoskod}`;
+            setCheck('appMarital' + (app.maritalStatus || 'Single'), true);
+            const mailAddr = part1.guestInfo.mailingSameAsCorrespondent ? homeAddress : `${part1.guestInfo.mailingAddress}, ${part1.guestInfo.mailingCity}`;
+            const mailPostcode = part1.guestInfo.mailingSameAsCorrespondent ? app.poskod : part1.guestInfo.mailingPostcode;
             fillDoubleRowCharBoxGrid('appMailingAddress', 'appMailingAddress2', mailAddr);
-
-            const fax = (part2.applicantOffice.fax || '').replace(/\D/g, '');
-            fillFixedCharBoxGroup('appFaxPrefix', fax.substring(0, 2), 2); fillFixedCharBoxGroup('appFaxNum', fax.substring(2, 10), 8);
+            fillFixedCharBoxGroup('appMailingPostcode', mailPostcode, 5);
             const hp = (app.phone || '').replace(/\D/g, '');
             fillFixedCharBoxGroup('appHpPrefix', hp.substring(0, 3), 3); fillFixedCharBoxGroup('appHpNum', hp.substring(3, 11), 8);
             setText('appEmail', app.email);
@@ -135,46 +131,70 @@
                 else if (incomeVal >= 24000) setCheck('appIncome2', true);
                 else setCheck('appIncome1', true);
             }
+            // New Bank Details Fields
+            fillCharBoxGrid('appBankName', part2.applicantBanking.bankName, 28);
+            fillFixedCharBoxGroup('appAccountNo', part2.applicantBanking.accountNumber, 16);
 
+            // (B) Business Information
             fillCharBoxGrid('appEmployer', appBiz.industry);
             fillCharBoxGrid('appIndustry', appBiz.industry);
-            fillDoubleRowCharBoxGrid('appOfficeAddress', 'appOfficeAddress2', part2.applicantOffice.address);
-            fillFixedCharBoxGroup('appOfficePostcode', part2.applicantOffice.poskod, 5);
-            const officeTel = (part2.applicantOffice.tel || '').replace(/\D/g, '');
-            fillFixedCharBoxGroup('appOfficePhonePrefix', officeTel.substring(0, 2), 2); fillFixedCharBoxGroup('appOfficePhoneNum', officeTel.substring(2, 10), 8);
-            fillFixedCharBoxGroup('appOfficeExt', '', 4);
-            fillFixedCharBoxGroup('appOfficeFaxPrefix', fax.substring(0, 2), 2); fillFixedCharBoxGroup('appOfficeFaxNum', fax.substring(2, 10), 8);
+            fillCharBoxGrid('appOfficeAddress', part2.applicantOffice.address, 28);
 
+            // (C) Family Information
             fillCharBoxGrid('nomineeName', nominee.fullName);
             fillFixedCharBoxGroup('nomineeNric', nominee.icPassport, 12);
-            setText('nomineeEmail', part2.nominee.email || '');
+            setText('nomineeRelation', nominee.relationshipToGuest || nominee.relationship);
             setCheck('nomineeNationality' + (nominee.nationality?.toLowerCase().includes('malaysian') ? 'Malaysian' : 'Foreigner'), true);
-            if (!nominee.nationality?.toLowerCase().includes('malaysian')) setText('nomineeNationalityForeignerText', nominee.nationality);
-            fillCharBoxGrid('nomineeRelation', nominee.relationshipToGuest || nominee.relationship);
-            fillCharBoxGrid('nomineeEmployer', nomineeBiz.occupation);
-            fillDoubleRowCharBoxGrid('nomineeOfficeAddress', 'nomineeOfficeAddress2', ''); // No data for this
-            fillFixedCharBoxGroup('nomineeOfficePostcode', '', 5);
-            fillFixedCharBoxGroup('nomineeOfficePhonePrefix', '', 2); fillFixedCharBoxGroup('nomineeOfficePhoneNum', '', 8);
-            fillFixedCharBoxGroup('nomineeOfficeExt', '', 4);
-            fillFixedCharBoxGroup('nomineeOfficeFaxPrefix', '', 2); fillFixedCharBoxGroup('nomineeOfficeFaxNum', '', 8);
             const nomineeHp = (nominee.phone || '').replace(/\D/g, '');
             fillFixedCharBoxGroup('nomineeHpPrefix', nomineeHp.substring(0, 3), 3); fillFixedCharBoxGroup('nomineeHpNum', nomineeHp.substring(3, 11), 8);
+            setText('nomineeEmail', nominee.email || '');
+            fillCharBoxGrid('nomineeOccupation', nomineeBiz.occupation);
+            if (nomineeBiz.monthlyIncome) {
+                const incomeVal = parseFloat(nomineeBiz.monthlyIncome.split('-')[0].replace(/,/g, '')) * 12;
+                if (incomeVal > 60000) setCheck('nomineeIncome4', true);
+                else if (incomeVal >= 36000) setCheck('nomineeIncome3', true);
+                else if (incomeVal >= 24000) setCheck('nomineeIncome2', true);
+                else setCheck('nomineeIncome1', true);
+            }
 
-            setText('declarationDate', formatDate(signatures.applicant.date));
-            setSignature('applicantSignature', signatures.applicant.signatureData);
-            fillFixedCharBoxGroup('programId', part1.officeUse.tmCode, 6);
-            setText('programsFee', part2.salesDetail.totalAmount);
-            setText('balance', '0.00');
-            // Update payment method checks
+            // (D) Payment
+            setCheck(part2.thirdPartyPayor.isApplicant ? 'payByApplicant' : 'payBy3rdParty', true);
             const method = part2.salesDetail.transactionMethod.toLowerCase();
-            setCheck('paymentDebit', method === 'debit');
-            setCheck('paymentCredit', method === 'credit');
-            setCheck('paymentCash', method === 'cash');
-            setCheck('paymentCheque', method === 'cheque');
-            setCheck('paymentOthers', method === 'others');
-            setText('counsellor', part1.officeUse.consultant);
-            setText('checkBy', signatures.witness.name);
-            setText('checkByDate', formatDate(signatures.witness.date));
+            if (method.includes('credit')) setCheck('methodCredit', true);
+            if (method.includes('debit')) setCheck('methodDebit', true);
+            part2.sourceOfFunds.forEach(fund => {
+                if (fund.includes('Cash')) setCheck('fundCash', true);
+                if (fund.includes('Credit')) setCheck('fundCreditCard', true);
+                if (fund.includes('Inheritance')) setCheck('fundInheritance', true);
+                if (fund.includes('Others')) setCheck('fundOthers', true);
+            });
+            setText('payorName', payor.fullName);
+            setText('payorBankName', part1.guestBankInfo.cardIssuingBank);
+            if (!part2.thirdPartyPayor.isApplicant) {
+                setText('payorAckName', payor.fullName);
+                setText('payorAckNric', payor.icPassport);
+            }
+            setCheck('docNricApp', true);
+            setCheck('docProofPayment', true);
+
+            // (E) Declaration
+            if (data.consents.finalConsent1 && data.consents.finalConsent2) {
+                setCheck('dec1', true); setCheck('dec2', true); setCheck('dec3', true);
+            }
+            setSignature('applicantSignatureLine', signatures.applicant.signatureData);
+            setText('applicantSignatureDate', formatDate(signatures.applicant.date));
+
+            // Office Use / Witness Info
+            if (signatures.consultant) {
+                setSignature('receiverSignatureLine', signatures.consultant.signatureData);
+                setText('receiverName', signatures.consultant.name);
+                setText('receiverDate', formatDate(signatures.consultant.date));
+            }
+            if (signatures.witness) {
+                setSignature('witnessSignatureLine', signatures.witness.signatureData);
+                setText('witnessName', signatures.witness.name);
+                setText('witnessDate', formatDate(signatures.witness.date));
+            }
         }
 
         function populateBuyerDeclaration(data) {
@@ -191,46 +211,6 @@
             if (sigs.applicant) { setSignature('applicantSignatureLine', sigs.applicant.signatureData); setText('applicantName', sigs.applicant.name); setText('applicantId', sigs.applicant.ic); setText('applicantDate', formatDate(sigs.applicant.date)); }
             if (sigs.nominee && sigs.nominee.signatureData) { setSignature('jointApplicantSignatureLine', sigs.nominee.signatureData); setText('jointApplicantName', sigs.nominee.name); setText('jointApplicantId', sigs.nominee.ic); setText('jointApplicantDate', formatDate(sigs.nominee.date)); }
             if (sigs.witness) { setSignature('witnessSignatureLine', sigs.witness.signatureData); setText('witnessName', sigs.witness.name); setText('witnessId', sigs.witness.ic); setText('witnessDate', formatDate(sigs.witness.date)); }
-        }
-
-        function populateAmlaForm(data) {
-            const { part1, part2, signatures: sigs } = data;
-            const app = (part2.membershipApplicant.applicantType === "Guest's Partner") ? part1.partnerInfo : p1.guestInfo;
-            const appBiz = (part2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerBusiness : p1.guestBusiness;
-
-            if (part2.sourceOfFunds.includes('Cash Savings')) setCheck('fundCash', true);
-            if (part2.sourceOfFunds.includes('Credit Card')) setCheck('fundCredit', true);
-            if (part2.sourceOfFunds.includes('Inheritance')) setCheck('fundInheritance', true);
-            if (part2.sourceOfFunds.includes('Others')) setCheck('fundOthers', true);
-
-            setText('amlaName', app.fullName); setText('amlaNric', app.icPassport);
-            setText('amlaHomeAddress', `${app.correspondentAddress}, ${app.poskod} ${app.city}`);
-            setText('amlaMailingAddress', app.mailingSameAsCorrespondent ? 'SAME AS HOME ADDRESS' : `${app.mailingAddress}, ${app.mailingPoskod} ${app.mailingCity}`);
-            setText('amlaMobile', app.phone); setText('amlaEmail', app.email);
-            setText('amlaOccupation', appBiz.occupation);
-
-            if (sigs.applicant) { setSignature('amlaSig', sigs.applicant.signatureData); setText('amlaSigName', ` ${sigs.applicant.name} `); setText('amlaSigDate', ` ${formatDate(sigs.applicant.date)} `); }
-
-            setText('receiver-name', ` ${sigs.consultant.name} `); setSignature('receiver-sig', sigs.consultant.signatureData); setText('receiver-date', ` ${formatDate(sigs.consultant.date)} `);
-            setText('witness-name', ` ${sigs.witness.name} `); setSignature('witness-sig', sigs.witness.signatureData); setText('witness-date', ` ${formatDate(sigs.witness.date)} `);
-        }
-
-        function populateProfitForm(data) {
-            const { part1, part2, signatures: sigs } = data;
-            const app = (part2.membershipApplicant.applicantType === "Guest's Partner") ? p1.partnerInfo : p1.guestInfo;
-
-            setText('pdMembershipNo', part1.officeUse.tmCode);
-            setText('pdName', app.fullName); setText('pdNric', app.icPassport);
-            setText('pdAccountNo', p2.applicantBanking.accountNumber); setText('pdBankName', p2.applicantBanking.bankName);
-            setText('pdPhone', app.phone); setText('pdEmail', app.email);
-
-            if (sigs.applicant) { setSignature('pdPrincipalSig', sigs.applicant.signatureData); setText('pdPrincipalDate', formatDate(sigs.applicant.date)); }
-            if (sigs.investmentManager) { setSignature('pdManagerSig', sigs.investmentManager.signatureData); setText('pdManagerDate', formatDate(sigs.investmentManager.date)); }
-
-            setText('salesDate', ` ${formatDate(sigs.witness.date)} `);
-            setText('salesReceivedBy', ` ${sigs.consultant.name} `);
-            setText('salesMembershipNo', ` ${part1.officeUse.tmCode} `);
-            setText('salesName', ` ${sigs.witness.name} `);
         }
     </script>
 </body>
